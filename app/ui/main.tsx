@@ -18,3 +18,26 @@ createRoot(document.getElementById("root")!).render(
     <App backend={demo ? demoBackend() : tauriBackend} demo={demo} />
   </StrictMode>,
 );
+
+// Dev-only state probe (see vite.config.ts): a read-only snapshot on request.
+if (import.meta.hot) {
+  const hot = import.meta.hot;
+  hot.on("fittle:probe", async () => {
+    const { app } = await import("./state/app");
+    const { edits } = await import("./state/edits");
+    const s = app.get();
+    const e = edits.get();
+    const card = (k: string) => s.header?.hdus.flatMap((h) => h.cards).find((c) => c.keyword === k);
+    hot.send("fittle:state", {
+      href: location.href,
+      current: s.current,
+      tab: s.tab,
+      loading: s.loading,
+      error: s.error,
+      headerPath: s.header?.path,
+      header: { INSTRUME: card("INSTRUME"), TELESCOP: card("TELESCOP") },
+      infoCamera: s.opened?.info.fields.camera,
+      edits: { editing: e.editing, ops: e.ops, error: e.error, result: e.result, plan: e.plan?.changes },
+    });
+  });
+}

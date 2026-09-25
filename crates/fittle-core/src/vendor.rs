@@ -215,22 +215,30 @@ fn matched_rules(rules: &MatchRules, h: &Header) -> Vec<String> {
 
 /// Best-matching smart-scope profile; more matching keys wins.
 pub fn match_scope(h: &Header) -> Option<(&'static ScopeProfile, Matched)> {
-    let mut best: Option<(&ScopeProfile, Vec<String>)> = None;
-    for p in profiles() {
-        let hits = matched_rules(&p.rules, h);
-        if !hits.is_empty() && best.as_ref().is_none_or(|(_, b)| hits.len() > b.len()) {
-            best = Some((p, hits));
-        }
-    }
-    best.map(|(p, evidence)| {
-        let m = Matched {
-            id: p.id.clone(),
-            name: p.display.clone(),
-            evidence,
-            verified: p.verified,
-        };
-        (p, m)
-    })
+    match_scopes(h).into_iter().next()
+}
+
+/// Every scope profile the header matches, best first (most matching keys).
+/// More than one means the header disagrees with itself (e.g. INSTRUME says
+/// one model, CREATOR another).
+pub fn match_scopes(h: &Header) -> Vec<(&'static ScopeProfile, Matched)> {
+    let mut all: Vec<(&ScopeProfile, Vec<String>)> = profiles()
+        .iter()
+        .map(|p| (p, matched_rules(&p.rules, h)))
+        .filter(|(_, hits)| !hits.is_empty())
+        .collect();
+    all.sort_by_key(|(_, hits)| std::cmp::Reverse(hits.len()));
+    all.into_iter()
+        .map(|(p, evidence)| {
+            let m = Matched {
+                id: p.id.clone(),
+                name: p.display.clone(),
+                evidence,
+                verified: p.verified,
+            };
+            (p, m)
+        })
+        .collect()
 }
 
 /// Software that wrote or processed the file, in data-file order.

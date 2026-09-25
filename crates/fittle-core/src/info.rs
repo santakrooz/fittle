@@ -86,7 +86,8 @@ pub fn info_from(fits: &Fits, path: &str) -> Info {
     }
 
     let file = filename::parse(path);
-    let scope = vendor::match_scope(&merged);
+    let scopes = vendor::match_scopes(&merged);
+    let scope = scopes.first().cloned();
     let apps = vendor::match_apps(&merged);
     let app_ids: Vec<&str> = apps.iter().map(|(a, _)| a.id.as_str()).collect();
     let quirks = vendor::quirks_for(scope.as_ref().map(|(p, _)| p.id.as_str()), &app_ids);
@@ -106,6 +107,23 @@ pub fn info_from(fits: &Fits, path: &str) -> Info {
         file: &file,
     };
     let (fields, mut notes) = canonical::read(&ctx);
+    // A header that names two different scopes: say which keys disagree.
+    if let (Some((best, bm)), Some((other, om))) = (scopes.first(), scopes.get(1)) {
+        notes.insert(
+            0,
+            Note {
+                level: canonical::NoteLevel::Warning,
+                message: format!(
+                    "The header names two scopes: {} ({}) and {} ({}); using {}",
+                    best.display,
+                    bm.evidence.join(", "),
+                    other.display,
+                    om.evidence.join(", "),
+                    best.display
+                ),
+            },
+        );
+    }
     let verdict = classify::classify(&classify::Input {
         header: &merged,
         fields: &fields,

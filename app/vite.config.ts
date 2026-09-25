@@ -23,10 +23,42 @@ function demoFixtures(): Plugin {
   };
 }
 
+/** Dev-only: GET /__fittle/state asks the running window for a read-only
+ *  snapshot of its state (for debugging the desktop app, which can't be
+ *  inspected from outside). Never bundled. */
+function stateProbe(): Plugin {
+  return {
+    name: "fittle-state-probe",
+    apply: "serve",
+    configureServer(server) {
+      let waiting: ((s: unknown) => void)[] = [];
+      server.ws.on("fittle:state", (data) => {
+        waiting.forEach((w) => w(data));
+        waiting = [];
+      });
+      server.middlewares.use("/__fittle/state", (_req, res) => {
+        // Answer once: the first window to reply wins; later or extra replies
+        // (several windows, or after the timeout) are ignored.
+        const reply = (body: unknown) => {
+          if (res.writableEnded || res.headersSent) return;
+          res.setHeader("Content-Type", "application/json");
+          res.end(JSON.stringify(body, null, 2));
+        };
+        const timer = setTimeout(() => reply({ error: "no window answered" }), 2000);
+        waiting.push((s) => {
+          clearTimeout(timer);
+          reply(s);
+        });
+        server.ws.send("fittle:probe", {});
+      });
+    },
+  };
+}
+
 // Mirrors AstroSideKick's Tauri-oriented Vite setup.
 export default defineConfig({
   root: "ui",
-  plugins: [react(), demoFixtures()],
+  plugins: [react(), demoFixtures(), stateProbe()],
   clearScreen: false,
   build: { outDir: "../dist", emptyOutDir: true },
   server: {
