@@ -55,6 +55,14 @@ docs/                 PLAN.md, mocks/, decisions/
 
 Type: Bricolage Grotesque (display, big numbers), Inter (UI), JetBrains Mono (keywords, values). Radius 14px for cards, 999px for pills. Uppercase 10–11px labels with letter-spacing. Three-pane layout: file rail 232px, image stage (fluid), inspector 356px, filmstrip for folders. Keep these tokens in one shared package so they can be reused by Stardog.
 
+## Vendor knowledge is data
+
+Smart-scope, capture-app and stacker specifics live in `crates/fittle-core/data/`, never in
+code (docs/decisions/0004). `scope-profiles.json` and `targets*.json` are copies from
+AstroSideKick: change them upstream and run `scripts/sync-astrosidekick-data.sh`.
+`apps.json` is Fittle's own (fingerprints and quirks); mark entries `verified` only
+against a real file and give a `source`.
+
 ## Testing and performance budgets
 
 - Golden snapshots (`insta`) of `fittle info --json` for every corpus file.

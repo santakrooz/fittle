@@ -1,0 +1,255 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "airmass": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 1.48
+    },
+    "altitude": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 42.3
+    },
+    "azimuth": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 76.9
+    },
+    "moon": {
+      "source": {
+        "from": [
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": {
+        "altitude": -21.3,
+        "illumination": 0.86,
+        "separation": 65.0,
+        "waxing": true
+      }
+    },
+    "plate_solved": false,
+    "session_night": {
+      "source": {
+        "from": [
+          "site longitude",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "2025-10-03"
+    },
+    "sky": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "day"
+    },
+    "sun_altitude": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 37.3
+    }
+  },
+  "fields": {
+    "bayer": {
+      "source": {
+        "key": "BAYERPAT",
+        "kind": "keyword"
+      },
+      "value": "GRBG"
+    },
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "IMX347"
+    },
+    "date_obs": {
+      "source": {
+        "key": "DATE-OBS",
+        "kind": "keyword"
+      },
+      "value": "2025-10-03T22:15:00"
+    },
+    "dec": {
+      "source": {
+        "key": "FOVDEC",
+        "kind": "keyword"
+      },
+      "value": 33.029
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 4.0
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 25.0
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "M 57"
+    },
+    "ra": {
+      "source": {
+        "key": "FOVRA",
+        "kind": "keyword"
+      },
+      "value": 283.396
+    },
+    "sensor_temp_c": {
+      "source": {
+        "key": "CMOSTEMP",
+        "kind": "keyword"
+      },
+      "value": 21.5
+    },
+    "site_elev_m": {
+      "source": {
+        "key": "ALTITUDE",
+        "kind": "keyword"
+      },
+      "value": 30.0
+    },
+    "site_lat": {
+      "source": {
+        "key": "LATITUDE",
+        "kind": "keyword"
+      },
+      "value": 37.77
+    },
+    "site_lon": {
+      "source": {
+        "key": "LONGITUD",
+        "kind": "keyword"
+      },
+      "value": -122.42
+    },
+    "telescope": {
+      "source": {
+        "key": "TELESCOP",
+        "kind": "keyword"
+      },
+      "value": "eVscope v2.0"
+    }
+  },
+  "file_name": {},
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "INSTRUME=IMX347",
+          "ORIGIN=Unistellar",
+          "TELESCOP=eVscope v2.0",
+          "FOVRA present",
+          "CMOSTEMP present"
+        ],
+        "id": "unistellar",
+        "name": "Unistellar",
+        "role": "capture",
+        "verified": false
+      }
+    ]
+  },
+  "path": "unistellar/eVscope-20251003-221500.fits",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "M 57",
+      "NGC 6720",
+      "Ring Nebula"
+    ],
+    "common_name": "Ring Nebula",
+    "constellation": "Lyra",
+    "dec": 33.0286,
+    "id": "M 57",
+    "kind": "Planetary nebula",
+    "ra": 283.3959,
+    "size_arcmin": 1.27
+  },
+  "verdict": {
+    "confidence": 73,
+    "evidence": [
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "light",
+        "text": "has a target (OBJECT / RA / DEC)",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BAYERPAT=GRBG on a single-plane (raw CFA) image",
+        "weight": 15
+      }
+    ],
+    "frame": "light",
+    "integrated": false,
+    "label": "Light sub",
+    "processed": false
+  }
+}

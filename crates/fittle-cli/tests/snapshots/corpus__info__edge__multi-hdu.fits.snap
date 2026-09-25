@@ -1,0 +1,72 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "M 27"
+    }
+  },
+  "file_name": {},
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 1,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": []
+  },
+  "path": "edge/multi-hdu.fits",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "M 27",
+      "NGC 6853",
+      "Dumbbell Nebula"
+    ],
+    "common_name": "Dumbbell Nebula",
+    "constellation": "Vulpecula",
+    "dec": 22.721,
+    "id": "M 27",
+    "kind": "Planetary nebula",
+    "ra": 299.9016,
+    "size_arcmin": 6.7
+  },
+  "verdict": {
+    "confidence": 73,
+    "evidence": [
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "light",
+        "text": "has a target (OBJECT / RA / DEC)",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      }
+    ],
+    "frame": "light",
+    "integrated": false,
+    "label": "Light sub",
+    "processed": false
+  }
+}

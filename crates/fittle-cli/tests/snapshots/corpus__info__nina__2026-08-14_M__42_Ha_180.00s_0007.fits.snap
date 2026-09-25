@@ -1,0 +1,361 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "altitude": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": -45.5
+    },
+    "azimuth": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 54.9
+    },
+    "fov_arcmin": {
+      "source": {
+        "from": [
+          "pixel scale",
+          "image size"
+        ],
+        "kind": "derived"
+      },
+      "value": [
+        1.5,
+        1.1
+      ]
+    },
+    "moon": {
+      "source": {
+        "from": [
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": {
+        "altitude": -27.2,
+        "illumination": 0.08,
+        "separation": 91.0,
+        "waxing": true
+      }
+    },
+    "pixel_scale": {
+      "source": {
+        "from": [
+          "pixel size",
+          "focal length"
+        ],
+        "kind": "derived"
+      },
+      "value": 1.41
+    },
+    "plate_solved": false,
+    "sampling": {
+      "source": {
+        "from": [
+          "pixel scale"
+        ],
+        "kind": "derived"
+      },
+      "value": "well"
+    },
+    "session_night": {
+      "source": {
+        "from": [
+          "site longitude",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "2026-08-14"
+    },
+    "sky": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "night"
+    },
+    "sun_altitude": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": -34.3
+    }
+  },
+  "fields": {
+    "binning": {
+      "source": {
+        "key": "XBINNING",
+        "kind": "keyword"
+      },
+      "value": 1
+    },
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "ZWO ASI294MM Pro"
+    },
+    "date_local": {
+      "source": {
+        "key": "DATE-LOC",
+        "kind": "keyword"
+      },
+      "value": "2026-08-14T23:02:11.123"
+    },
+    "date_obs": {
+      "source": {
+        "key": "DATE-OBS",
+        "kind": "keyword"
+      },
+      "value": "2026-08-15T06:02:11.123"
+    },
+    "dec": {
+      "source": {
+        "key": "DEC",
+        "kind": "keyword"
+      },
+      "value": -5.3911
+    },
+    "egain": {
+      "source": {
+        "key": "EGAIN",
+        "kind": "keyword"
+      },
+      "value": 0.25
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 180.0
+    },
+    "filter": {
+      "source": {
+        "key": "FILTER",
+        "kind": "keyword"
+      },
+      "value": "Ha"
+    },
+    "focal_mm": {
+      "source": {
+        "key": "FOCALLEN",
+        "kind": "keyword"
+      },
+      "value": 550.0
+    },
+    "focal_ratio": {
+      "source": {
+        "key": "FOCRATIO",
+        "kind": "keyword"
+      },
+      "value": 5.5
+    },
+    "focus_pos": {
+      "source": {
+        "key": "FOCPOS",
+        "kind": "keyword"
+      },
+      "value": 12840
+    },
+    "focus_temp_c": {
+      "source": {
+        "key": "FOCTEMP",
+        "kind": "keyword"
+      },
+      "value": 11.5
+    },
+    "frame_type": {
+      "source": {
+        "key": "IMAGETYP",
+        "kind": "keyword"
+      },
+      "value": "LIGHT"
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 139.0
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "M 42"
+    },
+    "offset": {
+      "source": {
+        "key": "OFFSET",
+        "kind": "keyword"
+      },
+      "value": 21.0
+    },
+    "pier_side": {
+      "source": {
+        "key": "PIERSIDE",
+        "kind": "keyword"
+      },
+      "value": "West"
+    },
+    "pixel_um": {
+      "source": {
+        "key": "XPIXSZ",
+        "kind": "keyword"
+      },
+      "value": 3.76
+    },
+    "ra": {
+      "source": {
+        "key": "RA",
+        "kind": "keyword"
+      },
+      "value": 83.8221
+    },
+    "row_order": {
+      "source": {
+        "key": "ROWORDER",
+        "kind": "keyword"
+      },
+      "value": "TOP-DOWN"
+    },
+    "sensor_temp_c": {
+      "source": {
+        "key": "CCD-TEMP",
+        "kind": "keyword"
+      },
+      "value": -9.8
+    },
+    "set_temp_c": {
+      "source": {
+        "key": "SET-TEMP",
+        "kind": "keyword"
+      },
+      "value": -10.0
+    },
+    "site_elev_m": {
+      "source": {
+        "key": "SITEELEV",
+        "kind": "keyword"
+      },
+      "value": 1350.0
+    },
+    "site_lat": {
+      "source": {
+        "key": "SITELAT",
+        "kind": "keyword"
+      },
+      "value": 36.1
+    },
+    "site_lon": {
+      "source": {
+        "key": "SITELONG",
+        "kind": "keyword"
+      },
+      "value": -115.2
+    },
+    "telescope": {
+      "source": {
+        "key": "TELESCOP",
+        "kind": "keyword"
+      },
+      "value": "Esprit 100ED"
+    }
+  },
+  "file_name": {
+    "exposure_s": 180.0
+  },
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "SWCREATE=N.I.N.A. 3.1.2.9001"
+        ],
+        "id": "nina",
+        "name": "N.I.N.A.",
+        "role": "capture",
+        "verified": true
+      }
+    ]
+  },
+  "path": "nina/2026-08-14_M 42_Ha_180.00s_0007.fits",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "M 42",
+      "NGC 1976",
+      "LBN 974",
+      "Great Orion Nebula",
+      "Orion Nebula"
+    ],
+    "common_name": "Great Orion Nebula",
+    "constellation": "Orion",
+    "dec": -5.3897,
+    "id": "M 42",
+    "kind": "Cluster with nebula",
+    "ra": 83.8187,
+    "size_arcmin": 90.0
+  },
+  "verdict": {
+    "confidence": 90,
+    "evidence": [
+      {
+        "supports": "light",
+        "text": "IMAGETYP=LIGHT",
+        "weight": 60
+      },
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      }
+    ],
+    "frame": "light",
+    "integrated": false,
+    "label": "Light sub",
+    "processed": false
+  }
+}

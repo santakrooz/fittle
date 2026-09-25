@@ -1,0 +1,228 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 11520,
+  "hdus": [
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "SWCREATE",
+          "raw": [
+            "SWCREATE= 'MaxIm DL Version 6.40'                                               "
+          ],
+          "record": 5,
+          "type": "string",
+          "value": "MaxIm DL Version 6.40"
+        },
+        {
+          "keyword": "IMAGETYP",
+          "raw": [
+            "IMAGETYP= 'Light Frame'                                                         "
+          ],
+          "record": 6,
+          "type": "string",
+          "value": "Light Frame"
+        },
+        {
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'M13     '                                                            "
+          ],
+          "record": 7,
+          "type": "string",
+          "value": "M13"
+        },
+        {
+          "keyword": "OBJCTRA",
+          "raw": [
+            "OBJCTRA = '16 41 41'                                                            "
+          ],
+          "record": 8,
+          "type": "string",
+          "value": "16 41 41"
+        },
+        {
+          "keyword": "OBJCTDEC",
+          "raw": [
+            "OBJCTDEC= '+36 27 36'                                                           "
+          ],
+          "record": 9,
+          "type": "string",
+          "value": "+36 27 36"
+        },
+        {
+          "keyword": "SITELAT",
+          "raw": [
+            "SITELAT = '+40 00 00'                                                           "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "+40 00 00"
+        },
+        {
+          "keyword": "SITELONG",
+          "raw": [
+            "SITELONG= '-105 16 00'                                                          "
+          ],
+          "record": 11,
+          "type": "string",
+          "value": "-105 16 00"
+        },
+        {
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =                300.0                                                  "
+          ],
+          "record": 12,
+          "type": "float",
+          "value": 300.0
+        },
+        {
+          "keyword": "SNAPSHOT",
+          "raw": [
+            "SNAPSHOT=                    1                                                  "
+          ],
+          "record": 13,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "FOCALLEN",
+          "raw": [
+            "FOCALLEN=               1000.0                                                  "
+          ],
+          "record": 14,
+          "type": "float",
+          "value": 1000.0
+        },
+        {
+          "keyword": "APTDIA",
+          "raw": [
+            "APTDIA  =                200.0                                                  "
+          ],
+          "record": 15,
+          "type": "float",
+          "value": 200.0
+        },
+        {
+          "keyword": "XPIXSZ",
+          "raw": [
+            "XPIXSZ  =                  5.4                                                  "
+          ],
+          "record": 16,
+          "type": "float",
+          "value": 5.4
+        },
+        {
+          "keyword": "CCD-TEMP",
+          "raw": [
+            "CCD-TEMP=                -20.0                                                  "
+          ],
+          "record": 17,
+          "type": "float",
+          "value": -20.0
+        },
+        {
+          "keyword": "FILTER",
+          "raw": [
+            "FILTER  = 'Lum     '                                                            "
+          ],
+          "record": 18,
+          "type": "string",
+          "value": "Lum"
+        },
+        {
+          "keyword": "DATE-OBS",
+          "raw": [
+            "DATE-OBS= '2025-06-15T05:00:00'                                                 "
+          ],
+          "record": 19,
+          "type": "string",
+          "value": "2025-06-15T05:00:00"
+        },
+        {
+          "keyword": "BSCALE",
+          "raw": [
+            "BSCALE  =                    1                                                  "
+          ],
+          "record": 20,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BZERO",
+          "raw": [
+            "BZERO   =                32768                                                  "
+          ],
+          "record": 21,
+          "type": "integer",
+          "value": 32768
+        }
+      ],
+      "data_bytes": 6144,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "maxim/M13-001-L.fit",
+  "schema": "fittle.header/1"
+}

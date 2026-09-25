@@ -1,0 +1,59 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {
+    "frame_type": {
+      "source": {
+        "kind": "filename"
+      },
+      "value": "flat"
+    }
+  },
+  "file_name": {
+    "prefix": "flat"
+  },
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": []
+  },
+  "path": "edge/rice/flat-original.fits",
+  "schema": "fittle.info/1",
+  "verdict": {
+    "confidence": 78,
+    "evidence": [
+      {
+        "supports": "flat",
+        "text": "file name starts 'flat'",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      }
+    ],
+    "frame": "flat",
+    "integrated": false,
+    "label": "Flat frame",
+    "processed": false
+  }
+}

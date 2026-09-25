@@ -1,0 +1,183 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 11520,
+  "hdus": [
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =               3600.0                                                  "
+          ],
+          "record": 5,
+          "type": "float",
+          "value": 3600.0
+        },
+        {
+          "keyword": "LUM_EXP",
+          "raw": [
+            "LUM_EXP =                120.0                                                  "
+          ],
+          "record": 6,
+          "type": "float",
+          "value": 120.0
+        },
+        {
+          "keyword": "LUM_CNT",
+          "raw": [
+            "LUM_CNT =                   30                                                  "
+          ],
+          "record": 7,
+          "type": "integer",
+          "value": 30
+        },
+        {
+          "keyword": "DARK_CNT",
+          "raw": [
+            "DARK_CNT=                   20                                                  "
+          ],
+          "record": 8,
+          "type": "integer",
+          "value": 20
+        },
+        {
+          "keyword": "FLAT_CNT",
+          "raw": [
+            "FLAT_CNT=                   25                                                  "
+          ],
+          "record": 9,
+          "type": "integer",
+          "value": 25
+        },
+        {
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'M 51    '                                                            "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "M 51"
+        },
+        {
+          "keyword": "CALSTAT",
+          "raw": [
+            "CALSTAT = 'DF      '                                                            "
+          ],
+          "record": 11,
+          "type": "string",
+          "value": "DF"
+        },
+        {
+          "keyword": "DATE-OBS",
+          "raw": [
+            "DATE-OBS= '2025-04-02T21:00:00'                                                 "
+          ],
+          "record": 12,
+          "type": "string",
+          "value": "2025-04-02T21:00:00"
+        },
+        {
+          "keyword": "BSCALE",
+          "raw": [
+            "BSCALE  =                    1                                                  "
+          ],
+          "record": 13,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BZERO",
+          "raw": [
+            "BZERO   =                32768                                                  "
+          ],
+          "record": 14,
+          "type": "integer",
+          "value": 32768
+        },
+        {
+          "keyword": "COMMENT",
+          "raw": [
+            "COMMENT 1  Written by Astrometric Stacking Program. www.hnsky.org               "
+          ],
+          "record": 15,
+          "type": "commentary",
+          "value": "1  Written by Astrometric Stacking Program. www.hnsky.org"
+        },
+        {
+          "keyword": "HISTORY",
+          "raw": [
+            "HISTORY 1  Stacking method SIGMA CLIP AVERAGE                                   "
+          ],
+          "record": 16,
+          "type": "commentary",
+          "value": "1  Stacking method SIGMA CLIP AVERAGE"
+        }
+      ],
+      "data_bytes": 6144,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "astap/stack_M51_30x120s.fit",
+  "schema": "fittle.header/1"
+}

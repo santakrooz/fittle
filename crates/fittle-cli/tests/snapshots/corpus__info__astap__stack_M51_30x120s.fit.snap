@@ -1,0 +1,144 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "moon": {
+      "source": {
+        "from": [
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": {
+        "illumination": 0.26,
+        "waxing": true
+      }
+    },
+    "plate_solved": false
+  },
+  "fields": {
+    "date_obs": {
+      "source": {
+        "key": "DATE-OBS",
+        "kind": "keyword"
+      },
+      "value": "2025-04-02T21:00:00"
+    },
+    "exposure_s": {
+      "source": {
+        "key": "LUM_EXP",
+        "kind": "keyword"
+      },
+      "value": 120.0
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "M 51"
+    },
+    "stack_count": {
+      "source": {
+        "key": "LUM_CNT",
+        "kind": "keyword"
+      },
+      "value": 30
+    },
+    "total_integration_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 3600.0
+    }
+  },
+  "file_name": {
+    "exposure_s": 120.0,
+    "frames": 30
+  },
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [
+    {
+      "level": "info",
+      "message": "EXPTIME=3600 is the total integration for this software"
+    }
+  ],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "COMMENT '1  written by astrometric stacking program. www.'",
+          "HISTORY '1  stacking method sigma clip average…'"
+        ],
+        "id": "astap",
+        "name": "ASTAP",
+        "role": "processing",
+        "verified": false
+      }
+    ]
+  },
+  "path": "astap/stack_M51_30x120s.fit",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "M 51",
+      "NGC 5194",
+      "PGC 47404",
+      "UGC 8493",
+      "Whirlpool Galaxy"
+    ],
+    "common_name": "Whirlpool Galaxy",
+    "constellation": "Canes Venatici",
+    "dec": 47.1952,
+    "id": "M 51",
+    "kind": "Galaxy",
+    "ra": 202.4696,
+    "size_arcmin": 13.71
+  },
+  "verdict": {
+    "confidence": 73,
+    "evidence": [
+      {
+        "supports": "integrated",
+        "text": "LUM_CNT=30",
+        "weight": 50
+      },
+      {
+        "supports": "integrated",
+        "text": "HISTORY '1  Stacking method SIGMA CLIP AVERAGE'",
+        "weight": 30
+      },
+      {
+        "supports": "integrated",
+        "text": "EXPTIME=3600 > exposure 120",
+        "weight": 25
+      },
+      {
+        "supports": "light",
+        "text": "has a target (OBJECT / RA / DEC)",
+        "weight": 20
+      }
+    ],
+    "frame": "light",
+    "integrated": true,
+    "label": "Stacked light",
+    "processed": false,
+    "processing": [
+      {
+        "evidence": "1  Stacking method SIGMA CLIP AVERAGE",
+        "name": "stacking"
+      }
+    ]
+  }
+}

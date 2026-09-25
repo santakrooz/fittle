@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-13",
+  "profiles": [
+    {
+      "id": "zwo-seestar-s50",
+      "display": "ZWO Seestar S50",
+      "vendor": "ZWO",
+      "match": {
+        "TELESCOP": ["S50_*", "S50", "Seestar S50"],
+        "INSTRUME": ["Seestar S50"],
+        "CREATOR": ["ZWO Seestar S50"]
+      },
+      "sensor": "IMX462",
+      "pixel_size_um": 2.9,
+      "focal_length_mm": 250,
+      "aperture_mm": 50,
+      "native_frame": [1080, 1920],
+      "bayer": "GRBG",
+      "spcc_sensor": "ZWO Seestar S50",
+      "filters": {
+        "none": {
+          "label": "No filter (broadband)",
+          "header": ["", "None", "UV/IR", "IRCUT", "IR-CUT", "IR CUT"],
+          "spcc": ["-oscfilter=UV/IR Block"],
+          "sky_zp": 21.84
+        },
+        "lp": {
+          "label": "LP (dual-band)",
+          "header": ["LP"],
+          "spcc": ["-oscfilter=ZWO Seestar LP"],
+          "narrowband": true,
+          "sky_zp": 19.85
+        }
+      },
+      "default_filter": "none",
+      "quirks": {
+        "force_32b_stack": false,
+        "spcc_supported": true
+      },
+      "typical_sub_sec": 10,
+      "stack_files": { "live": ["Stacked_*"], "app": ["DSO_Stacked_*"] },
+      "mosaic_capable": true,
+      "ui_visible": true,
+      "verified": true,
+      "notes": "Verified against IC 1318B session 2026-09-13 (firmware PROGRAM 9.31). TELESCOP is the serial (S50_d2421385); INSTRUME carries the model."
+    },
+    {
+      "id": "zwo-seestar-s50-pro",
+      "display": "ZWO Seestar S50 Pro",
+      "vendor": "ZWO",
+      "match": {
+        "TELESCOP": ["S50Pro_*", "S50 Pro*", "Seestar S50 Pro"],
+        "INSTRUME": ["Seestar S50 Pro"],
+        "CREATOR": ["ZWO Seestar S50 Pro"]
+      },
+      "sensor": null,
+      "pixel_size_um": null,
+      "focal_length_mm": 250,
+      "aperture_mm": 50,
+      "native_frame": null,
+      "bayer": "auto",
+      "spcc_sensor": null,
+      "filters": {
+        "none": {
+          "label": "No filter (broadband)",
+          "header": ["", "None", "UV/IR", "IRCUT", "IR-CUT", "IR CUT"],
+          "spcc": ["-oscfilter=UV/IR Block"]
+        },
+        "lp": {
+          "label": "LP (dual-band)",
+          "header": ["LP"],
+          "spcc": ["-oscfilter=ZWO Seestar LP"],
+          "narrowband": true
+        }
+      },
+      "default_filter": "none",
+      "quirks": {
+        "force_32b_stack": false,
+        "spcc_supported": true
+      },
+      "typical_sub_sec": 10,
+      "stack_files": { "live": ["Stacked_*"], "app": ["DSO_Stacked_*"] },
+      "mosaic_capable": true,
+      "ui_visible": true,
+      "verified": false,
+      "notes": "Sensor is an OmniVision part, not Sony (Mike, 2026-09-15; specs are public via C-Star and reviews). spcc_sensor stays null on purpose: Siril's SPCC database carries no OmniVision entries at all (Sony, Canon, Nikon, Onsemi, Samsung, Fujifilm only), so there is nothing to name and the colour stage falls through to plain pcc. That fallback is what inverts the Ha/OIII ratio on nebula-filled fields - see the M8 measurement in CLAUDE.md - so the fix for this scope is the fallback, not a sensor string. Native frame and pixel size still unknown; match patterns are guesses."
+    },
+    {
+      "id": "zwo-seestar-s30",
+      "display": "ZWO Seestar S30",
+      "vendor": "ZWO",
+      "match": {
+        "TELESCOP": ["S30_*", "S30", "Seestar S30"],
+        "INSTRUME": ["Seestar S30"],
+        "CREATOR": ["ZWO Seestar S30"]
+      },
+      "sensor": "IMX662",
+      "pixel_size_um": 2.9,
+      "focal_length_mm": 150,
+      "aperture_mm": 30,
+      "native_frame": [1080, 1920],
+      "bayer": "auto",
+      "spcc_sensor": "ZWO Seestar S30",
+      "filters": {
+        "none": {
+          "label": "No filter (broadband)",
+          "header": ["", "None", "UV/IR", "IRCUT", "IR-CUT", "IR CUT"],
+          "spcc": ["-oscfilter=UV/IR Block"]
+        },
+        "lp": {
+          "label": "LP (dual-band)",
+          "header": ["LP"],
+          "spcc": ["-oscfilter=ZWO Seestar LP"],
+          "narrowband": true
+        }
+      },
+      "default_filter": "none",
+      "quirks": {
+        "force_32b_stack": false,
+        "spcc_supported": true
+      },
+      "typical_sub_sec": 10,
+      "stack_files": { "live": ["Stacked_*"], "app": ["DSO_Stacked_*"] },
+      "mosaic_capable": true,
+      "ui_visible": true,
+      "verified": false,
+      "notes": "Specs from public datasheet; needs a sample header."
+    },
+    {
+      "id": "zwo-seestar-s30-pro",
+      "display": "ZWO Seestar S30 Pro",
+      "vendor": "ZWO",
+      "match": {
+        "TELESCOP": ["S30Pro_*", "S30 Pro*", "Seestar S30 Pro"],
+        "INSTRUME": ["Seestar S30 Pro"],
+        "CREATOR": ["ZWO Seestar S30 Pro"]
+      },
+      "sensor": "IMX585",
+      "pixel_size_um": 2.9,
+      "focal_length_mm": 150,
+      "aperture_mm": 30,
+      "native_frame": null,
+      "bayer": "auto",
+      "spcc_sensor": "Sony IMX585",
+      "filters": {
+        "none": {
+          "label": "No filter (broadband)",
+          "header": ["", "None", "UV/IR", "IRCUT", "IR-CUT", "IR CUT"],
+          "spcc": ["-oscfilter=UV/IR Block"]
+        },
+        "lp": {
+          "label": "LP (dual-band)",
+          "header": ["LP"],
+          "spcc": ["-oscfilter=ZWO Seestar LP"],
+          "narrowband": true
+        }
+      },
+      "default_filter": "none",
+      "quirks": {
+        "force_32b_stack": false,
+        "spcc_supported": true
+      },
+      "typical_sub_sec": 10,
+      "stack_files": { "live": ["Stacked_*"], "app": ["DSO_Stacked_*"] },
+      "mosaic_capable": true,
+      "ui_visible": true,
+      "verified": false,
+      "notes": "Sensor IMX585 / 2.9 um, confirmed by Mike 2026-09-15 and corroborated by his four S30 Pro stacks (XPIXSZ 2.9; M8 short axis 2180 is the IMX585 height). Sampling works out at 3.99 arcsec/px, matching the S30 scale in CLAUDE.md. spcc_sensor names the Sony part, not a camera: Siril's SPCC database has no Pro entry and is mostly keyed by sensor anyway (only the S30 and S50 have camera entries). native_frame still unknown - we have stacks, not subs, and nothing reads it. Match patterns are still guesses."
+    },
+    {
+      "id": "dwarflab-dwarf-3",
+      "display": "DwarfLab Dwarf 3",
+      "vendor": "DwarfLab",
+      "match": {
+        "TELESCOP": ["DWARF3*", "Dwarf 3*", "DWARF III*"],
+        "INSTRUME": ["DWARF3*", "Dwarf 3*"]
+      },
+      "sensor": "IMX678",
+      "pixel_size_um": 2.0,
+      "focal_length_mm": 150,
+      "aperture_mm": 35,
+      "native_frame": [3840, 2160],
+      "bayer": "auto",
+      "spcc_sensor": null,
+      "filters": {
+        "none": {
+          "label": "Astro (UV/IR cut)",
+          "header": ["", "Astro", "UV/IR"],
+          "spcc": ["-oscfilter=UV/IR Block"]
+        },
+        "duo": {
+          "label": "Dual-band",
+          "header": ["Duo", "Dual", "Dual-band"],
+          "spcc": [
+            "-narrowband",
+            "-rwl=656.28",
+            "-rbw=18",
+            "-gwl=500.70",
+            "-gbw=30",
+            "-bwl=500.70",
+            "-bbw=30"
+          ],
+          "narrowband": true
+        }
+      },
+      "default_filter": "none",
+      "quirks": {
+        "force_32b_stack": true,
+        "spcc_supported": true
+      },
+      "typical_sub_sec": 15,
+      "mosaic_capable": false,
+      "ui_visible": false,
+      "verified": false,
+      "notes": "Quirks from Naztronomy script v2.0.6: must stack with -32b or the result is milky. Match patterns unverified."
+    },
+    {
+      "id": "dwarflab-dwarf-mini",
+      "display": "DwarfLab Dwarf Mini",
+      "vendor": "DwarfLab",
+      "match": {
+        "TELESCOP": ["DWARF MINI*", "Dwarf Mini*", "DWARFMINI*"],
+        "INSTRUME": ["DWARF MINI*", "Dwarf Mini*"]
+      },
+      "sensor": null,
+      "pixel_size_um": null,
+      "focal_length_mm": null,
+      "aperture_mm": null,
+      "native_frame": null,
+      "bayer": "auto",
+      "spcc_sensor": null,
+      "filters": {
+        "none": {
+          "label": "Astro (UV/IR cut)",
+          "header": ["", "Astro", "UV/IR"],
+          "spcc": ["-oscfilter=UV/IR Block"]
+        },
+        "duo": {
+          "label": "Dual-band",
+          "header": ["Duo", "Dual", "Dual-band"],
+          "spcc": [
+            "-narrowband",
+            "-rwl=656.28",
+            "-rbw=18",
+            "-gwl=500.70",
+            "-gbw=30",
+            "-bwl=500.70",
+            "-bbw=30"
+          ],
+          "narrowband": true
+        }
+      },
+      "default_filter": "none",
+      "quirks": {
+        "force_32b_stack": true,
+        "spcc_supported": true
+      },
+      "typical_sub_sec": 15,
+      "mosaic_capable": false,
+      "ui_visible": false,
+      "verified": false,
+      "notes": "Placeholder until a sample header arrives."
+    },
+    {
+      "id": "dwarflab-dwarf-2",
+      "display": "DwarfLab Dwarf II",
+      "vendor": "DwarfLab",
+      "match": {
+        "TELESCOP": ["DWARF2*", "Dwarf 2*", "DWARF II*"],
+        "INSTRUME": ["DWARF2*", "Dwarf II*"]
+      },
+      "sensor": "IMX415",
+      "pixel_size_um": 1.45,
+      "focal_length_mm": 100,
+      "aperture_mm": 24,
+      "native_frame": [3840, 2160],
+      "bayer": "auto",
+      "spcc_sensor": null,
+      "filters": {
+        "none": {
+          "label": "No filter",
+          "header": ["", "None"],
+          "spcc": []
+        }
+      },
+      "default_filter": "none",
+      "quirks": {
+        "force_32b_stack": false,
+        "spcc_supported": false
+      },
+      "typical_sub_sec": 15,
+      "mosaic_capable": false,
+      "ui_visible": false,
+      "verified": false,
+      "notes": "SPCC does not work on Dwarf II data (Naztronomy v2.0.6); colour-calibration stage is skipped."
+    },
+    {
+      "id": "generic-osc",
+      "display": "Unknown telescope (generic colour camera)",
+      "vendor": "",
+      "match": {},
+      "sensor": null,
+      "pixel_size_um": null,
+      "focal_length_mm": null,
+      "aperture_mm": null,
+      "native_frame": null,
+      "bayer": "auto",
+      "spcc_sensor": null,
+      "filters": {
+        "none": {
+          "label": "No filter (broadband)",
+          "header": [],
+          "spcc": ["-oscfilter=UV/IR Block"]
+        }
+      },
+      "default_filter": "none",
+      "quirks": {
+        "force_32b_stack": false,
+        "spcc_supported": true
+      },
+      "typical_sub_sec": null,
+      "mosaic_capable": false,
+      "ui_visible": false,
+      "verified": true,
+      "notes": "Fallback when no profile matches. The app asks the user to send a header so a real profile can be added."
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "a": {
+    "hdu": 0,
+    "path": "seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit",
+    "verdict": "Light sub"
+  },
+  "b": {
+    "hdu": 0,
+    "path": "calibration/master_dark_300s_g100_-10C.fit",
+    "verdict": "Master dark"
+  },
+  "blockers": 2,
+  "differences": 28,
+  "rows": [
+    {
+      "a": "T",
+      "b": "T",
+      "keyword": "SIMPLE",
+      "status": "same"
+    },
+    {
+      "a": "16",
+      "b": "-32",
+      "impact": {
+        "level": "info",
+        "text": "expected for a stack or master"
+      },
+      "keyword": "BITPIX",
+      "status": "changed"
+    },
+    {
+      "a": "2",
+      "b": "2",
+      "keyword": "NAXIS",
+      "status": "same"
+    },
+    {
+      "a": "64",
+      "b": "64",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "NAXIS1",
+      "status": "same"
+    },
+    {
+      "a": "48",
+      "b": "48",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "NAXIS2",
+      "status": "same"
+    },
+    {
+      "a": "'GRBG'",
+      "impact": {
+        "level": "warning",
+        "text": "Bayer pattern missing on one side"
+      },
+      "keyword": "BAYERPAT",
+      "status": "only_a"
+    },
+    {
+      "a": "0",
+      "keyword": "XBAYROFF",
+      "status": "only_a"
+    },
+    {
+      "a": "0",
+      "keyword": "YBAYROFF",
+      "status": "only_a"
+    },
+    {
+      "a": "'Seestar S50'",
+      "b": "'ZWO ASI2600MC Pro'",
+      "impact": {
+        "level": "blocker",
+        "text": "blocks calibration (camera differs)"
+      },
+      "keyword": "INSTRUME",
+      "status": "changed"
+    },
+    {
+      "a": "'Seestar S50'",
+      "keyword": "TELESCOP",
+      "status": "only_a"
+    },
+    {
+      "a": "'ZWO Seestar S50'",
+      "keyword": "CREATOR",
+      "status": "only_a"
+    },
+    {
+      "a": "'NGC 6995'",
+      "keyword": "OBJECT",
+      "status": "only_a"
+    },
+    {
+      "a": "314.295",
+      "keyword": "RA",
+      "status": "only_a"
+    },
+    {
+      "a": "31.2353",
+      "keyword": "DEC",
+      "status": "only_a"
+    },
+    {
+      "a": "'2026-09-25T04:34:12.000'",
+      "keyword": "DATE-OBS",
+      "status": "only_a"
+    },
+    {
+      "a": "20.0",
+      "b": "300.0",
+      "impact": {
+        "level": "warning",
+        "text": "dark exposure differs (needs scaling)"
+      },
+      "keyword": "EXPTIME",
+      "status": "changed"
+    },
+    {
+      "a": "20.0",
+      "keyword": "EXPOSURE",
+      "status": "only_a"
+    },
+    {
+      "a": "'Light'",
+      "b": "'Master Dark'",
+      "impact": {
+        "level": "info",
+        "text": "expected"
+      },
+      "keyword": "IMAGETYP",
+      "status": "changed"
+    },
+    {
+      "a": "80",
+      "b": "100",
+      "impact": {
+        "level": "blocker",
+        "text": "blocks calibration (gain differs)"
+      },
+      "keyword": "GAIN",
+      "status": "changed"
+    },
+    {
+      "a": "28.4",
+      "b": "-10.0",
+      "impact": {
+        "level": "warning",
+        "text": "Δ 38.4 °C"
+      },
+      "keyword": "CCD-TEMP",
+      "status": "changed"
+    },
+    {
+      "a": "2.9",
+      "keyword": "XPIXSZ",
+      "status": "only_a"
+    },
+    {
+      "a": "2.9",
+      "keyword": "YPIXSZ",
+      "status": "only_a"
+    },
+    {
+      "a": "1",
+      "b": "1",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "XBINNING",
+      "status": "same"
+    },
+    {
+      "a": "1",
+      "impact": {
+        "level": "warning",
+        "text": "binning missing on one side"
+      },
+      "keyword": "YBINNING",
+      "status": "only_a"
+    },
+    {
+      "a": "0",
+      "keyword": "FOCALLEN",
+      "status": "only_a"
+    },
+    {
+      "a": "'LP'",
+      "keyword": "FILTER",
+      "status": "only_a"
+    },
+    {
+      "a": "33.69",
+      "keyword": "SITELAT",
+      "status": "only_a"
+    },
+    {
+      "a": "-117.27",
+      "keyword": "SITELONG",
+      "status": "only_a"
+    },
+    {
+      "a": "1",
+      "keyword": "BSCALE",
+      "status": "only_a"
+    },
+    {
+      "a": "32768",
+      "keyword": "BZERO",
+      "status": "only_a"
+    },
+    {
+      "b": "50",
+      "impact": {
+        "level": "warning",
+        "text": "offset missing on one side"
+      },
+      "keyword": "OFFSET",
+      "status": "only_b"
+    },
+    {
+      "b": "'N.I.N.A. 3.1.2.9001'",
+      "keyword": "SWCREATE",
+      "status": "only_b"
+    },
+    {
+      "b": "40",
+      "impact": {
+        "level": "info",
+        "text": "master of 40"
+      },
+      "keyword": "NCOMBINE",
+      "status": "only_b"
+    }
+  ],
+  "schema": "fittle.diff/1"
+}

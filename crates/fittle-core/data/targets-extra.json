@@ -1,0 +1,182 @@
+[
+  {
+    "n": ["Cygnus Wall"],
+    "t": "HII",
+    "ra": 314.35,
+    "dec": 43.9,
+    "mag": null,
+    "size": 60,
+    "c": "Cyg"
+  },
+  {
+    "n": ["IC 1396A", "Elephant's Trunk Nebula"],
+    "t": "HII",
+    "ra": 324.125,
+    "dec": 57.5,
+    "mag": null,
+    "size": 20.0,
+    "c": "Cep"
+  },
+  {
+    "n": ["LBN 437", "Gecko Nebula"],
+    "t": "Neb",
+    "ra": 338.0,
+    "dec": 40.67,
+    "mag": null,
+    "size": 30,
+    "c": "Lac"
+  },
+  {
+    "n": ["LDN 1235", "Dark Shark Nebula"],
+    "t": "DrkN",
+    "ra": 333.25,
+    "dec": 73.37,
+    "mag": null,
+    "size": 60,
+    "c": "Cep"
+  },
+  {
+    "n": ["Sadr Region", "Butterfly Nebula (Cygnus)", "IC 1318B"],
+    "t": "HII",
+    "ra": 305.35,
+    "dec": 40.6,
+    "mag": null,
+    "size": 180,
+    "c": "Cyg"
+  },
+  {
+    "n": ["Sh2-101", "Tulip Nebula"],
+    "t": "HII",
+    "ra": 300.125,
+    "dec": 35.2667,
+    "mag": null,
+    "size": 16,
+    "c": "Cyg"
+  },
+  {
+    "n": ["Sh2-114", "Flying Dragon Nebula"],
+    "t": "HII",
+    "ra": 315.75,
+    "dec": 48.8,
+    "mag": null,
+    "size": 60,
+    "c": "Cyg"
+  },
+  {
+    "n": ["Sh2-115"],
+    "t": "HII",
+    "ra": 308.75,
+    "dec": 46.9,
+    "mag": null,
+    "size": 50,
+    "c": "Cyg"
+  },
+  {
+    "n": ["Sh2-119"],
+    "t": "HII",
+    "ra": 319.5,
+    "dec": 43.95,
+    "mag": null,
+    "size": 120,
+    "c": "Cyg"
+  },
+  {
+    "n": ["Sh2-129", "Flying Bat Nebula", "Ou4"],
+    "t": "HII",
+    "ra": 317.75,
+    "dec": 59.95,
+    "mag": null,
+    "size": 140,
+    "c": "Cep"
+  },
+  {
+    "n": ["Sh2-132", "Lion Nebula"],
+    "t": "HII",
+    "ra": 334.75,
+    "dec": 56.1,
+    "mag": null,
+    "size": 90,
+    "c": "Cep"
+  },
+  {
+    "n": ["Sh2-136", "vdB 141", "Ghost Nebula"],
+    "t": "RfN",
+    "ra": 319.0,
+    "dec": 68.25,
+    "mag": null,
+    "size": 8,
+    "c": "Cep"
+  },
+  {
+    "n": ["Sh2-140"],
+    "t": "HII",
+    "ra": 334.75,
+    "dec": 63.3,
+    "mag": null,
+    "size": 15,
+    "c": "Cep"
+  },
+  {
+    "n": ["Sh2-157", "Lobster Claw Nebula"],
+    "t": "HII",
+    "ra": 349.0,
+    "dec": 60.0,
+    "mag": null,
+    "size": 60,
+    "c": "Cas"
+  },
+  {
+    "n": ["Sh2-188"],
+    "t": "PN",
+    "ra": 22.5,
+    "dec": 58.4,
+    "mag": null,
+    "size": 9,
+    "c": "Cas"
+  },
+  {
+    "n": ["Sh2-224"],
+    "t": "SNR",
+    "ra": 81.75,
+    "dec": 42.95,
+    "mag": null,
+    "size": 60,
+    "c": "Aur"
+  },
+  {
+    "n": ["Sh2-240", "Simeis 147", "Spaghetti Nebula"],
+    "t": "SNR",
+    "ra": 84.75,
+    "dec": 28.0,
+    "mag": null,
+    "size": 180,
+    "c": "Tau"
+  },
+  {
+    "n": ["Sh2-274", "Abell 21", "Medusa Nebula"],
+    "t": "PN",
+    "ra": 112.25,
+    "dec": 13.25,
+    "mag": null,
+    "size": 10,
+    "c": "Gem"
+  },
+  {
+    "n": ["Sh2-308", "Dolphin Head Nebula"],
+    "t": "HII",
+    "ra": 103.55,
+    "dec": -23.92,
+    "mag": null,
+    "size": 40,
+    "c": "CMa"
+  },
+  {
+    "n": ["Sh2-64", "W40"],
+    "t": "HII",
+    "ra": 277.75,
+    "dec": -2.1,
+    "mag": null,
+    "size": 10,
+    "c": "Ser"
+  }
+]
