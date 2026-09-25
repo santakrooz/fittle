@@ -269,10 +269,19 @@ fn log(msg: String) {
     }
 }
 
-/// File passed on the command line (`fittle-app <file>`, later `fittle view`).
+#[derive(Serialize)]
+struct Launch {
+    path: String,
+    dir: bool,
+}
+
+/// File or folder passed on the command line (`fittle-app <path>`, later `fittle view`).
 #[tauri::command]
-fn initial_path() -> Option<String> {
-    std::env::args().skip(1).find(|a| !a.starts_with('-'))
+fn initial_path() -> Option<Launch> {
+    let arg = std::env::args().skip(1).find(|a| !a.starts_with('-'))?;
+    let p = std::path::Path::new(&arg);
+    let abs = p.canonicalize().unwrap_or_else(|_| p.to_path_buf());
+    Some(Launch { dir: abs.is_dir(), path: abs.to_string_lossy().to_string() })
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

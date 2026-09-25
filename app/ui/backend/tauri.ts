@@ -21,7 +21,7 @@ function pixels(buf: ArrayBuffer): Pixels {
 const FITS = [{ name: "FITS", extensions: ["fit", "fits", "fts", "fz"] }];
 
 export const tauriBackend: Backend = {
-  initialPath: () => invoke<string | null>("initial_path"),
+  initialPath: () => invoke<{ path: string; dir: boolean } | null>("initial_path"),
   async pickFile() {
     const p = await open({ multiple: false, filters: FITS });
     return typeof p === "string" ? p : null;

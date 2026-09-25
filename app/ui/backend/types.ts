@@ -257,7 +257,8 @@ export type WriteReport = Plan & {
 export type FileResult = { path: string; report?: WriteReport; error?: string };
 
 export interface Backend {
-  initialPath(): Promise<string | null>;
+  /** File or folder the app was launched with. */
+  initialPath(): Promise<{ path: string; dir: boolean } | null>;
   pickFile(): Promise<string | null>;
   pickFolder(): Promise<string | null>;
   listFolder(path: string): Promise<Entry[]>;

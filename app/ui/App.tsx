@@ -25,7 +25,8 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
       if (demo) openFolder("demo");
       else
         backend.initialPath().then((p) => {
-          if (p) void openFile(p);
+          if (p?.dir) void openFolder(p.path);
+          else if (p) void openFile(p.path);
         });
     }
 
