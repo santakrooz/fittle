@@ -33,7 +33,7 @@ crates/fittle-astro   alt/az, airmass, moon/sun, WCS math, constellation lookup
 crates/fittle-scan    folder scan, session report, sub grader, calibration matcher
 crates/fittle-cli     clap; binary `fittle`
 crates/fittle-mcp     rmcp, stdio; also reachable as `fittle mcp`
-app/                  Tauri 2 shell (src-tauri) + web UI (ui)
+app/                  Tauri 2 shell (src-tauri) + React web UI (ui)
 integrations/         Quick Look (Swift), Windows thumbnail handler, Linux thumbnailer
 testdata/             FITS corpus by capture app (git-lfs)
 docs/                 PLAN.md, mocks/, decisions/
@@ -70,4 +70,6 @@ Type: Bricolage Grotesque (display, big numbers), Inter (UI), JetBrains Mono (ke
 
 ## Open decisions (ask before assuming)
 
-License (MIT/Apache-2.0 vs GPL-3.0), frontend framework (match Stardog), shared token package name, whether Quick Look and thumbnails ship in v1.0.
+License (leaning MIT; confirm before publishing), shared token package name and whether "Stardog" means AstroSideKick, whether Quick Look and thumbnails ship in v1.0.
+
+Decided: frontend is React 19 + TypeScript + Vite (docs/decisions/0002). A free web edition (WASM core, Railway, opt-in scrubbed header contributions) follows M1 (docs/decisions/0003).
