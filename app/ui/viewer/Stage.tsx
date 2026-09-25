@@ -1,125 +1,206 @@
 import { useEffect, useRef } from "react";
-import type { Preview, Stf } from "../backend/types";
-import { LINEAR, type StretchMode } from "./stf";
+import { app, getBackend, hover, onViewCommand } from "../state/app";
+import { shaderStretch } from "../state/stretch";
+import { Renderer, type ViewState } from "./renderer";
+import { fitView, screenToDisplay, visibleRect, zoomAt } from "./transform";
 
-// WebGL2 float-texture viewer. The file's values are uploaded once as
-// R32F / RGB32F; the stretch runs in the fragment shader, so changing it is
-// a uniform update, never a re-upload and never a React re-render.
+const CHANNEL = { rgb: 0, r: 1, g: 2, b: 3 } as const;
+/** Largest detail patch requested, in pixels. */
+const MAX_DETAIL = 4_200_000;
 
-const VERT = `#version 300 es
-in vec2 pos;
-out vec2 uv;
-uniform vec2 scale;
-void main() {
-  uv = vec2(pos.x * 0.5 + 0.5, 0.5 - pos.y * 0.5);
-  gl_Position = vec4(pos * scale, 0.0, 1.0);
-}`;
+export function Stage() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-const FRAG = `#version 300 es
-precision highp float;
-in vec2 uv;
-out vec4 color;
-uniform sampler2D img;
-uniform bool mono;
-uniform vec3 shadows, midtones, highlights;
-vec3 mtf(vec3 m, vec3 x) {
-  return ((m - 1.0) * x) / ((2.0 * m - 1.0) * x - m);
-}
-void main() {
-  vec3 v = texture(img, uv).rgb;
-  if (mono) v = v.rrr;
-  vec3 x = clamp((v - shadows) / (highlights - shadows), 0.0, 1.0);
-  color = vec4(clamp(mtf(midtones, x), 0.0, 1.0), 1.0);
-}`;
-
-function compile(gl: WebGL2RenderingContext, type: number, src: string) {
-  const s = gl.createShader(type)!;
-  gl.shaderSource(s, src);
-  gl.compileShader(s);
-  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s) ?? "shader");
-  return s;
-}
-
-type Props = { preview: Preview; mode: StretchMode };
-
-export function Stage({ preview, mode }: Props) {
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const draw = useRef<(stf: Stf[]) => void>(() => {});
-
-  // Set up GL and upload the texture once per preview.
   useEffect(() => {
-    const el = canvas.current!;
-    const gl = el.getContext("webgl2", { antialias: false });
-    if (!gl) throw new Error("WebGL2 unavailable");
+    const canvas = canvasRef.current!;
+    let r: Renderer;
+    try {
+      r = new Renderer(canvas);
+    } catch (e) {
+      app.set({ error: String(e) });
+      return;
+    }
+    let fitted = true;
+    let detailTimer = 0;
+    let detailSeq = 0;
+    let readoutBusy = false;
+    let pending: { x: number; y: number } | null = null;
 
-    const prog = gl.createProgram()!;
-    gl.attachShader(prog, compile(gl, gl.VERTEX_SHADER, VERT));
-    gl.attachShader(prog, compile(gl, gl.FRAGMENT_SHADER, FRAG));
-    gl.linkProgram(prog);
-    gl.useProgram(prog);
+    const size = () => ({ width: canvas.width, height: canvas.height });
+    const img = () => {
+      const d = app.get().display;
+      return d ? { width: d.width, height: d.height } : null;
+    };
+    const flip = () => app.get().opened?.info.fields.row_order?.value.toUpperCase() === "BOTTOM-UP";
+    const sourceStep = () => app.get().display?.source_step ?? 1;
 
-    const quad = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, "pos");
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const publishZoom = () => hover.set({ zoom: r.view.scale / sourceStep() });
+    const setView = (v: ViewState, isFit = false) => {
+      r.view = v;
+      fitted = isFit;
+      publishZoom();
+      r.request();
+      scheduleDetail();
+    };
+    const fit = () => {
+      const i = img();
+      if (i) setView(fitView(i, size()), true);
+    };
 
-    const { width, height, channels } = preview.info;
-    const tex = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-    const [internal, format] = channels === 3 ? [gl.RGB32F, gl.RGB] : [gl.R32F, gl.RED];
-    gl.texImage2D(gl.TEXTURE_2D, 0, internal, width, height, 0, format, gl.FLOAT, preview.pixels);
-    // Float textures are not filterable without an extension; the preview is
-    // already downsampled, so nearest is fine for M0.
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    // Full-resolution patch for the visible area once zoomed past the preview.
+    const scheduleDetail = () => {
+      clearTimeout(detailTimer);
+      detailTimer = window.setTimeout(async () => {
+        const s = app.get();
+        if (!s.display || !s.preview) return;
+        const previewScale = s.display.width / s.preview.width;
+        if (r.view.scale * previewScale <= 1.2) {
+          r.setDetail(null);
+          return;
+        }
+        const rect = visibleRect(r.view, size(), s.display, flip());
+        if (rect.w < 2 || rect.h < 2) return;
+        let stepPx = Math.max(1, Math.floor(1 / r.view.scale));
+        while ((rect.w / stepPx) * (rect.h / stepPx) > MAX_DETAIL) stepPx++;
+        const seq = ++detailSeq;
+        const px = await getBackend().region(s.mode, rect.x, rect.y, rect.w, rect.h, stepPx);
+        if (seq !== detailSeq) return;
+        r.setDetail(px, rect.x, rect.y, px.width * stepPx, px.height * stepPx);
+      }, 160);
+    };
 
-    const u = (n: string) => gl.getUniformLocation(prog, n);
-    gl.uniform1i(u("mono"), channels === 1 ? 1 : 0);
+    const applyStretch = () => {
+      const s = app.get();
+      if (!s.display) return;
+      r.stretch = shaderStretch(s.display, s.stretch);
+      r.clipping = s.stretch.clipping;
+      r.channel = CHANNEL[s.stretch.channel];
+      r.request();
+    };
 
-    let last: Stf[] = [];
-    const render = (stf: Stf[]) => {
-      last = stf;
-      const dpr = window.devicePixelRatio || 1;
-      const w = Math.round(el.clientWidth * dpr);
-      const h = Math.round(el.clientHeight * dpr);
-      if (el.width !== w || el.height !== h) {
-        el.width = w;
-        el.height = h;
+    // React to state without re-rendering: new pixels, stretch changes.
+    let lastPreview = app.get().preview;
+    let lastStretch = app.get().stretch;
+    const onState = () => {
+      const s = app.get();
+      if (s.preview !== lastPreview) {
+        lastPreview = s.preview;
+        if (s.preview && s.display) {
+          const keep = r.hasImage() && !fitted;
+          r.setImage(s.preview, s.display.width, s.display.height, flip());
+          applyStretch();
+          if (!keep) fit();
+          else scheduleDetail();
+        } else {
+          r.dispose();
+          r.request();
+        }
       }
-      gl.viewport(0, 0, w, h);
-      // Fit: preserve aspect ratio inside the canvas.
-      const imgAspect = width / height;
-      const boxAspect = w / h;
-      gl.uniform2f(u("scale"), imgAspect > boxAspect ? 1 : imgAspect / boxAspect, imgAspect > boxAspect ? boxAspect / imgAspect : 1);
-      const ch = (i: number) => stf[Math.min(i, stf.length - 1)];
-      gl.uniform3f(u("shadows"), ch(0).shadows, ch(1).shadows, ch(2).shadows);
-      gl.uniform3f(u("midtones"), ch(0).midtones, ch(1).midtones, ch(2).midtones);
-      gl.uniform3f(u("highlights"), ch(0).highlights, ch(1).highlights, ch(2).highlights);
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (s.stretch !== lastStretch) {
+        lastStretch = s.stretch;
+        applyStretch();
+      }
     };
-    draw.current = render;
+    const unsub = app.subscribe(onState);
+    onState();
 
-    const ro = new ResizeObserver(() => render(last));
-    ro.observe(el);
+    const ro = new ResizeObserver(() => {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.round(canvas.clientWidth * dpr);
+      canvas.height = Math.round(canvas.clientHeight * dpr);
+      if (fitted) fit();
+      else r.request();
+    });
+    ro.observe(canvas);
+
+    const unView = onViewCommand((c) => {
+      const centre = [canvas.width / 2, canvas.height / 2] as const;
+      if (c === "fit") fit();
+      else if (c === "one") setView({ ...r.view, scale: sourceStep() });
+      else setView(zoomAt(r.view, c === "in" ? 1.5 : 1 / 1.5, centre[0], centre[1], size()));
+    });
+
+    // ---- pointer ----------------------------------------------------------
+    const dpr = () => window.devicePixelRatio || 1;
+    const local = (e: PointerEvent | WheelEvent | MouseEvent) => {
+      const b = canvas.getBoundingClientRect();
+      return [(e.clientX - b.left) * dpr(), (e.clientY - b.top) * dpr()] as const;
+    };
+    let drag: { x: number; y: number; cx: number; cy: number } | null = null;
+
+    const readout = async () => {
+      if (readoutBusy || !pending) return;
+      const p = pending;
+      pending = null;
+      readoutBusy = true;
+      try {
+        hover.set({ readout: await getBackend().readout(p.x, p.y) });
+      } finally {
+        readoutBusy = false;
+        if (pending) readout();
+      }
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const [sx, sy] = local(e);
+      setView(zoomAt(r.view, Math.exp(-e.deltaY * 0.0015), sx, sy, size()));
+    };
+    const onDown = (e: PointerEvent) => {
+      canvas.setPointerCapture(e.pointerId);
+      const [x, y] = local(e);
+      drag = { x, y, cx: r.view.cx, cy: r.view.cy };
+      canvas.style.cursor = "grabbing";
+    };
+    const onMove = (e: PointerEvent) => {
+      const [sx, sy] = local(e);
+      if (drag) {
+        setView({ scale: r.view.scale, cx: drag.cx - (sx - drag.x) / r.view.scale, cy: drag.cy - (sy - drag.y) / r.view.scale });
+        return;
+      }
+      const i = img();
+      if (!i) return;
+      const p = screenToDisplay(r.view, sx, sy, size(), i, flip());
+      if (!p) {
+        hover.set({ readout: null });
+        return;
+      }
+      const st = sourceStep();
+      pending = { x: p.x * st, y: p.y * st };
+      readout();
+    };
+    const onUp = (e: PointerEvent) => {
+      drag = null;
+      canvas.style.cursor = "";
+      canvas.releasePointerCapture(e.pointerId);
+    };
+    const onLeave = () => hover.set({ readout: null });
+    const onDbl = (e: MouseEvent) => {
+      const [sx, sy] = local(e);
+      if (fitted) setView(zoomAt(r.view, sourceStep() / r.view.scale, sx, sy, size()));
+      else fit();
+    };
+    canvas.addEventListener("wheel", onWheel, { passive: false });
+    canvas.addEventListener("pointerdown", onDown);
+    canvas.addEventListener("pointermove", onMove);
+    canvas.addEventListener("pointerup", onUp);
+    canvas.addEventListener("pointerleave", onLeave);
+    canvas.addEventListener("dblclick", onDbl);
+
     return () => {
+      unsub();
+      unView();
       ro.disconnect();
-      gl.deleteTexture(tex);
-      gl.deleteBuffer(quad);
-      gl.deleteProgram(prog);
+      clearTimeout(detailTimer);
+      canvas.removeEventListener("wheel", onWheel);
+      canvas.removeEventListener("pointerdown", onDown);
+      canvas.removeEventListener("pointermove", onMove);
+      canvas.removeEventListener("pointerup", onUp);
+      canvas.removeEventListener("pointerleave", onLeave);
+      canvas.removeEventListener("dblclick", onDbl);
+      r.dispose();
     };
-  }, [preview]);
+  }, []);
 
-  // Stretch changes are uniform updates only.
-  useEffect(() => {
-    draw.current(mode === "auto" ? preview.info.stf : [LINEAR]);
-  }, [preview, mode]);
-
-  return <canvas ref={canvas} className="stage-canvas" aria-label="Stretched image preview" />;
+  return <canvas ref={canvasRef} className="stage-canvas" aria-label="Image, stretched for display" />;
 }

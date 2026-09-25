@@ -35,3 +35,9 @@ _rejected/
 
 # Local real-data corpus (large, may contain site coordinates) — never commit
 /sample fits/
+
+# FITS test corpus (download with testdata/fetch-corpus.sh)
+testdata/corpus/
+
+# Local GUI demo fixtures (generated from real files; may contain site coordinates)
+/app/demo-fixtures/

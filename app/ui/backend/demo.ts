@@ -1,0 +1,94 @@
+// `?demo`: the app in a plain browser from fixtures written by
+// `cargo run -p fittle-image --example ui_fixtures -- <folders…>` (served by the
+// dev server from app/demo-fixtures). Regions and readouts come from the
+// preview, so they are approximate; RA/Dec is not available.
+import { unpack } from "./tauri";
+import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Mode, Opened, Pixels } from "./types";
+
+export const isDemo = () => new URLSearchParams(location.search).has("demo");
+
+const json = async <T>(url: string): Promise<T> => {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: ${r.status}`);
+  return r.json() as Promise<T>;
+};
+const bin = async (url: string) => {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: ${r.status}`);
+  return r.arrayBuffer();
+};
+
+const idOf = (path: string) => path.replace(/^demo:/, "");
+
+export function demoBackend(): Backend {
+  let current = "";
+  let opened: Opened | null = null;
+  const previews = new Map<string, Pixels>();
+  const displays = new Map<string, Display>();
+
+  const load = async (mode: Mode) => {
+    const key = `${current}/${mode}`;
+    if (!previews.has(key)) {
+      const p = unpack(await bin(`/demo/files/${current}/preview-${mode}.bin`));
+      previews.set(key, { width: p.width, height: p.height, channels: p.channels, data: new Uint16Array(p.body) });
+    }
+    if (!displays.has(key)) displays.set(key, await json<Display>(`/demo/files/${current}/display-${mode}.json`));
+    return { px: previews.get(key)!, d: displays.get(key)! };
+  };
+
+  return {
+    initialPath: async () => null,
+    pickFile: async () => null,
+    pickFolder: async () => "demo",
+    listFolder: async () => (await json<{ entries: Entry[] }>("/demo/list.json")).entries,
+    async thumbnail(path) {
+      try {
+        const p = unpack(await bin(`/demo/files/${idOf(path)}/thumb.bin`));
+        return { width: p.width, height: p.height, rgba: new Uint8ClampedArray(p.body) };
+      } catch {
+        return null;
+      }
+    },
+    async openFile(path) {
+      current = idOf(path);
+      opened = await json<Opened>(`/demo/files/${current}/open.json`);
+      return opened;
+    },
+    display: async (mode) => (await load(mode)).d,
+    preview: async (mode) => (await load(mode)).px,
+    async region(mode, x, y, w, h) {
+      // Crop the preview (lower resolution than the real region).
+      const { px, d } = await load(mode);
+      const f = d.width / px.width;
+      const [x0, y0] = [Math.floor(x / f), Math.floor(y / f)];
+      const [rw, rh] = [Math.max(1, Math.min(px.width - x0, Math.ceil(w / f))), Math.max(1, Math.min(px.height - y0, Math.ceil(h / f)))];
+      const out = new Uint16Array(rw * rh * px.channels);
+      for (let r = 0; r < rh; r++) {
+        const src = ((y0 + r) * px.width + x0) * px.channels;
+        out.set(px.data.subarray(src, src + rw * px.channels), r * rw * px.channels);
+      }
+      return { width: rw, height: rh, channels: px.channels, data: out };
+    },
+    async readout(x, y) {
+      if (!opened?.image) return null;
+      const mode = opened.image.default_mode;
+      const { px, d } = await load(mode);
+      const f = (d.width * d.source_step) / px.width;
+      const [px_x, px_y] = [Math.min(px.width - 1, Math.floor(x / f)), Math.min(px.height - 1, Math.floor(y / f))];
+      const norm = Array.from({ length: px.channels }, (_, c) => halfToFloat(px.data[(px_y * px.width + px_x) * px.channels + c]));
+      const [lo, hi] = opened.image.normalized_from;
+      return { x, y, norm, raw: norm.map((v) => lo + v * (hi - lo)) };
+    },
+    header: async (path) => json<HeaderDoc>(`/demo/files/${idOf(path)}/header.json`),
+    dictionary: () => json<KeywordInfo[]>("/demo/dictionary.json"),
+  };
+}
+
+export function halfToFloat(h: number): number {
+  const s = h & 0x8000 ? -1 : 1;
+  const e = (h >> 10) & 0x1f;
+  const f = h & 0x3ff;
+  if (e === 0) return s * 2 ** -14 * (f / 1024);
+  if (e === 31) return f ? NaN : s * Infinity;
+  return s * 2 ** (e - 15) * (1 + f / 1024);
+}

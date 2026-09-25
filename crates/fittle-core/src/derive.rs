@@ -176,6 +176,22 @@ pub fn derive(
     out
 }
 
+/// TAN plate solution from a header, if present.
+pub fn wcs_tan(h: &Header) -> Option<fittle_astro::wcs::Tan> {
+    let tan = |n: u8| {
+        h.string(&format!("CTYPE{n}"))
+            .is_some_and(|t| t.contains("TAN"))
+    };
+    if !(tan(1) && tan(2)) {
+        return None;
+    }
+    Some(fittle_astro::wcs::Tan {
+        crval: [h.float("CRVAL1")?, h.float("CRVAL2")?],
+        crpix: [h.float("CRPIX1")?, h.float("CRPIX2")?],
+        cd: wcs_cd(h)?,
+    })
+}
+
 /// CD matrix from `CDi_j`, or from `CDELTn` (+ `CROTA2`).
 fn wcs_cd(h: &Header) -> Option<[[f64; 2]; 2]> {
     if let (Some(a), Some(dd)) = (h.float("CD1_1"), h.float("CD2_2")) {

@@ -8,6 +8,7 @@
 pub mod coords;
 pub mod optics;
 pub mod time;
+pub mod wcs;
 
 pub use coords::{
     Equatorial, Horizontal, airmass, angular_separation, parse_dec, parse_lon, parse_ra,

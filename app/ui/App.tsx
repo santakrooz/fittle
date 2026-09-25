@@ -1,136 +1,80 @@
-import { useEffect, useState } from "react";
-import type { Backend, Card, HeaderDoc, Preview } from "./backend/types";
+import { useEffect } from "react";
+import type { Backend } from "./backend/types";
+import { FileRail } from "./panes/FileRail";
+import { Inspector } from "./panes/Inspector";
+import { Palette } from "./panes/Palette";
+import { Hud, StageToolbar } from "./panes/StageChrome";
+import { TitleBar } from "./panes/TitleBar";
+import { app, init, openFile, openFolder, setMode, setStretch, step, view } from "./state/app";
 import { Stage } from "./viewer/Stage";
-import type { StretchMode } from "./viewer/stf";
 
-// M0 hello-world: open a FITS file, show it auto-stretched from a float
-// texture, and list its header. The full three-pane layout arrives in M2.
+/** React's development mode runs effects twice; open the startup file once. */
+let started = false;
 
-const PREVIEW_EDGE = 4096;
+function typing(e: KeyboardEvent) {
+  const t = e.target as HTMLElement | null;
+  return !!t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
+}
 
-type Loaded = { path: string; header: HeaderDoc; preview: Preview | null; error?: string };
-
-export function App({ backend }: { backend: Backend }) {
-  const [file, setFile] = useState<Loaded | null>(null);
-  const [mode, setMode] = useState<StretchMode>("auto");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
   useEffect(() => {
-    backend.initialPath().then((p) => {
-      if (p) void load(p);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, at startup
-  }, []);
-
-  async function openFile() {
-    const path = await backend.pickFile();
-    if (path) await load(path);
-  }
-
-  async function load(path: string) {
-    setBusy(true);
-    setError(null);
-    try {
-      const header = await backend.header(path);
-      setFile({ path, header, preview: null });
-      try {
-        const preview = await backend.preview(path, PREVIEW_EDGE);
-        setFile({ path, header, preview });
-      } catch (e) {
-        setFile({ path, header, preview: null, error: String(e) });
-      }
-    } catch (e) {
-      setError(String(e));
-    } finally {
-      setBusy(false);
+    init(backend);
+    if (!started) {
+      started = true;
+      if (demo) openFolder("demo");
+      else
+        backend.initialPath().then((p) => {
+          if (p) void openFile(p);
+        });
     }
-  }
 
-  const name = file?.path.split(/[\\/]/).pop();
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        app.set((s) => ({ palette: !s.palette }));
+        return;
+      }
+      if (typing(e) || app.get().palette || e.metaKey || e.ctrlKey || e.altKey) return;
+      const s = app.get();
+      const k = e.key;
+      if (k === "ArrowDown" || k === "ArrowRight") (e.preventDefault(), step(1));
+      else if (k === "ArrowUp" || k === "ArrowLeft") (e.preventDefault(), step(-1));
+      else if (k === "f") view("fit");
+      else if (k === "1") view("one");
+      else if (k === "+" || k === "=") view("in");
+      else if (k === "-") view("out");
+      else if (k === "a") setStretch({ kind: "auto" });
+      else if (k === "l") setStretch({ kind: "linear" });
+      else if (k === "h") setStretch({ kind: "asinh" });
+      else if (k === "c") setStretch({ clipping: !s.stretch.clipping });
+      else if (k === "d" && s.opened?.image?.can_debayer) setMode(s.mode === "debayer" ? "raw" : "debayer");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [backend, demo]);
+
+  const loading = app.use((s) => s.loading);
+  const error = app.use((s) => s.error);
+  const hasImage = app.use((s) => !!s.preview && !!s.opened?.image);
+  const current = app.use((s) => s.current);
 
   return (
     <div className="app">
-      <header className="titlebar">
-        <span className="brand">Fittle</span>
-        {name && <span className="crumb">{name}</span>}
-        <button className="pill primary" onClick={openFile} disabled={busy}>
-          {busy ? "Opening…" : "Open FITS…"}
-        </button>
-      </header>
-
-      <main className="stage">
-        {file?.preview ? (
-          <>
-            <div className="toolbar" role="toolbar" aria-label="Stretch">
-              {(["auto", "linear"] as const).map((m) => (
-                <button key={m} className={`pill ${mode === m ? "active" : ""}`} onClick={() => setMode(m)}>
-                  {m === "auto" ? "Auto STF" : "Linear"}
-                </button>
-              ))}
-            </div>
-            <Stage preview={file.preview} mode={mode} />
-            <div className="hud mono">
-              {file.preview.info.source_width} × {file.preview.info.source_height}
-              {file.preview.info.channels === 3 ? " · RGB" : ""} · display stretch only
-            </div>
-          </>
-        ) : (
-          <div className="empty">
-            {error ?? file?.error ?? (busy ? "Reading…" : "Open a FITS file to see what it is.")}
+      <TitleBar />
+      <FileRail />
+      <main className="stage" aria-busy={loading}>
+        <Stage />
+        <StageToolbar />
+        <Hud />
+        {!hasImage && (
+          <div className="stage-empty">
+            {error ? <p className="stage-error">{error}</p> : <p>{loading || current ? "Reading…" : "Open a FITS file or a folder to begin."}</p>}
           </div>
         )}
+        {loading && hasImage && <div className="stage-busy" aria-hidden="true" />}
       </main>
-
-      <aside className="inspector">{file && <HeaderPanel doc={file.header} />}</aside>
+      <Inspector />
+      <Palette />
     </div>
   );
-}
-
-function HeaderPanel({ doc }: { doc: HeaderDoc }) {
-  return (
-    <div className="panel">
-      {doc.issues.length > 0 && (
-        <section className="card">
-          <h3 className="label">Header health</h3>
-          {doc.issues.map((i, n) => (
-            <div key={n} className={`issue ${i.severity}`}>
-              {i.code}: {i.message}
-            </div>
-          ))}
-        </section>
-      )}
-      {doc.hdus.map((hdu) => (
-        <section key={hdu.index} className="card">
-          <h3 className="label">
-            HDU {hdu.index} · {hdu.kind.replace("_", " ")}
-            {hdu.shape.length > 0 && ` · ${hdu.shape.join(" × ")}`}
-          </h3>
-          <table className="cards">
-            <tbody>
-              {hdu.cards.map((c) => (
-                <tr key={c.record}>
-                  <td className="mono key">{c.keyword || " "}</td>
-                  <td className="mono val">{show(c)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      ))}
-    </div>
-  );
-}
-
-function show(c: Card): string {
-  switch (c.type) {
-    case "logical":
-      return c.value ? "T" : "F";
-    case "undefined":
-      return "";
-    case "complex":
-      return `(${c.value[0]}, ${c.value[1]})`;
-    default:
-      return String(c.value);
-  }
 }

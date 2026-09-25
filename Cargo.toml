@@ -21,6 +21,8 @@ serde_json = "1"
 thiserror = "2"
 clap = { version = "4", features = ["derive"] }
 insta = { version = "1", features = ["json"] }
+rayon = "1"
+half = "2"
 fitsrs = "0.4"
 
 [profile.release]

@@ -95,6 +95,13 @@ pub struct Note {
     pub message: String,
 }
 
+/// A keyword a vendor quirk says not to trust (e.g. Seestar APERTURE in cm).
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct Ignored {
+    pub key: String,
+    pub reason: String,
+}
+
 /// A keyword holding a device serial number (relevant to the privacy scrub).
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct Serial {
@@ -109,6 +116,9 @@ macro_rules! fields {
             $($(#[$m])* #[serde(skip_serializing_if = "Option::is_none")] pub $name: Option<Fact<$ty>>,)*
             #[serde(skip_serializing_if = "Vec::is_empty")]
             pub serials: Vec<Serial>,
+            /// Keywords present but deliberately not used, with the reason.
+            #[serde(skip_serializing_if = "Vec::is_empty")]
+            pub ignored: Vec<Ignored>,
         }
     };
 }
@@ -304,6 +314,10 @@ pub fn read(ctx: &Context) -> (Canonical, Vec<Note>) {
                 notes.push(Note {
                     level: NoteLevel::Info,
                     message: format!("{} ignored: {}", r.key, r.reason),
+                });
+                c.ignored.push(Ignored {
+                    key: r.key.clone(),
+                    reason: r.reason.clone(),
                 });
             }
         }
