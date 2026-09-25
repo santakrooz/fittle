@@ -84,7 +84,15 @@ function Plot({ d, stretch, xMax }: { d: Display; stretch: Stretch; xMax: number
     g.stroke();
     g.setLineDash([]);
   }, [d, stretch, xMax]);
-  return <canvas ref={ref} className="hist-canvas" aria-label="Histogram with the display curve" />;
+  return (
+    <canvas
+      ref={ref}
+      className="hist-canvas"
+      aria-label="Histogram with the display curve"
+      title="Double-click to reset to Auto STF"
+      onDoubleClick={reset}
+    />
+  );
 }
 
 function shaderAsinh(d: Display, s: Stretch, v: number) {
@@ -92,6 +100,8 @@ function shaderAsinh(d: Display, s: Stretch, v: number) {
   const x = Math.min(1, Math.max(0, (v - sh.shadows[0]) / (sh.highlights[0] - sh.shadows[0])));
   return Math.asinh(sh.asinh * x) / Math.asinh(sh.asinh);
 }
+
+const reset = () => setStretch({ kind: "auto" });
 
 /** Black / mid / white handles. Dragging switches to a manual stretch. */
 function Handles({ d, stretch, xMax }: { d: Display; stretch: Stretch; xMax: number }) {
@@ -128,9 +138,9 @@ function Handles({ d, stretch, xMax }: { d: Display; stretch: Stretch; xMax: num
     <>
       <div ref={track} className="slider">
         <div className="track" />
-        <button type="button" className="knob" style={{ left: `${Math.min(100, (stf.shadows / xMax) * 100)}%` }} aria-label="Black point" onPointerDown={drag("shadows")} />
-        <button type="button" className="knob a" style={{ left: `${Math.min(100, (midX / xMax) * 100)}%` }} aria-label="Midtones" onPointerDown={drag("mid")} />
-        <button type="button" className="knob" style={{ left: `${Math.min(100, (stf.highlights / xMax) * 100)}%` }} aria-label="White point" onPointerDown={drag("highlights")} />
+        <button type="button" className="knob" style={{ left: `${Math.min(100, (stf.shadows / xMax) * 100)}%` }} aria-label="Black point (double-click to reset)" title="Drag to set the black point · double-click to reset" onPointerDown={drag("shadows")} onDoubleClick={reset} />
+        <button type="button" className="knob a" style={{ left: `${Math.min(100, (midX / xMax) * 100)}%` }} aria-label="Midtones (double-click to reset)" title="Drag to set the midtones · double-click to reset" onPointerDown={drag("mid")} onDoubleClick={reset} />
+        <button type="button" className="knob" style={{ left: `${Math.min(100, (stf.highlights / xMax) * 100)}%` }} aria-label="White point (double-click to reset)" title="Drag to set the white point · double-click to reset" onPointerDown={drag("highlights")} onDoubleClick={reset} />
       </div>
       <div className="ft-fields three">
         <Val label="Black" v={stf.shadows} />
@@ -180,15 +190,22 @@ export function HistogramTab() {
       <Card
         title="Histogram"
         badge={
-          <Segmented
-            label="Histogram range"
-            value={range}
-            onChange={setRange}
-            options={[
-              { value: "fit", label: "Fit data" },
-              { value: "full", label: "0–1" },
-            ]}
-          />
+          <div className="ft-row hist-head">
+            {stretch.kind !== "auto" && (
+              <button type="button" className="ft-chip" onClick={reset} title="Back to the automatic stretch (A)">
+                ↺ Reset
+              </button>
+            )}
+            <Segmented
+              label="Histogram range"
+              value={range}
+              onChange={setRange}
+              options={[
+                { value: "fit", label: "Fit data" },
+                { value: "full", label: "0–1" },
+              ]}
+            />
+          </div>
         }
       >
         <Plot d={d} stretch={stretch} xMax={xMax} />
@@ -226,7 +243,7 @@ export function HistogramTab() {
         </table>
       </Card>
       <div className="ft-row">
-        <Button onClick={() => setStretch({ kind: "auto" })} disabled={stretch.kind === "auto"}>
+        <Button onClick={reset} disabled={stretch.kind === "auto"}>
           Reset to Auto STF
         </Button>
         <Button variant="ghost" onClick={() => setStretch({ clipping: !stretch.clipping })}>
