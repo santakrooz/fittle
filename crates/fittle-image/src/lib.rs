@@ -11,7 +11,7 @@ pub mod session;
 pub mod stats;
 pub mod stretch;
 pub mod thumb;
-mod tiles;
+pub mod tiles;
 pub mod view;
 
 pub use decode::{DecodeError, Image, decode_hdu};

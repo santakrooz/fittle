@@ -1,0 +1,79 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 30.0
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "M 57"
+    }
+  },
+  "file_name": {},
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": []
+  },
+  "path": "edge/checksum.fits",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "M 57",
+      "NGC 6720",
+      "Ring Nebula"
+    ],
+    "common_name": "Ring Nebula",
+    "constellation": "Lyra",
+    "dec": 33.0286,
+    "id": "M 57",
+    "kind": "Planetary nebula",
+    "ra": 283.3959,
+    "size_arcmin": 1.27
+  },
+  "verdict": {
+    "confidence": 73,
+    "evidence": [
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "light",
+        "text": "has a target (OBJECT / RA / DEC)",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      }
+    ],
+    "frame": "light",
+    "integrated": false,
+    "label": "Light sub",
+    "processed": false
+  }
+}

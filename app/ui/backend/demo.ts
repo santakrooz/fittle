@@ -3,7 +3,7 @@
 // dev server from app/demo-fixtures). Regions and readouts come from the
 // preview, so they are approximate; RA/Dec is not available.
 import { unpack } from "./tauri";
-import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Mode, Opened, Pixels } from "./types";
+import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Mode, Opened, Pixels, Plan } from "./types";
 
 export const isDemo = () => new URLSearchParams(location.search).has("demo");
 
@@ -81,6 +81,40 @@ export function demoBackend(): Backend {
     },
     header: async (path) => json<HeaderDoc>(`/demo/files/${idOf(path)}/header.json`),
     dictionary: () => json<KeywordInfo[]>("/demo/dictionary.json"),
+    // Simulated dry run so the editor can be exercised in a browser. The real
+    // plan (validation, block count, consequences) comes from fittle-core.
+    async planEdit(path, ops) {
+      const doc = await json<HeaderDoc>(`/demo/files/${idOf(path)}/header.json`);
+      const cards = doc.hdus.find((h) => h.shape.length)?.cards ?? doc.hdus[0].cards;
+      const show = (v: { type: string; value?: unknown }) => (v.type === "string" ? `'${v.value}'` : String(v.value));
+      const changes: Plan["changes"] = ops.map((o) => {
+        if (o.op === "set") {
+          const c = cards.find((x) => x.keyword === o.key && x.type !== "commentary");
+          return c
+            ? { kind: "modified" as const, key: o.key, before: show(c), after: show(o.value) }
+            : { kind: "added" as const, key: o.key, after: show(o.value) };
+        }
+        if (o.op === "unset") return { kind: "removed" as const, key: o.key, before: show(cards.find((x) => x.keyword === o.key) ?? { type: "undefined" }) };
+        if (o.op === "rename") return { kind: "renamed" as const, key: `${o.from} → ${o.to}` };
+        return { kind: "history" as const, key: "HISTORY", after: o.text };
+      });
+      return {
+        path,
+        hdu: 0,
+        changes,
+        header_blocks_before: 1,
+        header_blocks_after: 1,
+        in_place: true,
+        consequences: ["Demo mode simulates this preview; the desktop app validates and writes."],
+        warnings: [],
+      };
+    },
+    applyEdits: () => Promise.reject(new Error("Editing needs the desktop app (demo mode is read-only).")),
+    scrubOps: () =>
+      Promise.resolve([
+        { op: "unset" as const, key: "SITELAT" },
+        { op: "unset" as const, key: "SITELONG" },
+      ]),
   };
 }
 

@@ -329,6 +329,15 @@ def documented():
             ("CCD-TEMP", -9.8)]))])
 
 
+def checksummed():
+    """CHECKSUM/DATASUM written by astropy (an independent implementation).
+    Generated last so earlier files keep their random draws."""
+    p = OUT / "edge/checksum.fits"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    fits.HDUList([fits.PrimaryHDU(u16(sky()), header([("OBJECT", "M 57"), ("EXPTIME", 30.0)]))]).writeto(
+        p, overwrite=True, checksum=True)
+
+
 def patch_card(raw, key, record):
     key = key.ljust(8)
     for i in range(0, 2880 * 4, 80):
@@ -347,6 +356,7 @@ if __name__ == "__main__":
     calibration()
     edge_cases()
     documented()
+    checksummed()
     for p in sorted(OUT.rglob("*")):
         if p.is_file():
             print(f"{p.stat().st_size:>8}  {p.relative_to(OUT)}")

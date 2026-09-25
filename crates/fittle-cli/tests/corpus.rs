@@ -176,3 +176,112 @@ fn exit_codes() {
         Some(0)
     );
 }
+
+// ---- editing ----------------------------------------------------------------
+
+fn fittle_in(dir: &Path, args: &[&str]) -> Output {
+    Command::new(env!("CARGO_BIN_EXE_fittle"))
+        .args(args)
+        .env("NO_COLOR", "1")
+        .current_dir(dir)
+        .output()
+        .unwrap()
+}
+
+#[test]
+fn set_dry_run_writes_nothing() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::copy(
+        corpus_root().join("seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit"),
+        dir.path().join("sub.fit"),
+    )
+    .unwrap();
+    let before = std::fs::read(dir.path().join("sub.fit")).unwrap();
+    let out = fittle_in(
+        dir.path(),
+        &["set", "sub.fit", "FOCALLEN=250", "APTDIA=50.0", "--dry-run"],
+    );
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    insta::assert_snapshot!("set_dry_run", String::from_utf8(out.stdout).unwrap());
+    assert_eq!(std::fs::read(dir.path().join("sub.fit")).unwrap(), before);
+    assert!(!dir.path().join("sub.fit.bak").exists());
+}
+
+#[test]
+fn set_json_and_batch_validation() {
+    let dir = tempfile::tempdir().unwrap();
+    for n in ["a.fit", "b.fit"] {
+        std::fs::copy(
+            corpus_root().join("seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit"),
+            dir.path().join(n),
+        )
+        .unwrap();
+    }
+    let out = fittle_in(
+        dir.path(),
+        &[
+            "set",
+            "a.fit",
+            "b.fit",
+            "OBJECT=M 31",
+            "--json",
+            "--no-backup",
+        ],
+    );
+    assert!(out.status.success());
+    let json: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(json["schema"], "fittle.edit/1");
+    assert_eq!(json["files"].as_array().unwrap().len(), 2);
+    assert_eq!(json["files"][0]["method"], "in_place");
+
+    // One locked key fails the whole batch before anything is written.
+    let before = std::fs::read(dir.path().join("a.fit")).unwrap();
+    let out = fittle_in(
+        dir.path(),
+        &["set", "a.fit", "b.fit", "OBJECT=M 33", "BITPIX=8"],
+    );
+    assert_eq!(out.status.code(), Some(2));
+    assert_eq!(std::fs::read(dir.path().join("a.fit")).unwrap(), before);
+}
+
+#[test]
+fn template_and_scrub() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::copy(
+        corpus_root().join("seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit"),
+        dir.path().join("sub.fit"),
+    )
+    .unwrap();
+    std::fs::write(
+        dir.path().join("rig.json"),
+        r#"{"FOCALLEN": 250.0, "APTDIA": 50.0, "TELESCOP": "Seestar S50"}"#,
+    )
+    .unwrap();
+    assert!(
+        fittle_in(
+            dir.path(),
+            &["set", "sub.fit", "--from", "rig.json", "--no-backup"]
+        )
+        .status
+        .success()
+    );
+    let out = fittle_in(
+        dir.path(),
+        &["scrub", "sub.fit", "--privacy", "--no-backup"],
+    );
+    assert!(out.status.success());
+    let info = fittle_in(dir.path(), &["info", "--json", "sub.fit"]);
+    let json: serde_json::Value = serde_json::from_slice(&info.stdout).unwrap();
+    assert_eq!(json["fields"]["focal_mm"]["value"], 250.0);
+    assert!(json["fields"]["site_lat"].is_null());
+    assert_eq!(
+        fittle_in(dir.path(), &["unset", "sub.fit", "NAXIS"])
+            .status
+            .code(),
+        Some(2)
+    );
+}

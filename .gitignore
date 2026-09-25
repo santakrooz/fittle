@@ -41,3 +41,9 @@ testdata/corpus/
 
 # Local GUI demo fixtures (generated from real files; may contain site coordinates)
 /app/demo-fixtures/
+
+# cargo-fuzz
+/fuzz/target/
+/fuzz/corpus/
+/fuzz/artifacts/
+/fuzz/coverage/

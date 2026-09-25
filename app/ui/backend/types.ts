@@ -216,6 +216,46 @@ export type KeywordInfo = {
 
 export type Thumb = { width: number; height: number; rgba: Uint8ClampedArray };
 
+// ---- editing (fittle.edit/1) ---------------------------------------------
+
+export type NewValue =
+  | { type: "logical"; value: boolean }
+  | { type: "integer"; value: number }
+  | { type: "float"; value: number }
+  | { type: "string"; value: string }
+  | { type: "auto"; value: string };
+
+export type Op =
+  | { op: "set"; key: string; value: NewValue; comment: string | null }
+  | { op: "unset"; key: string }
+  | { op: "rename"; from: string; to: string }
+  | { op: "history"; text: string };
+
+export type EditOptions = { backup: boolean; history: boolean; checksum: boolean; hdu: number | null };
+
+export type ChangeKind = "added" | "modified" | "removed" | "renamed" | "history";
+export type Change = { kind: ChangeKind; key: string; before?: string; after?: string };
+
+export type Plan = {
+  path: string;
+  hdu: number;
+  changes: Change[];
+  header_blocks_before: number;
+  header_blocks_after: number;
+  in_place: boolean;
+  consequences: string[];
+  warnings: string[];
+};
+
+export type WriteReport = Plan & {
+  method: "none" | "in_place" | "rewrite";
+  backup?: string;
+  untouched_sha256: string;
+  checksum?: string;
+};
+
+export type FileResult = { path: string; report?: WriteReport; error?: string };
+
 export interface Backend {
   initialPath(): Promise<string | null>;
   pickFile(): Promise<string | null>;
@@ -231,6 +271,12 @@ export interface Backend {
   readout(x: number, y: number): Promise<Readout | null>;
   header(path: string): Promise<HeaderDoc>;
   dictionary(): Promise<KeywordInfo[]>;
+  /** Dry run: what `ops` would do. Rejects with a message on validation errors. */
+  planEdit(path: string, ops: Op[], options: EditOptions): Promise<Plan>;
+  /** Write `ops` to every path (validated first; nothing written on error). */
+  applyEdits(paths: string[], ops: Op[], options: EditOptions): Promise<FileResult[]>;
+  /** Privacy-scrub edits for a file, to stage. */
+  scrubOps(path: string): Promise<Op[]>;
   /** Development timing line (no-op unless tracing). */
   log?(msg: string): void;
 }
