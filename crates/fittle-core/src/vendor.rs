@@ -227,7 +227,21 @@ pub fn match_scopes(h: &Header) -> Vec<(&'static ScopeProfile, Matched)> {
         .map(|p| (p, matched_rules(&p.rules, h)))
         .filter(|(_, hits)| !hits.is_empty())
         .collect();
-    all.sort_by_key(|(_, hits)| std::cmp::Reverse(hits.len()));
+    // Weigh keys by how much they say about the hardware: INSTRUME is the
+    // FITS instrument keyword, CREATOR names the capture device's software,
+    // TELESCOP is often a user-renamable device name (Seestar). The stable
+    // sort keeps registry order only for true ties.
+    let weight = |hits: &[String]| -> u32 {
+        hits.iter()
+            .map(|e| match e.split('=').next().unwrap_or("") {
+                "INSTRUME" => 4,
+                "CREATOR" => 3,
+                "TELESCOP" => 1,
+                _ => 2,
+            })
+            .sum()
+    };
+    all.sort_by_key(|(_, hits)| std::cmp::Reverse(weight(hits)));
     all.into_iter()
         .map(|(p, evidence)| {
             let m = Matched {

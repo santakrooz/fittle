@@ -318,33 +318,54 @@ pub fn history_cards(text: &str) -> Vec<String> {
 
 // ---- planning -------------------------------------------------------------
 
-/// Keys whose change has a consequence worth saying before the write.
-fn consequence(key: &str, removed: bool) -> Option<&'static str> {
-    Some(match key {
-        "SITELAT" | "SITELONG" | "OBSGEO-B" | "OBSGEO-L" | "LATITUDE" | "LONGITUD" if removed => {
-            "Removing site coordinates disables altitude, airmass and moon calculations for this file."
-        }
-        "DATE-OBS" if removed => {
-            "Removing DATE-OBS disables altitude, moon and session-night calculations."
-        }
-        "FOCALLEN" | "XPIXSZ" | "YPIXSZ" | "XBINNING" => {
-            "Changes the pixel scale and field of view Fittle derives."
-        }
-        "GAIN" | "OFFSET" | "EXPTIME" | "EXPOSURE" | "CCD-TEMP" | "SET-TEMP" | "FILTER"
-        | "INSTRUME" | "READOUTM" => "Changes which calibration frames this file matches.",
-        "IMAGETYP" | "FRAME" | "STACKCNT" | "NCOMBINE" | "LIVETIME" => {
-            "Changes how Fittle classifies this file."
-        }
-        "OBJECT" => "Changes the target name other tools use to group this file.",
-        "INSTRUME" | "CREATOR" | "TELESCOP" | "SWCREATE" => {
+/// Consequences worth saying before the write, for one changed key.
+fn consequences_of(key: &str, removed: bool) -> Vec<&'static str> {
+    let mut out = Vec::new();
+    let site = [
+        "SITELAT", "SITELONG", "OBSGEO-B", "OBSGEO-L", "LATITUDE", "LONGITUD",
+    ];
+    if removed && site.contains(&key) {
+        out.push("Removing site coordinates disables altitude, airmass and moon calculations for this file.");
+    }
+    if removed && key == "DATE-OBS" {
+        out.push("Removing DATE-OBS disables altitude, moon and session-night calculations.");
+    }
+    if matches!(key, "INSTRUME" | "CREATOR" | "TELESCOP" | "SWCREATE") {
+        out.push(
             "Changes which scope or app Fittle identifies. Smart scopes repeat the model in several keys \
-             (Seestar: INSTRUME, CREATOR and the TELESCOP serial); change them together or Fittle reports a conflict."
-        }
-        "BAYERPAT" | "XBAYROFF" | "YBAYROFF" | "ROWORDER" => {
-            "Changes how colour is reconstructed (debayering) and the image orientation."
-        }
-        _ => return None,
-    })
+             (Seestar: INSTRUME, CREATOR and the TELESCOP serial); change them together or Fittle reports a conflict.",
+        );
+    }
+    if matches!(key, "FOCALLEN" | "XPIXSZ" | "YPIXSZ" | "XBINNING") {
+        out.push("Changes the pixel scale and field of view Fittle derives.");
+    }
+    if matches!(
+        key,
+        "GAIN"
+            | "OFFSET"
+            | "EXPTIME"
+            | "EXPOSURE"
+            | "CCD-TEMP"
+            | "SET-TEMP"
+            | "FILTER"
+            | "INSTRUME"
+            | "READOUTM"
+    ) {
+        out.push("Changes which calibration frames this file matches.");
+    }
+    if matches!(
+        key,
+        "IMAGETYP" | "FRAME" | "STACKCNT" | "NCOMBINE" | "LIVETIME"
+    ) {
+        out.push("Changes how Fittle classifies this file.");
+    }
+    if key == "OBJECT" {
+        out.push("Changes the target name other tools use to group this file.");
+    }
+    if matches!(key, "BAYERPAT" | "XBAYROFF" | "YBAYROFF" | "ROWORDER") {
+        out.push("Changes how colour is reconstructed (debayering) and the image orientation.");
+    }
+    out
 }
 
 /// Default HDU to edit: the image HDU, else the primary.
@@ -395,7 +416,7 @@ pub fn plan_for(fits: &Fits, path: &str, ops: &[Op], opts: &Options) -> Result<P
     let mut warnings = Vec::new();
     let mut consequences: Vec<String> = Vec::new();
     let note = |key: &str, removed: bool, list: &mut Vec<String>| {
-        if let Some(c) = consequence(key, removed) {
+        for c in consequences_of(key, removed) {
             if !list.iter().any(|x| x == c) {
                 list.push(c.to_string());
             }
