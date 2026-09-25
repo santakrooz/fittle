@@ -1,0 +1,165 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 17280,
+  "hdus": [
+    {
+      "bitpix": -32,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                  -32 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": -32
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "INSTRUME",
+          "raw": [
+            "INSTRUME= 'ZWO ASI2600MC Pro'                                                   "
+          ],
+          "record": 5,
+          "type": "string",
+          "value": "ZWO ASI2600MC Pro"
+        },
+        {
+          "keyword": "GAIN",
+          "raw": [
+            "GAIN    =                  100                                                  "
+          ],
+          "record": 6,
+          "type": "integer",
+          "value": 100
+        },
+        {
+          "keyword": "OFFSET",
+          "raw": [
+            "OFFSET  =                   50                                                  "
+          ],
+          "record": 7,
+          "type": "integer",
+          "value": 50
+        },
+        {
+          "keyword": "CCD-TEMP",
+          "raw": [
+            "CCD-TEMP=                -10.0                                                  "
+          ],
+          "record": 8,
+          "type": "float",
+          "value": -10.0
+        },
+        {
+          "keyword": "XBINNING",
+          "raw": [
+            "XBINNING=                    1                                                  "
+          ],
+          "record": 9,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "SWCREATE",
+          "raw": [
+            "SWCREATE= 'N.I.N.A. 3.1.2.9001'                                                 "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "N.I.N.A. 3.1.2.9001"
+        },
+        {
+          "keyword": "IMAGETYP",
+          "raw": [
+            "IMAGETYP= 'Master Dark'                                                         "
+          ],
+          "record": 11,
+          "type": "string",
+          "value": "Master Dark"
+        },
+        {
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =                300.0                                                  "
+          ],
+          "record": 12,
+          "type": "float",
+          "value": 300.0
+        },
+        {
+          "keyword": "NCOMBINE",
+          "raw": [
+            "NCOMBINE=                   40                                                  "
+          ],
+          "record": 13,
+          "type": "integer",
+          "value": 40
+        },
+        {
+          "keyword": "HISTORY",
+          "raw": [
+            "HISTORY Siril stack: 40 images, median                                          "
+          ],
+          "record": 14,
+          "type": "commentary",
+          "value": "Siril stack: 40 images, median"
+        }
+      ],
+      "data_bytes": 12288,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "calibration/master_dark_300s_g100_-10C.fit",
+  "schema": "fittle.header/1"
+}

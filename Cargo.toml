@@ -1,0 +1,27 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+repository = "https://github.com/santakrooz/fittle"
+# License is an open decision (MIT/Apache-2.0 vs GPL-3.0); see docs/PLAN.md.
+publish = false
+
+[workspace.dependencies]
+fittle-core = { path = "crates/fittle-core" }
+fittle-image = { path = "crates/fittle-image" }
+fittle-astro = { path = "crates/fittle-astro" }
+fittle-scan = { path = "crates/fittle-scan" }
+fittle-mcp = { path = "crates/fittle-mcp" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+insta = { version = "1", features = ["json"] }
+fitsrs = "0.4"
+
+[profile.release]
+lto = "thin"

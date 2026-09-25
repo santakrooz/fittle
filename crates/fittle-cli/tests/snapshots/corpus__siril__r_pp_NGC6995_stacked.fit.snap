@@ -1,0 +1,194 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 17280,
+  "hdus": [
+    {
+      "bitpix": -32,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                  -32 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": -32
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "INSTRUME",
+          "raw": [
+            "INSTRUME= 'Seestar S50'                                                         "
+          ],
+          "record": 5,
+          "type": "string",
+          "value": "Seestar S50"
+        },
+        {
+          "keyword": "TELESCOP",
+          "raw": [
+            "TELESCOP= 'Seestar S50'                                                         "
+          ],
+          "record": 6,
+          "type": "string",
+          "value": "Seestar S50"
+        },
+        {
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'NGC 6995'                                                            "
+          ],
+          "record": 7,
+          "type": "string",
+          "value": "NGC 6995"
+        },
+        {
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =                 20.0                                                  "
+          ],
+          "record": 8,
+          "type": "float",
+          "value": 20.0
+        },
+        {
+          "comment": "Stack frames",
+          "keyword": "STACKCNT",
+          "raw": [
+            "STACKCNT=                  212 / Stack frames                                   "
+          ],
+          "record": 9,
+          "type": "integer",
+          "value": 212
+        },
+        {
+          "comment": "[s] Exposure time after deadtime correction",
+          "keyword": "LIVETIME",
+          "raw": [
+            "LIVETIME=               4240.0 / [s] Exposure time after deadtime correction    "
+          ],
+          "record": 10,
+          "type": "float",
+          "value": 4240.0
+        },
+        {
+          "keyword": "DATE-OBS",
+          "raw": [
+            "DATE-OBS= '2026-09-25T04:34:12'                                                 "
+          ],
+          "record": 11,
+          "type": "string",
+          "value": "2026-09-25T04:34:12"
+        },
+        {
+          "keyword": "FILTER",
+          "raw": [
+            "FILTER  = 'LP      '                                                            "
+          ],
+          "record": 12,
+          "type": "string",
+          "value": "LP"
+        },
+        {
+          "keyword": "PROGRAM",
+          "raw": [
+            "PROGRAM = 'Siril v1.4.0'                                                        "
+          ],
+          "record": 13,
+          "type": "string",
+          "value": "Siril v1.4.0"
+        },
+        {
+          "keyword": "HISTORY",
+          "raw": [
+            "HISTORY Background extraction (Correction: Subtraction)                         "
+          ],
+          "record": 14,
+          "type": "commentary",
+          "value": "Background extraction (Correction: Subtraction)"
+        },
+        {
+          "keyword": "HISTORY",
+          "raw": [
+            "HISTORY Stacking: Average stacking with Winsorized sigma clipping               "
+          ],
+          "record": 15,
+          "type": "commentary",
+          "value": "Stacking: Average stacking with Winsorized sigma clipping"
+        },
+        {
+          "keyword": "HISTORY",
+          "raw": [
+            "HISTORY Siril stack: 212 images, normalisation: additive + scaling              "
+          ],
+          "record": 16,
+          "type": "commentary",
+          "value": "Siril stack: 212 images, normalisation: additive + scaling"
+        },
+        {
+          "keyword": "HISTORY",
+          "raw": [
+            "HISTORY Registration: global star alignment                                     "
+          ],
+          "record": 17,
+          "type": "commentary",
+          "value": "Registration: global star alignment"
+        }
+      ],
+      "data_bytes": 12288,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "siril/r_pp_NGC6995_stacked.fit",
+  "schema": "fittle.header/1"
+}

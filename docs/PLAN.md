@@ -177,8 +177,8 @@ fittle/
 
 | Layer | Choice | Why |
 | --- | --- | --- |
-| FITS I/O | Own header reader/writer + `fitsrs` (pure Rust) for data; `cfitsio` via `fitsio` only if a gap appears | Pure Rust = painless Windows/macOS/Linux builds, no C toolchain |
-| Tile compression | Spike: `fitsrs` support vs a small Rice codec | `.fz` files from Seestar/ASIAIR archives |
+| FITS I/O | **Decided (M0, [0001](decisions/0001-fits-io.md)):** own header reader/writer and own pixel decoder; `fitsrs` kept only as a test oracle | Pure Rust = painless Windows/macOS/Linux builds, no C toolchain |
+| Tile compression | **Decided (M0):** own RICE_1 decoder (`fitsrs` 0.4.1 mis-decodes 16-bit Rice); GZIP / quantized float later | `.fz` files from Seestar/ASIAIR archives |
 | Pixels | `ndarray` + `rayon`; SIMD stats | 60 MP median/MAD in <150 ms |
 | Export | `image` crate (PNG/JPEG/WebP/TIFF), `tiff` for 32-bit float, `ravif` for AVIF |  |
 | Ephemeris | Small built-in VSOP87/ELP-lite or `astro` crate | Offline moon/sun positions |
