@@ -7,8 +7,13 @@ publish.workspace = true
 
 [dependencies]
 fittle-core.workspace = true
+fittle-astro.workspace = true
 thiserror.workspace = true
 serde.workspace = true
+rayon = "1"
+half = "2"
 
 [dev-dependencies]
 fitsrs.workspace = true
+fittle-scan.workspace = true
+serde_json.workspace = true

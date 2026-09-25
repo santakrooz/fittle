@@ -1,0 +1,13 @@
+<!-- @dsCard group="Navigation" height=64 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Tabs — preview</title>
+<style>html,body{margin:0;background:var(--bg);} #root{padding:12px;}</style></head>
+<body>
+<div id="root" class="ft-root"></div>
+<script>
+  var F = window.Fittle, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{background:'var(--panel)',borderRadius:'var(--radius-card)',maxWidth:380}},h(F.Tabs,{tabs:['Overview','Header','Histogram','Stars'],value:'Overview'})));
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!-- @dsCard group="Actions" height=56 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Chip — preview</title>
+<style>html,body{margin:0;background:var(--bg);} #root{padding:12px;}</style></head>
+<body>
+<div id="root" class="ft-root"></div>
+<script>
+  var F = window.Fittle, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ft-row'},h(F.Chip,{on:true},'All'),h(F.Chip,null,'Lights'),h(F.Chip,null,'Stacks'),h(F.Chip,null,'Calib'),h(F.Chip,null,'Rejects')));
+</script>
+</body>
+</html>

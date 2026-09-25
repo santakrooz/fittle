@@ -1,0 +1,13 @@
+<!-- @dsCard group="Data" height=104 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>StatTile — preview</title>
+<style>html,body{margin:0;background:var(--bg);} #root{padding:12px;}</style></head>
+<body>
+<div id="root" class="ft-root"></div>
+<script>
+  var F = window.Fittle, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10}},h(F.StatTile,{value:'18 h 57',unit:'m',label:'Usable'}),h(F.StatTile,{value:'3,412',label:'Subs kept'}),h(F.StatTile,{value:'6',label:'Nights'}),h(F.StatTile,{value:'2.1',unit:'px',label:'Median HFR'})));
+</script>
+</body>
+</html>

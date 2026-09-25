@@ -1,0 +1,13 @@
+<!-- @dsCard group="Navigation" height=72 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Toolbar — preview</title>
+<style>html,body{margin:0;background:var(--bg);} #root{padding:12px;}</style></head>
+<body>
+<div id="root" class="ft-root"></div>
+<script>
+  var F = window.Fittle, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{padding:'14px',background:'radial-gradient(ellipse at 50% 40%, var(--stage-center), var(--stage-edge) 70%)',borderRadius:'var(--radius-card)'}},h(F.Toolbar,{label:'View'},h(F.Toolbar.Button,{on:true},'Auto STF'),h(F.Toolbar.Button,null,'Linear'),h(F.Toolbar.Button,null,'Asinh'),h(F.Toolbar.Separator),h(F.Toolbar.Button,{icon:'zoomOut',label:'Zoom out'}),h(F.Toolbar.Button,{on:true},'Fit'),h(F.Toolbar.Button,{icon:'zoomIn',label:'Zoom in'}),h(F.Toolbar.Button,null,'1:1'),h(F.Toolbar.Separator),h(F.Toolbar.Button,null,'RGB'))));
+</script>
+</body>
+</html>

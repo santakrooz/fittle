@@ -1,0 +1,13 @@
+<!-- @dsCard group="Data" height=120 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Field — preview</title>
+<style>html,body{margin:0;background:var(--bg);} #root{padding:12px;}</style></head>
+<body>
+<div id="root" class="ft-root"></div>
+<script>
+  var F = window.Fittle, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{maxWidth:330}},h(F.Fields,null,h(F.Field,{label:'Optics',value:'250 mm',unit:'ƒ/5 · 50 mm'}),h(F.Field,{label:'Sensor',value:'IMX462',unit:'2.9 µm'}),h(F.Field,{label:'Scale',value:'2.39″/px',derived:true}),h(F.Field,{label:'Field',value:'43′ × 76′',derived:true}))));
+</script>
+</body>
+</html>
