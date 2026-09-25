@@ -1,0 +1,290 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "airmass": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 1.03
+    },
+    "altitude": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 76.2
+    },
+    "azimuth": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 99.5
+    },
+    "fov_arcmin": {
+      "source": {
+        "from": [
+          "pixel scale",
+          "image size"
+        ],
+        "kind": "derived"
+      },
+      "value": [
+        1.2,
+        0.9
+      ]
+    },
+    "moon": {
+      "source": {
+        "from": [
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": {
+        "altitude": -5.9,
+        "illumination": 0.85,
+        "separation": 82.5,
+        "waxing": false
+      }
+    },
+    "pixel_scale": {
+      "source": {
+        "from": [
+          "pixel size",
+          "focal length"
+        ],
+        "kind": "derived"
+      },
+      "value": 1.114
+    },
+    "plate_solved": false,
+    "sampling": {
+      "source": {
+        "from": [
+          "pixel scale"
+        ],
+        "kind": "derived"
+      },
+      "value": "well"
+    },
+    "session_night": {
+      "source": {
+        "from": [
+          "site longitude",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "2025-06-14"
+    },
+    "sky": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "night"
+    },
+    "sun_altitude": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": -20.6
+    }
+  },
+  "fields": {
+    "aperture_mm": {
+      "source": {
+        "key": "APTDIA",
+        "kind": "keyword"
+      },
+      "value": 200.0
+    },
+    "date_obs": {
+      "source": {
+        "key": "DATE-OBS",
+        "kind": "keyword"
+      },
+      "value": "2025-06-15T05:00:00"
+    },
+    "dec": {
+      "source": {
+        "key": "OBJCTDEC",
+        "kind": "keyword"
+      },
+      "value": 36.46
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 300.0
+    },
+    "filter": {
+      "source": {
+        "key": "FILTER",
+        "kind": "keyword"
+      },
+      "value": "Lum"
+    },
+    "focal_mm": {
+      "source": {
+        "key": "FOCALLEN",
+        "kind": "keyword"
+      },
+      "value": 1000.0
+    },
+    "focal_ratio": {
+      "source": {
+        "from": [
+          "focal length",
+          "aperture"
+        ],
+        "kind": "derived"
+      },
+      "value": 5.0
+    },
+    "frame_type": {
+      "source": {
+        "key": "IMAGETYP",
+        "kind": "keyword"
+      },
+      "value": "Light Frame"
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "M13"
+    },
+    "pixel_um": {
+      "source": {
+        "key": "XPIXSZ",
+        "kind": "keyword"
+      },
+      "value": 5.4
+    },
+    "ra": {
+      "source": {
+        "key": "OBJCTRA",
+        "kind": "keyword"
+      },
+      "value": 250.42083333333332
+    },
+    "sensor_temp_c": {
+      "source": {
+        "key": "CCD-TEMP",
+        "kind": "keyword"
+      },
+      "value": -20.0
+    },
+    "site_lat": {
+      "source": {
+        "key": "SITELAT",
+        "kind": "keyword"
+      },
+      "value": 40.0
+    },
+    "site_lon": {
+      "source": {
+        "key": "SITELONG",
+        "kind": "keyword"
+      },
+      "value": -105.26666666666668
+    },
+    "stack_count": {
+      "source": {
+        "key": "SNAPSHOT",
+        "kind": "keyword"
+      },
+      "value": 1
+    }
+  },
+  "file_name": {},
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "SWCREATE=MaxIm DL Version 6.40"
+        ],
+        "id": "maxim",
+        "name": "MaxIm DL",
+        "role": "capture",
+        "verified": false
+      }
+    ]
+  },
+  "path": "maxim/M13-001-L.fit",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "M 13",
+      "NGC 6205",
+      "Hercules Globular Cluster"
+    ],
+    "common_name": "Hercules Globular Cluster",
+    "constellation": "Hercules",
+    "dec": 36.4613,
+    "id": "M 13",
+    "kind": "Globular cluster",
+    "ra": 250.4235,
+    "size_arcmin": 16.5
+  },
+  "verdict": {
+    "confidence": 82,
+    "evidence": [
+      {
+        "supports": "light",
+        "text": "IMAGETYP=Light Frame",
+        "weight": 60
+      },
+      {
+        "supports": "single",
+        "text": "SNAPSHOT=1",
+        "weight": 30
+      }
+    ],
+    "frame": "light",
+    "integrated": false,
+    "label": "Light sub",
+    "processed": false
+  }
+}

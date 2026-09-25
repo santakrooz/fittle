@@ -1,0 +1,226 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "fov_arcmin": {
+      "source": {
+        "from": [
+          "pixel scale",
+          "image size"
+        ],
+        "kind": "derived"
+      },
+      "value": [
+        1.5,
+        1.1
+      ]
+    },
+    "pixel_scale": {
+      "source": {
+        "from": [
+          "pixel size",
+          "focal length"
+        ],
+        "kind": "derived"
+      },
+      "value": 1.41
+    },
+    "plate_solved": true,
+    "sampling": {
+      "source": {
+        "from": [
+          "pixel scale"
+        ],
+        "kind": "derived"
+      },
+      "value": "well"
+    },
+    "wcs_scale": {
+      "source": {
+        "from": [
+          "WCS"
+        ],
+        "kind": "derived"
+      },
+      "value": 1.411
+    }
+  },
+  "fields": {
+    "binning": {
+      "source": {
+        "kind": "filename"
+      },
+      "value": -1
+    },
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "ZWO ASI2600MC Pro"
+    },
+    "dec": {
+      "source": {
+        "key": "CRVAL2",
+        "kind": "keyword"
+      },
+      "value": 61.45
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 300.0
+    },
+    "focal_mm": {
+      "source": {
+        "key": "FOCALLEN",
+        "kind": "keyword"
+      },
+      "value": 550.0
+    },
+    "frame_type": {
+      "source": {
+        "key": "IMAGETYP",
+        "kind": "keyword"
+      },
+      "value": "Master Light"
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "IC 1805"
+    },
+    "pixel_um": {
+      "source": {
+        "key": "XPIXSZ",
+        "kind": "keyword"
+      },
+      "value": 3.76
+    },
+    "ra": {
+      "source": {
+        "key": "CRVAL1",
+        "kind": "keyword"
+      },
+      "value": 38.175
+    },
+    "stack_count": {
+      "source": {
+        "key": "NCOMBINE",
+        "kind": "keyword"
+      },
+      "value": 96
+    },
+    "telescope": {
+      "source": {
+        "key": "TELESCOP",
+        "kind": "keyword"
+      },
+      "value": "Esprit 100ED"
+    },
+    "total_integration_s": {
+      "source": {
+        "from": [
+          "stack count",
+          "exposure"
+        ],
+        "kind": "derived"
+      },
+      "value": 28800.0
+    }
+  },
+  "file_name": {
+    "binning": -1,
+    "prefix": "masterlight"
+  },
+  "health": [],
+  "image": {
+    "bitpix": -32,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 3,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "SWCREATE=PixInsight 1.9.3",
+          "HISTORY 'imageintegration.pixelcombination: average…'"
+        ],
+        "id": "pixinsight",
+        "name": "PixInsight",
+        "role": "processing",
+        "verified": false
+      }
+    ]
+  },
+  "path": "pixinsight/masterLight_BIN-1_6248x4176_EXPOSURE-300.00s_FILTER-NoFilter_RGB.fits",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "IC 1805",
+      "LBN 654"
+    ],
+    "common_name": "Heart Nebula",
+    "constellation": "Cassiopeia",
+    "dec": 61.4569,
+    "id": "IC 1805",
+    "kind": "Cluster with nebula",
+    "ra": 38.173,
+    "size_arcmin": 60.0
+  },
+  "verdict": {
+    "confidence": 99,
+    "evidence": [
+      {
+        "supports": "light",
+        "text": "IMAGETYP=Master Light",
+        "weight": 60
+      },
+      {
+        "supports": "integrated",
+        "text": "NCOMBINE=96",
+        "weight": 50
+      },
+      {
+        "supports": "integrated",
+        "text": "frame type says 'master'",
+        "weight": 40
+      },
+      {
+        "supports": "integrated",
+        "text": "HISTORY 'ImageIntegration.pixelCombination: average'",
+        "weight": 30
+      },
+      {
+        "supports": "light",
+        "text": "file name starts 'masterlight'",
+        "weight": 25
+      },
+      {
+        "supports": "integrated",
+        "text": "BITPIX=-32 (float)",
+        "weight": 10
+      }
+    ],
+    "frame": "light",
+    "integrated": true,
+    "label": "Stacked light",
+    "processed": false,
+    "processing": [
+      {
+        "evidence": "ImageIntegration.pixelCombination: average",
+        "name": "stacking"
+      }
+    ]
+  }
+}

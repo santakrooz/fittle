@@ -1,0 +1,118 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {
+    "binning": {
+      "source": {
+        "key": "XBINNING",
+        "kind": "keyword"
+      },
+      "value": 1
+    },
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "ZWO ASI2600MC Pro"
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 300.0
+    },
+    "frame_type": {
+      "source": {
+        "key": "IMAGETYP",
+        "kind": "keyword"
+      },
+      "value": "DARK"
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 100.0
+    },
+    "offset": {
+      "source": {
+        "key": "OFFSET",
+        "kind": "keyword"
+      },
+      "value": 50.0
+    },
+    "sensor_temp_c": {
+      "source": {
+        "key": "CCD-TEMP",
+        "kind": "keyword"
+      },
+      "value": -10.0
+    }
+  },
+  "file_name": {
+    "exposure_s": 300.0,
+    "prefix": "dark"
+  },
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "SWCREATE=N.I.N.A. 3.1.2.9001"
+        ],
+        "id": "nina",
+        "name": "N.I.N.A.",
+        "role": "capture",
+        "verified": true
+      }
+    ]
+  },
+  "path": "calibration/DARK_300.00s_0001.fits",
+  "schema": "fittle.info/1",
+  "verdict": {
+    "confidence": 90,
+    "evidence": [
+      {
+        "supports": "dark",
+        "text": "IMAGETYP=DARK",
+        "weight": 60
+      },
+      {
+        "supports": "dark",
+        "text": "file name starts 'dark'",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      }
+    ],
+    "frame": "dark",
+    "integrated": false,
+    "label": "Dark frame",
+    "processed": false
+  }
+}

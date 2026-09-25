@@ -1,0 +1,240 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "fov_arcmin": {
+      "source": {
+        "from": [
+          "pixel scale",
+          "image size"
+        ],
+        "kind": "derived"
+      },
+      "value": [
+        2.9,
+        2.2
+      ]
+    },
+    "moon": {
+      "source": {
+        "from": [
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": {
+        "illumination": 0.0,
+        "separation": 148.8,
+        "waxing": false
+      }
+    },
+    "pixel_scale": {
+      "source": {
+        "from": [
+          "pixel size",
+          "focal length"
+        ],
+        "kind": "derived"
+      },
+      "value": 2.75
+    },
+    "plate_solved": false,
+    "sampling": {
+      "source": {
+        "from": [
+          "pixel scale"
+        ],
+        "kind": "derived"
+      },
+      "value": "under"
+    }
+  },
+  "fields": {
+    "bayer": {
+      "source": {
+        "key": "BAYERPAT",
+        "kind": "keyword"
+      },
+      "value": "RGGB"
+    },
+    "binning": {
+      "source": {
+        "key": "XBINNING",
+        "kind": "keyword"
+      },
+      "value": 1
+    },
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "DWARFIII"
+    },
+    "date_obs": {
+      "source": {
+        "key": "DATE-OBS",
+        "kind": "keyword"
+      },
+      "value": "2025-10-20T21:35:12.345"
+    },
+    "dec": {
+      "source": {
+        "key": "DEC",
+        "kind": "keyword"
+      },
+      "value": 41.2687
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 60.0
+    },
+    "filter": {
+      "source": {
+        "key": "FILTER",
+        "kind": "keyword"
+      },
+      "value": "Astro"
+    },
+    "focal_mm": {
+      "source": {
+        "key": "FOCALLEN",
+        "kind": "keyword"
+      },
+      "value": 150.0
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 60.0
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "M 31"
+    },
+    "pixel_um": {
+      "source": {
+        "key": "XPIXSZ",
+        "kind": "keyword"
+      },
+      "value": 2.0
+    },
+    "ra": {
+      "source": {
+        "key": "RA",
+        "kind": "keyword"
+      },
+      "value": 10.6847
+    },
+    "sensor_temp_c": {
+      "source": {
+        "key": "DET-TEMP",
+        "kind": "keyword"
+      },
+      "value": 12.0
+    },
+    "telescope": {
+      "source": {
+        "key": "TELESCOP",
+        "kind": "keyword"
+      },
+      "value": "DWARFIII"
+    }
+  },
+  "file_name": {
+    "exposure_s": 60.0,
+    "filter": "Astro",
+    "gain": 60
+  },
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [
+    {
+      "level": "info",
+      "message": "Dwarf DATE-OBS is the END of the exposure"
+    },
+    {
+      "level": "info",
+      "message": "Dwarf stack frame count lives in shotsInfo.json (shotsStacked), not the header"
+    }
+  ],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "INSTRUME=DWARFIII",
+          "ORIGIN=DWARFLAB",
+          "TELESCOP=DWARFIII"
+        ],
+        "id": "dwarf-app",
+        "name": "DWARFLAB Dwarf",
+        "role": "capture",
+        "verified": false
+      }
+    ]
+  },
+  "path": "dwarf3/DWARF_RAW_TELE_M 31_EXP_60_GAIN_60_2025-10-20-21-30-00-000/M 31_60s60_Astro_20251020-213512345_12C.fits",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "M 31",
+      "NGC 224",
+      "PGC 2557",
+      "UGC 454",
+      "Andromeda Galaxy"
+    ],
+    "common_name": "Andromeda Galaxy",
+    "constellation": "Andromeda",
+    "dec": 41.2691,
+    "id": "M 31",
+    "kind": "Galaxy",
+    "ra": 10.6848,
+    "size_arcmin": 177.83
+  },
+  "verdict": {
+    "confidence": 73,
+    "evidence": [
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "light",
+        "text": "has a target (OBJECT / RA / DEC)",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BAYERPAT=RGGB on a single-plane (raw CFA) image",
+        "weight": 15
+      }
+    ],
+    "frame": "light",
+    "integrated": false,
+    "label": "Light sub",
+    "processed": false
+  }
+}

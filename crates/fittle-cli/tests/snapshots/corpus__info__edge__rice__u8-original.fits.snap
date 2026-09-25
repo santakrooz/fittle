@@ -1,0 +1,40 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {},
+  "file_name": {},
+  "health": [],
+  "image": {
+    "bitpix": 8,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": []
+  },
+  "path": "edge/rice/u8-original.fits",
+  "schema": "fittle.info/1",
+  "verdict": {
+    "confidence": 0,
+    "evidence": [
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      }
+    ],
+    "frame": "unknown",
+    "integrated": false,
+    "label": "Unknown",
+    "processed": false
+  }
+}

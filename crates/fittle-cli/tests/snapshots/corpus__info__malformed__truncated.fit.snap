@@ -1,0 +1,376 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "airmass": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 1.0
+    },
+    "altitude": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 87.4
+    },
+    "azimuth": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 199.3
+    },
+    "fov_arcmin": {
+      "source": {
+        "from": [
+          "pixel scale",
+          "image size"
+        ],
+        "kind": "derived"
+      },
+      "value": [
+        2.6,
+        1.9
+      ]
+    },
+    "moon": {
+      "source": {
+        "from": [
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": {
+        "altitude": 42.2,
+        "illumination": 0.97,
+        "separation": 46.5,
+        "waxing": true
+      }
+    },
+    "pixel_scale": {
+      "source": {
+        "from": [
+          "pixel size",
+          "focal length"
+        ],
+        "kind": "derived"
+      },
+      "value": 2.393
+    },
+    "plate_solved": false,
+    "sampling": {
+      "source": {
+        "from": [
+          "pixel scale"
+        ],
+        "kind": "derived"
+      },
+      "value": "under"
+    },
+    "session_night": {
+      "source": {
+        "from": [
+          "site longitude",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "2026-09-24"
+    },
+    "sky": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "night"
+    },
+    "sun_altitude": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": -35.4
+    }
+  },
+  "fields": {
+    "aperture_mm": {
+      "source": {
+        "kind": "model_default",
+        "model": "ZWO Seestar S50"
+      },
+      "value": 50.0
+    },
+    "bayer": {
+      "source": {
+        "key": "BAYERPAT",
+        "kind": "keyword"
+      },
+      "value": "GRBG"
+    },
+    "binning": {
+      "source": {
+        "key": "XBINNING",
+        "kind": "keyword"
+      },
+      "value": 1
+    },
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "Seestar S50"
+    },
+    "date_obs": {
+      "source": {
+        "key": "DATE-OBS",
+        "kind": "keyword"
+      },
+      "value": "2026-09-25T04:34:12.000"
+    },
+    "dec": {
+      "source": {
+        "key": "DEC",
+        "kind": "keyword"
+      },
+      "value": 31.2353
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 20.0
+    },
+    "filter": {
+      "source": {
+        "key": "FILTER",
+        "kind": "keyword"
+      },
+      "value": "LP"
+    },
+    "focal_mm": {
+      "source": {
+        "kind": "model_default",
+        "model": "ZWO Seestar S50"
+      },
+      "value": 250.0
+    },
+    "focal_ratio": {
+      "source": {
+        "from": [
+          "focal length",
+          "aperture"
+        ],
+        "kind": "derived"
+      },
+      "value": 5.0
+    },
+    "frame_type": {
+      "source": {
+        "key": "IMAGETYP",
+        "kind": "keyword"
+      },
+      "value": "Light"
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 80.0
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "NGC 6995"
+    },
+    "pixel_um": {
+      "source": {
+        "key": "XPIXSZ",
+        "kind": "keyword"
+      },
+      "value": 2.9
+    },
+    "ra": {
+      "source": {
+        "key": "RA",
+        "kind": "keyword"
+      },
+      "value": 314.295
+    },
+    "row_order": {
+      "source": {
+        "kind": "model_default",
+        "model": "ZWO Seestar S50"
+      },
+      "value": "TOP-DOWN"
+    },
+    "sensor": {
+      "source": {
+        "kind": "model_default",
+        "model": "ZWO Seestar S50"
+      },
+      "value": "IMX462"
+    },
+    "sensor_temp_c": {
+      "source": {
+        "key": "CCD-TEMP",
+        "kind": "keyword"
+      },
+      "value": 28.4
+    },
+    "serials": [
+      {
+        "key": "TELESCOP",
+        "value": "Seestar S50"
+      }
+    ],
+    "site_lat": {
+      "source": {
+        "key": "SITELAT",
+        "kind": "keyword"
+      },
+      "value": 33.69
+    },
+    "site_lon": {
+      "source": {
+        "key": "SITELONG",
+        "kind": "keyword"
+      },
+      "value": -117.27
+    },
+    "telescope": {
+      "source": {
+        "kind": "model_default",
+        "model": "ZWO Seestar S50"
+      },
+      "value": "ZWO Seestar S50"
+    }
+  },
+  "file_name": {},
+  "health": [
+    {
+      "code": "truncated_data",
+      "hdu": 0,
+      "message": "data unit needs 6144 bytes but only 4640 remain",
+      "severity": "error"
+    },
+    {
+      "code": "size_not_block_multiple",
+      "message": "file size 7520 is not a multiple of 2880",
+      "severity": "warning"
+    }
+  ],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [
+    {
+      "level": "warning",
+      "message": "FOCALLEN=0 in header; used ZWO Seestar S50 default (250 mm)"
+    }
+  ],
+  "origin": {
+    "scope": {
+      "evidence": [
+        "CREATOR=ZWO Seestar S50",
+        "INSTRUME=Seestar S50",
+        "TELESCOP=Seestar S50"
+      ],
+      "id": "zwo-seestar-s50",
+      "name": "ZWO Seestar S50",
+      "verified": true
+    },
+    "software": [
+      {
+        "evidence": [
+          "CREATOR=ZWO Seestar S50",
+          "INSTRUME=Seestar S50"
+        ],
+        "id": "seestar-app",
+        "name": "ZWO Seestar",
+        "role": "capture",
+        "verified": true
+      }
+    ]
+  },
+  "path": "malformed/truncated.fit",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "NGC 6995",
+      "Eastern Veil",
+      "Network Nebula"
+    ],
+    "common_name": "Eastern Veil",
+    "constellation": "Cygnus",
+    "dec": 31.2352,
+    "id": "NGC 6995",
+    "kind": "Supernova remnant",
+    "ra": 314.2948,
+    "size_arcmin": 12.0
+  },
+  "verdict": {
+    "confidence": 95,
+    "evidence": [
+      {
+        "supports": "light",
+        "text": "IMAGETYP=Light",
+        "weight": 60
+      },
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BAYERPAT=GRBG on a single-plane (raw CFA) image",
+        "weight": 15
+      }
+    ],
+    "frame": "light",
+    "integrated": false,
+    "label": "Light sub",
+    "processed": false
+  }
+}

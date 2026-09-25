@@ -1,0 +1,161 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {
+    "binning": {
+      "source": {
+        "key": "XBINNING",
+        "kind": "keyword"
+      },
+      "value": 1
+    },
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "ZWO ASI2600MC Pro"
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 300.0
+    },
+    "frame_type": {
+      "source": {
+        "key": "IMAGETYP",
+        "kind": "keyword"
+      },
+      "value": "Master Dark"
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 100.0
+    },
+    "offset": {
+      "source": {
+        "key": "OFFSET",
+        "kind": "keyword"
+      },
+      "value": 50.0
+    },
+    "sensor_temp_c": {
+      "source": {
+        "key": "CCD-TEMP",
+        "kind": "keyword"
+      },
+      "value": -10.0
+    },
+    "stack_count": {
+      "source": {
+        "key": "NCOMBINE",
+        "kind": "keyword"
+      },
+      "value": 40
+    },
+    "total_integration_s": {
+      "source": {
+        "from": [
+          "stack count",
+          "exposure"
+        ],
+        "kind": "derived"
+      },
+      "value": 12000.0
+    }
+  },
+  "file_name": {
+    "exposure_s": 300.0,
+    "prefix": "master",
+    "temp_c": -10.0
+  },
+  "health": [],
+  "image": {
+    "bitpix": -32,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "SWCREATE=N.I.N.A. 3.1.2.9001"
+        ],
+        "id": "nina",
+        "name": "N.I.N.A.",
+        "role": "capture",
+        "verified": true
+      },
+      {
+        "evidence": [
+          "HISTORY 'siril stack: 40 images, median…'"
+        ],
+        "id": "siril",
+        "name": "Siril",
+        "role": "processing",
+        "verified": true
+      }
+    ]
+  },
+  "path": "calibration/master_dark_300s_g100_-10C.fit",
+  "schema": "fittle.info/1",
+  "verdict": {
+    "confidence": 95,
+    "evidence": [
+      {
+        "supports": "dark",
+        "text": "IMAGETYP=Master Dark",
+        "weight": 60
+      },
+      {
+        "supports": "integrated",
+        "text": "NCOMBINE=40",
+        "weight": 50
+      },
+      {
+        "supports": "integrated",
+        "text": "frame type says 'master'",
+        "weight": 40
+      },
+      {
+        "supports": "integrated",
+        "text": "HISTORY 'Siril stack: 40 images, median'",
+        "weight": 30
+      },
+      {
+        "supports": "integrated",
+        "text": "file name starts 'master'",
+        "weight": 20
+      },
+      {
+        "supports": "integrated",
+        "text": "BITPIX=-32 (float)",
+        "weight": 10
+      }
+    ],
+    "frame": "dark",
+    "integrated": true,
+    "label": "Master dark",
+    "processed": false,
+    "processing": [
+      {
+        "evidence": "Siril stack: 40 images, median",
+        "name": "stacking"
+      }
+    ]
+  }
+}

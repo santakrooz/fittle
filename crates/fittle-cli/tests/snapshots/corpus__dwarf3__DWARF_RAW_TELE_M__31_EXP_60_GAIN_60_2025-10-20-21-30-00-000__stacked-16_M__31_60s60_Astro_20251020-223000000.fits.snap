@@ -1,0 +1,265 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 23040,
+  "hdus": [
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    3 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 3
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "NAXIS3",
+          "raw": [
+            "NAXIS3  =                    3                                                  "
+          ],
+          "record": 5,
+          "type": "integer",
+          "value": 3
+        },
+        {
+          "keyword": "TELESCOP",
+          "raw": [
+            "TELESCOP= 'DWARFIII'                                                            "
+          ],
+          "record": 6,
+          "type": "string",
+          "value": "DWARFIII"
+        },
+        {
+          "keyword": "INSTRUME",
+          "raw": [
+            "INSTRUME= 'DWARFIII'                                                            "
+          ],
+          "record": 7,
+          "type": "string",
+          "value": "DWARFIII"
+        },
+        {
+          "keyword": "ORIGIN",
+          "raw": [
+            "ORIGIN  = 'DWARFLAB'                                                            "
+          ],
+          "record": 8,
+          "type": "string",
+          "value": "DWARFLAB"
+        },
+        {
+          "keyword": "CAMERA",
+          "raw": [
+            "CAMERA  = 'TELE    '                                                            "
+          ],
+          "record": 9,
+          "type": "string",
+          "value": "TELE"
+        },
+        {
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'M 31    '                                                            "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "M 31"
+        },
+        {
+          "keyword": "RA",
+          "raw": [
+            "RA      =              10.6847                                                  "
+          ],
+          "record": 11,
+          "type": "float",
+          "value": 10.6847
+        },
+        {
+          "keyword": "DEC",
+          "raw": [
+            "DEC     =              41.2687                                                  "
+          ],
+          "record": 12,
+          "type": "float",
+          "value": 41.2687
+        },
+        {
+          "keyword": "FOCALLEN",
+          "raw": [
+            "FOCALLEN=                150.0                                                  "
+          ],
+          "record": 13,
+          "type": "float",
+          "value": 150.0
+        },
+        {
+          "keyword": "XPIXSZ",
+          "raw": [
+            "XPIXSZ  =                  2.0                                                  "
+          ],
+          "record": 14,
+          "type": "float",
+          "value": 2.0
+        },
+        {
+          "keyword": "YPIXSZ",
+          "raw": [
+            "YPIXSZ  =                  2.0                                                  "
+          ],
+          "record": 15,
+          "type": "float",
+          "value": 2.0
+        },
+        {
+          "keyword": "XBINNING",
+          "raw": [
+            "XBINNING=                    1                                                  "
+          ],
+          "record": 16,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "YBINNING",
+          "raw": [
+            "YBINNING=                    1                                                  "
+          ],
+          "record": 17,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "GAIN",
+          "raw": [
+            "GAIN    =                   60                                                  "
+          ],
+          "record": 18,
+          "type": "integer",
+          "value": 60
+        },
+        {
+          "keyword": "FILTER",
+          "raw": [
+            "FILTER  = 'Astro   '                                                            "
+          ],
+          "record": 19,
+          "type": "string",
+          "value": "Astro"
+        },
+        {
+          "keyword": "DET-TEMP",
+          "raw": [
+            "DET-TEMP=                   12                                                  "
+          ],
+          "record": 20,
+          "type": "integer",
+          "value": 12
+        },
+        {
+          "keyword": "BAYERPAT",
+          "raw": [
+            "BAYERPAT= 'RGGB    '                                                            "
+          ],
+          "record": 21,
+          "type": "string",
+          "value": "RGGB"
+        },
+        {
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =               2580.0                                                  "
+          ],
+          "record": 22,
+          "type": "float",
+          "value": 2580.0
+        },
+        {
+          "keyword": "DATE-OBS",
+          "raw": [
+            "DATE-OBS= '2025-10-20T22:30:00.000'                                             "
+          ],
+          "record": 23,
+          "type": "string",
+          "value": "2025-10-20T22:30:00.000"
+        },
+        {
+          "keyword": "BSCALE",
+          "raw": [
+            "BSCALE  =                    1                                                  "
+          ],
+          "record": 24,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BZERO",
+          "raw": [
+            "BZERO   =                32768                                                  "
+          ],
+          "record": 25,
+          "type": "integer",
+          "value": 32768
+        }
+      ],
+      "data_bytes": 18432,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48,
+        3
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "dwarf3/DWARF_RAW_TELE_M 31_EXP_60_GAIN_60_2025-10-20-21-30-00-000/stacked-16_M 31_60s60_Astro_20251020-223000000.fits",
+  "schema": "fittle.header/1"
+}

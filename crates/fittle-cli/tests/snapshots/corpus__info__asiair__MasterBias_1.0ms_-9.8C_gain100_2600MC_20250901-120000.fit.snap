@@ -1,0 +1,142 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "ZWO ASI2600MC Duo"
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 0.001
+    },
+    "frame_type": {
+      "source": {
+        "key": "IMAGETYP",
+        "kind": "keyword"
+      },
+      "value": "Bias"
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 100.0
+    },
+    "mount": {
+      "source": {
+        "key": "TELESCOP",
+        "kind": "keyword"
+      },
+      "value": "OnStep"
+    },
+    "offset": {
+      "source": {
+        "key": "OFFSET",
+        "kind": "keyword"
+      },
+      "value": 50.0
+    },
+    "sensor_temp_c": {
+      "source": {
+        "key": "CCD-TEMP",
+        "kind": "keyword"
+      },
+      "value": -9.8
+    },
+    "stack_count": {
+      "source": {
+        "key": "STACKCNT",
+        "kind": "keyword"
+      },
+      "value": 100
+    },
+    "total_integration_s": {
+      "source": {
+        "from": [
+          "stack count",
+          "exposure"
+        ],
+        "kind": "derived"
+      },
+      "value": 0.1
+    }
+  },
+  "file_name": {
+    "exposure_s": 0.001,
+    "gain": 100,
+    "prefix": "masterbias",
+    "temp_c": -9.8
+  },
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [
+    {
+      "level": "info",
+      "message": "TELESCOP='OnStep': this app writes the mount driver name in TELESCOP, not the telescope"
+    }
+  ],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "CREATOR=ZWO ASIAIR Plus"
+        ],
+        "id": "asiair",
+        "name": "ZWO ASIAIR",
+        "role": "capture",
+        "verified": true
+      }
+    ]
+  },
+  "path": "asiair/MasterBias_1.0ms_-9.8C_gain100_2600MC_20250901-120000.fit",
+  "schema": "fittle.info/1",
+  "verdict": {
+    "confidence": 97,
+    "evidence": [
+      {
+        "supports": "bias",
+        "text": "IMAGETYP=Bias",
+        "weight": 60
+      },
+      {
+        "supports": "integrated",
+        "text": "STACKCNT=100",
+        "weight": 50
+      },
+      {
+        "supports": "bias",
+        "text": "EXPTIME=0.001",
+        "weight": 30
+      },
+      {
+        "supports": "bias",
+        "text": "file name starts 'masterbias'",
+        "weight": 25
+      }
+    ],
+    "frame": "bias",
+    "integrated": true,
+    "label": "Master bias",
+    "processed": false
+  }
+}

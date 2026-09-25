@@ -1,0 +1,157 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 23040,
+  "hdus": [
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    3 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 3
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "NAXIS3",
+          "raw": [
+            "NAXIS3  =                    3                                                  "
+          ],
+          "record": 5,
+          "type": "integer",
+          "value": 3
+        },
+        {
+          "keyword": "SOFTWARE",
+          "raw": [
+            "SOFTWARE= 'DeepSkyStacker 5.1.6'                                                "
+          ],
+          "record": 6,
+          "type": "string",
+          "value": "DeepSkyStacker 5.1.6"
+        },
+        {
+          "keyword": "NCOMBINE",
+          "raw": [
+            "NCOMBINE=                   40                                                  "
+          ],
+          "record": 7,
+          "type": "integer",
+          "value": 40
+        },
+        {
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =                12000                                                  "
+          ],
+          "record": 8,
+          "type": "integer",
+          "value": 12000
+        },
+        {
+          "keyword": "EXPOSURE",
+          "raw": [
+            "EXPOSURE=                12000                                                  "
+          ],
+          "record": 9,
+          "type": "integer",
+          "value": 12000
+        },
+        {
+          "keyword": "ROWORDER",
+          "raw": [
+            "ROWORDER= 'TOP-DOWN'                                                            "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "TOP-DOWN"
+        },
+        {
+          "keyword": "ISOSPEED",
+          "raw": [
+            "ISOSPEED=                  800                                                  "
+          ],
+          "record": 11,
+          "type": "integer",
+          "value": 800
+        },
+        {
+          "keyword": "BSCALE",
+          "raw": [
+            "BSCALE  =                    1                                                  "
+          ],
+          "record": 12,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BZERO",
+          "raw": [
+            "BZERO   =                32768                                                  "
+          ],
+          "record": 13,
+          "type": "integer",
+          "value": 32768
+        }
+      ],
+      "data_bytes": 18432,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48,
+        3
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "deepskystacker/Autosave.fit",
+  "schema": "fittle.header/1"
+}

@@ -64,6 +64,57 @@ fn header_json_snapshots() {
 }
 
 #[test]
+fn info_json_snapshots() {
+    for rel in corpus_files() {
+        let out = fittle(&["info", "--json", &rel]);
+        assert!(
+            out.status.success(),
+            "{rel}: {}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let json: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+        assert_eq!(json["schema"], "fittle.info/1");
+        let name = format!("info__{}", rel.replace(['/', ' '], "__"));
+        insta::assert_json_snapshot!(name, json);
+    }
+}
+
+#[test]
+fn info_human_view() {
+    let out = Command::new(env!("CARGO_BIN_EXE_fittle"))
+        .args([
+            "info",
+            "seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit",
+        ])
+        .env("NO_COLOR", "1")
+        .current_dir(corpus_root())
+        .output()
+        .unwrap();
+    insta::assert_snapshot!("info_human_seestar", String::from_utf8(out.stdout).unwrap());
+}
+
+#[test]
+fn diff_snapshots() {
+    for (name, a, b) in [
+        (
+            "light_vs_dark",
+            "asiair/Light_M 31_300.0s_Bin1_2600MC_gain100_20260901-221500_-10.0C_0001.fit",
+            "calibration/DARK_300.00s_0001.fits",
+        ),
+        (
+            "light_vs_master_dark",
+            "seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit",
+            "calibration/master_dark_300s_g100_-10C.fit",
+        ),
+    ] {
+        let out = fittle(&["diff", "--json", a, b]);
+        assert!(out.status.success());
+        let json: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+        insta::assert_json_snapshot!(format!("diff__{name}"), json);
+    }
+}
+
+#[test]
 fn grouped_and_raw_views() {
     let rel = "siril/r_pp_NGC6995_stacked.fit";
     let out = fittle(&["header", rel]);

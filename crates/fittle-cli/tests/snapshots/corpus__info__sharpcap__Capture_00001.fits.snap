@@ -1,0 +1,124 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "moon": {
+      "source": {
+        "from": [
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": {
+        "illumination": 0.93,
+        "waxing": false
+      }
+    },
+    "plate_solved": false
+  },
+  "fields": {
+    "bayer": {
+      "source": {
+        "key": "BAYERPAT",
+        "kind": "keyword"
+      },
+      "value": "RGGB"
+    },
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "ZWO ASI533MC Pro"
+    },
+    "date_obs": {
+      "source": {
+        "from": [
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "2025-09-10T02:11:12.123"
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 30.0
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 100.0
+    },
+    "pixel_um": {
+      "source": {
+        "key": "XPIXSZ",
+        "kind": "keyword"
+      },
+      "value": 3.76
+    },
+    "row_order": {
+      "source": {
+        "key": "ROWORDER",
+        "kind": "keyword"
+      },
+      "value": "TOP-DOWN"
+    }
+  },
+  "file_name": {},
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "SWCREATE=SharpCap v4.1.12345.0, 64 bit"
+        ],
+        "id": "sharpcap",
+        "name": "SharpCap",
+        "role": "capture",
+        "verified": false
+      }
+    ]
+  },
+  "path": "sharpcap/Capture_00001.fits",
+  "schema": "fittle.info/1",
+  "verdict": {
+    "confidence": 0,
+    "evidence": [
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BAYERPAT=RGGB on a single-plane (raw CFA) image",
+        "weight": 15
+      }
+    ],
+    "frame": "unknown",
+    "integrated": false,
+    "label": "Unknown",
+    "processed": false
+  }
+}

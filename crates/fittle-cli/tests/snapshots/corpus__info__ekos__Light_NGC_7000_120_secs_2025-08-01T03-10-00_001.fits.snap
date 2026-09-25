@@ -1,0 +1,355 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "airmass": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 1.11
+    },
+    "altitude": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 63.8
+    },
+    "azimuth": {
+      "source": {
+        "from": [
+          "RA",
+          "DEC",
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": 75.0
+    },
+    "fov_arcmin": {
+      "source": {
+        "from": [
+          "pixel scale",
+          "image size"
+        ],
+        "kind": "derived"
+      },
+      "value": [
+        2.5,
+        1.9
+      ]
+    },
+    "moon": {
+      "source": {
+        "from": [
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": {
+        "altitude": 4.3,
+        "illumination": 0.46,
+        "separation": 111.2,
+        "waxing": true
+      }
+    },
+    "pixel_scale": {
+      "source": {
+        "from": [
+          "pixel size",
+          "focal length"
+        ],
+        "kind": "derived"
+      },
+      "value": 2.388
+    },
+    "plate_solved": false,
+    "sampling": {
+      "source": {
+        "from": [
+          "pixel scale"
+        ],
+        "kind": "derived"
+      },
+      "value": "under"
+    },
+    "session_night": {
+      "source": {
+        "from": [
+          "site longitude",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "2025-07-31"
+    },
+    "sky": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": "night"
+    },
+    "sun_altitude": {
+      "source": {
+        "from": [
+          "site",
+          "DATE-OBS"
+        ],
+        "kind": "derived"
+      },
+      "value": -21.2
+    }
+  },
+  "fields": {
+    "aperture_mm": {
+      "source": {
+        "key": "APTDIA",
+        "kind": "keyword"
+      },
+      "value": 80.0
+    },
+    "bayer": {
+      "source": {
+        "key": "BAYERPAT",
+        "kind": "keyword"
+      },
+      "value": "RGGB"
+    },
+    "binning": {
+      "source": {
+        "key": "XBINNING",
+        "kind": "keyword"
+      },
+      "value": 1
+    },
+    "camera": {
+      "source": {
+        "key": "INSTRUME",
+        "kind": "keyword"
+      },
+      "value": "ZWO CCD ASI294MC Pro"
+    },
+    "date_obs": {
+      "source": {
+        "key": "DATE-OBS",
+        "kind": "keyword"
+      },
+      "value": "2025-08-01T03:10:00.000"
+    },
+    "dec": {
+      "source": {
+        "key": "DEC",
+        "kind": "keyword"
+      },
+      "value": 44.53
+    },
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 120.0
+    },
+    "focal_mm": {
+      "source": {
+        "key": "FOCALLEN",
+        "kind": "keyword"
+      },
+      "value": 400.0
+    },
+    "focal_ratio": {
+      "source": {
+        "from": [
+          "focal length",
+          "aperture"
+        ],
+        "kind": "derived"
+      },
+      "value": 5.0
+    },
+    "frame_type": {
+      "source": {
+        "key": "IMAGETYP",
+        "kind": "keyword"
+      },
+      "value": "Light Frame"
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 120.0
+    },
+    "mount": {
+      "source": {
+        "key": "TELESCOP",
+        "kind": "keyword"
+      },
+      "value": "EQMod Mount"
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "NGC 7000"
+    },
+    "offset": {
+      "source": {
+        "key": "OFFSET",
+        "kind": "keyword"
+      },
+      "value": 30.0
+    },
+    "pier_side": {
+      "source": {
+        "key": "PIERSIDE",
+        "kind": "keyword"
+      },
+      "value": "WEST"
+    },
+    "pixel_um": {
+      "source": {
+        "key": "XPIXSZ",
+        "kind": "keyword"
+      },
+      "value": 4.63
+    },
+    "ra": {
+      "source": {
+        "key": "RA",
+        "kind": "keyword"
+      },
+      "value": 314.82
+    },
+    "row_order": {
+      "source": {
+        "key": "ROWORDER",
+        "kind": "keyword"
+      },
+      "value": "TOP-DOWN"
+    },
+    "sensor_temp_c": {
+      "source": {
+        "key": "CCD-TEMP",
+        "kind": "keyword"
+      },
+      "value": -10.0
+    },
+    "site_lat": {
+      "source": {
+        "key": "SITELAT",
+        "kind": "keyword"
+      },
+      "value": 43.6
+    },
+    "site_lon": {
+      "source": {
+        "key": "SITELONG",
+        "kind": "keyword"
+      },
+      "value": -79.4
+    }
+  },
+  "file_name": {
+    "prefix": "light"
+  },
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [
+    {
+      "level": "info",
+      "message": "TELESCOP='EQMod Mount': this app writes the mount driver name in TELESCOP, not the telescope"
+    }
+  ],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "COMMENT 'generated by indi'"
+        ],
+        "id": "ekos",
+        "name": "KStars / Ekos",
+        "role": "capture",
+        "verified": false
+      }
+    ]
+  },
+  "path": "ekos/Light_NGC_7000_120_secs_2025-08-01T03-10-00_001.fits",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "NGC 7000",
+      "C 20",
+      "LBN 373",
+      "North America Nebula"
+    ],
+    "common_name": "North America Nebula",
+    "constellation": "Cygnus",
+    "dec": 44.5288,
+    "id": "NGC 7000",
+    "kind": "Emission nebula (HII region)",
+    "ra": 314.8214,
+    "size_arcmin": 120.0
+  },
+  "verdict": {
+    "confidence": 95,
+    "evidence": [
+      {
+        "supports": "light",
+        "text": "IMAGETYP=Light Frame",
+        "weight": 60
+      },
+      {
+        "supports": "light",
+        "text": "file name starts 'light'",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BAYERPAT=RGGB on a single-plane (raw CFA) image",
+        "weight": 15
+      }
+    ],
+    "frame": "light",
+    "integrated": false,
+    "label": "Light sub",
+    "processed": false
+  }
+}

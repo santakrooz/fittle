@@ -1,0 +1,372 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 14400,
+  "hdus": [
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "INSTRUME",
+          "raw": [
+            "INSTRUME= 'ZWO CCD ASI294MC Pro'                                                "
+          ],
+          "record": 5,
+          "type": "string",
+          "value": "ZWO CCD ASI294MC Pro"
+        },
+        {
+          "keyword": "TELESCOP",
+          "raw": [
+            "TELESCOP= 'EQMod Mount'                                                         "
+          ],
+          "record": 6,
+          "type": "string",
+          "value": "EQMod Mount"
+        },
+        {
+          "keyword": "OBSERVER",
+          "raw": [
+            "OBSERVER= 'Unknown '                                                            "
+          ],
+          "record": 7,
+          "type": "string",
+          "value": "Unknown"
+        },
+        {
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'NGC 7000'                                                            "
+          ],
+          "record": 8,
+          "type": "string",
+          "value": "NGC 7000"
+        },
+        {
+          "keyword": "ROWORDER",
+          "raw": [
+            "ROWORDER= 'TOP-DOWN'                                                            "
+          ],
+          "record": 9,
+          "type": "string",
+          "value": "TOP-DOWN"
+        },
+        {
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =                120.0                                                  "
+          ],
+          "record": 10,
+          "type": "float",
+          "value": 120.0
+        },
+        {
+          "keyword": "DARKTIME",
+          "raw": [
+            "DARKTIME=                120.0                                                  "
+          ],
+          "record": 11,
+          "type": "float",
+          "value": 120.0
+        },
+        {
+          "keyword": "CCD-TEMP",
+          "raw": [
+            "CCD-TEMP=                -10.0                                                  "
+          ],
+          "record": 12,
+          "type": "float",
+          "value": -10.0
+        },
+        {
+          "keyword": "PIXSIZE1",
+          "raw": [
+            "PIXSIZE1=                 4.63                                                  "
+          ],
+          "record": 13,
+          "type": "float",
+          "value": 4.63
+        },
+        {
+          "keyword": "PIXSIZE2",
+          "raw": [
+            "PIXSIZE2=                 4.63                                                  "
+          ],
+          "record": 14,
+          "type": "float",
+          "value": 4.63
+        },
+        {
+          "keyword": "XBINNING",
+          "raw": [
+            "XBINNING=                    1                                                  "
+          ],
+          "record": 15,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "YBINNING",
+          "raw": [
+            "YBINNING=                    1                                                  "
+          ],
+          "record": 16,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "XPIXSZ",
+          "raw": [
+            "XPIXSZ  =                 4.63                                                  "
+          ],
+          "record": 17,
+          "type": "float",
+          "value": 4.63
+        },
+        {
+          "keyword": "YPIXSZ",
+          "raw": [
+            "YPIXSZ  =                 4.63                                                  "
+          ],
+          "record": 18,
+          "type": "float",
+          "value": 4.63
+        },
+        {
+          "keyword": "FRAME",
+          "raw": [
+            "FRAME   = 'Light   '                                                            "
+          ],
+          "record": 19,
+          "type": "string",
+          "value": "Light"
+        },
+        {
+          "keyword": "IMAGETYP",
+          "raw": [
+            "IMAGETYP= 'Light Frame'                                                         "
+          ],
+          "record": 20,
+          "type": "string",
+          "value": "Light Frame"
+        },
+        {
+          "keyword": "GAIN",
+          "raw": [
+            "GAIN    =                  120                                                  "
+          ],
+          "record": 21,
+          "type": "integer",
+          "value": 120
+        },
+        {
+          "keyword": "OFFSET",
+          "raw": [
+            "OFFSET  =                   30                                                  "
+          ],
+          "record": 22,
+          "type": "integer",
+          "value": 30
+        },
+        {
+          "keyword": "FOCALLEN",
+          "raw": [
+            "FOCALLEN=                400.0                                                  "
+          ],
+          "record": 23,
+          "type": "float",
+          "value": 400.0
+        },
+        {
+          "keyword": "APTDIA",
+          "raw": [
+            "APTDIA  =                 80.0                                                  "
+          ],
+          "record": 24,
+          "type": "float",
+          "value": 80.0
+        },
+        {
+          "keyword": "SCALE",
+          "raw": [
+            "SCALE   =                2.388                                                  "
+          ],
+          "record": 25,
+          "type": "float",
+          "value": 2.388
+        },
+        {
+          "keyword": "SITELAT",
+          "raw": [
+            "SITELAT =                 43.6                                                  "
+          ],
+          "record": 26,
+          "type": "float",
+          "value": 43.6
+        },
+        {
+          "keyword": "SITELONG",
+          "raw": [
+            "SITELONG=                -79.4                                                  "
+          ],
+          "record": 27,
+          "type": "float",
+          "value": -79.4
+        },
+        {
+          "keyword": "OBJCTRA",
+          "raw": [
+            "OBJCTRA = '20 59 17'                                                            "
+          ],
+          "record": 28,
+          "type": "string",
+          "value": "20 59 17"
+        },
+        {
+          "keyword": "OBJCTDEC",
+          "raw": [
+            "OBJCTDEC= '44 31 44'                                                            "
+          ],
+          "record": 29,
+          "type": "string",
+          "value": "44 31 44"
+        },
+        {
+          "keyword": "RA",
+          "raw": [
+            "RA      =               314.82                                                  "
+          ],
+          "record": 30,
+          "type": "float",
+          "value": 314.82
+        },
+        {
+          "keyword": "DEC",
+          "raw": [
+            "DEC     =                44.53                                                  "
+          ],
+          "record": 31,
+          "type": "float",
+          "value": 44.53
+        },
+        {
+          "keyword": "PIERSIDE",
+          "raw": [
+            "PIERSIDE= 'WEST    '                                                            "
+          ],
+          "record": 32,
+          "type": "string",
+          "value": "WEST"
+        },
+        {
+          "keyword": "DATE-OBS",
+          "raw": [
+            "DATE-OBS= '2025-08-01T03:10:00.000'                                             "
+          ],
+          "record": 33,
+          "type": "string",
+          "value": "2025-08-01T03:10:00.000"
+        },
+        {
+          "keyword": "BAYERPAT",
+          "raw": [
+            "BAYERPAT= 'RGGB    '                                                            "
+          ],
+          "record": 34,
+          "type": "string",
+          "value": "RGGB"
+        },
+        {
+          "keyword": "BSCALE",
+          "raw": [
+            "BSCALE  =                    1                                                  "
+          ],
+          "record": 35,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BZERO",
+          "raw": [
+            "BZERO   =                32768                                                  "
+          ],
+          "record": 36,
+          "type": "integer",
+          "value": 32768
+        },
+        {
+          "keyword": "COMMENT",
+          "raw": [
+            "COMMENT Generated by INDI                                                       "
+          ],
+          "record": 37,
+          "type": "commentary",
+          "value": "Generated by INDI"
+        }
+      ],
+      "data_bytes": 6144,
+      "data_offset": 5760,
+      "header_blocks": 2,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "ekos/Light_NGC_7000_120_secs_2025-08-01T03-10-00_001.fits",
+  "schema": "fittle.header/1"
+}

@@ -1,0 +1,67 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {},
+  "file_name": {},
+  "health": [
+    {
+      "code": "invalid_value",
+      "hdu": 0,
+      "message": "OBJECT: value \"M 33\" is not a valid FITS value",
+      "record": 5,
+      "severity": "warning"
+    },
+    {
+      "code": "invalid_keyword",
+      "hdu": 0,
+      "message": "keyword \"filter\" has characters outside A-Z 0-9 - _",
+      "record": 6,
+      "severity": "warning"
+    },
+    {
+      "code": "non_ascii",
+      "hdu": 0,
+      "message": "record contains bytes outside printable ASCII",
+      "record": 7,
+      "severity": "warning"
+    }
+  ],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": []
+  },
+  "path": "malformed/nonstandard-cards.fit",
+  "schema": "fittle.info/1",
+  "verdict": {
+    "confidence": 0,
+    "evidence": [
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      }
+    ],
+    "frame": "unknown",
+    "integrated": false,
+    "label": "Unknown",
+    "processed": false
+  }
+}

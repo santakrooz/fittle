@@ -1,0 +1,215 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "a": {
+    "hdu": 0,
+    "path": "asiair/Light_M 31_300.0s_Bin1_2600MC_gain100_20260901-221500_-10.0C_0001.fit",
+    "verdict": "Light sub"
+  },
+  "b": {
+    "hdu": 0,
+    "path": "calibration/DARK_300.00s_0001.fits",
+    "verdict": "Dark frame"
+  },
+  "blockers": 0,
+  "differences": 15,
+  "rows": [
+    {
+      "a": "T",
+      "b": "T",
+      "keyword": "SIMPLE",
+      "status": "same"
+    },
+    {
+      "a": "16",
+      "b": "16",
+      "keyword": "BITPIX",
+      "status": "same"
+    },
+    {
+      "a": "2",
+      "b": "2",
+      "keyword": "NAXIS",
+      "status": "same"
+    },
+    {
+      "a": "64",
+      "b": "64",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "NAXIS1",
+      "status": "same"
+    },
+    {
+      "a": "48",
+      "b": "48",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "NAXIS2",
+      "status": "same"
+    },
+    {
+      "a": "'ZWO ASI2600MC Pro'",
+      "b": "'ZWO ASI2600MC Pro'",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "INSTRUME",
+      "status": "same"
+    },
+    {
+      "a": "'RedCat 51'",
+      "keyword": "TELESCOP",
+      "status": "only_a"
+    },
+    {
+      "a": "'ASIAIR'",
+      "b": "'N.I.N.A. 3.1.2.9001'",
+      "keyword": "SWCREATE",
+      "status": "changed"
+    },
+    {
+      "a": "'M 31'",
+      "keyword": "OBJECT",
+      "status": "only_a"
+    },
+    {
+      "a": "'00 42 44.3'",
+      "keyword": "OBJCTRA",
+      "status": "only_a"
+    },
+    {
+      "a": "'+41 16 09'",
+      "keyword": "OBJCTDEC",
+      "status": "only_a"
+    },
+    {
+      "a": "'2026-09-01T22:15:00.000'",
+      "keyword": "DATE-OBS",
+      "status": "only_a"
+    },
+    {
+      "a": "300.0",
+      "b": "300.0",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "EXPTIME",
+      "status": "same"
+    },
+    {
+      "a": "'Light'",
+      "b": "'DARK'",
+      "impact": {
+        "level": "info",
+        "text": "expected"
+      },
+      "keyword": "IMAGETYP",
+      "status": "changed"
+    },
+    {
+      "a": "100",
+      "b": "100",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "GAIN",
+      "status": "same"
+    },
+    {
+      "a": "50",
+      "b": "50",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "OFFSET",
+      "status": "same"
+    },
+    {
+      "a": "-10.1",
+      "b": "-10.0",
+      "impact": {
+        "level": "ok",
+        "text": "Δ 0.1 °C"
+      },
+      "keyword": "CCD-TEMP",
+      "status": "changed"
+    },
+    {
+      "a": "-10.0",
+      "keyword": "SET-TEMP",
+      "status": "only_a"
+    },
+    {
+      "a": "3.76",
+      "keyword": "XPIXSZ",
+      "status": "only_a"
+    },
+    {
+      "a": "3.76",
+      "keyword": "YPIXSZ",
+      "status": "only_a"
+    },
+    {
+      "a": "1",
+      "b": "1",
+      "impact": {
+        "level": "ok",
+        "text": "match"
+      },
+      "keyword": "XBINNING",
+      "status": "same"
+    },
+    {
+      "a": "1",
+      "impact": {
+        "level": "warning",
+        "text": "binning missing on one side"
+      },
+      "keyword": "YBINNING",
+      "status": "only_a"
+    },
+    {
+      "a": "250.0",
+      "keyword": "FOCALLEN",
+      "status": "only_a"
+    },
+    {
+      "a": "'RGGB'",
+      "impact": {
+        "level": "warning",
+        "text": "Bayer pattern missing on one side"
+      },
+      "keyword": "BAYERPAT",
+      "status": "only_a"
+    },
+    {
+      "a": "'L-eXtreme'",
+      "keyword": "FILTER",
+      "status": "only_a"
+    },
+    {
+      "a": "1",
+      "b": "1",
+      "keyword": "BSCALE",
+      "status": "same"
+    },
+    {
+      "a": "32768",
+      "b": "32768",
+      "keyword": "BZERO",
+      "status": "same"
+    }
+  ],
+  "schema": "fittle.diff/1"
+}

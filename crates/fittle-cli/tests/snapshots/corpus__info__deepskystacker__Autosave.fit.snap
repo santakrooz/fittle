@@ -1,0 +1,97 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {
+    "exposure_s": {
+      "source": {
+        "from": [
+          "EXPTIME",
+          "stack count"
+        ],
+        "kind": "derived"
+      },
+      "value": 300.0
+    },
+    "row_order": {
+      "source": {
+        "key": "ROWORDER",
+        "kind": "keyword"
+      },
+      "value": "TOP-DOWN"
+    },
+    "stack_count": {
+      "source": {
+        "key": "NCOMBINE",
+        "kind": "keyword"
+      },
+      "value": 40
+    },
+    "total_integration_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 12000.0
+    }
+  },
+  "file_name": {},
+  "health": [],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 3,
+    "width": 64
+  },
+  "notes": [
+    {
+      "level": "info",
+      "message": "EXPTIME=12000 is the total integration for this software"
+    }
+  ],
+  "origin": {
+    "software": [
+      {
+        "evidence": [
+          "SOFTWARE=DeepSkyStacker 5.1.6"
+        ],
+        "id": "deepskystacker",
+        "name": "DeepSkyStacker",
+        "role": "processing",
+        "verified": false
+      }
+    ]
+  },
+  "path": "deepskystacker/Autosave.fit",
+  "schema": "fittle.info/1",
+  "verdict": {
+    "confidence": 73,
+    "evidence": [
+      {
+        "supports": "integrated",
+        "text": "NCOMBINE=40",
+        "weight": 50
+      },
+      {
+        "supports": "integrated",
+        "text": "EXPTIME=12000 > exposure 300",
+        "weight": 25
+      },
+      {
+        "supports": "light",
+        "text": "integrated, no calibration frame type",
+        "weight": 20
+      }
+    ],
+    "frame": "light",
+    "integrated": true,
+    "label": "Stacked light",
+    "processed": false
+  }
+}

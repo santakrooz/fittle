@@ -1,0 +1,95 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "derived": {
+    "plate_solved": false
+  },
+  "fields": {
+    "exposure_s": {
+      "source": {
+        "key": "EXPTIME",
+        "kind": "keyword"
+      },
+      "value": 120.0
+    },
+    "gain": {
+      "source": {
+        "key": "GAIN",
+        "kind": "keyword"
+      },
+      "value": 100.0
+    },
+    "object": {
+      "source": {
+        "key": "OBJECT",
+        "kind": "keyword"
+      },
+      "value": "M 101"
+    }
+  },
+  "file_name": {},
+  "health": [
+    {
+      "code": "duplicate_keyword",
+      "hdu": 0,
+      "message": "GAIN appears more than once (first at record 6)",
+      "record": 8,
+      "severity": "warning"
+    }
+  ],
+  "image": {
+    "bitpix": 16,
+    "compressed": false,
+    "hdu": 0,
+    "height": 48,
+    "planes": 1,
+    "width": 64
+  },
+  "notes": [],
+  "origin": {
+    "software": []
+  },
+  "path": "malformed/duplicate-keys.fit",
+  "schema": "fittle.info/1",
+  "target": {
+    "aliases": [
+      "M 101",
+      "NGC 5457",
+      "PGC 50063",
+      "UGC 8981"
+    ],
+    "common_name": "Pinwheel Galaxy",
+    "constellation": "Ursa Major",
+    "dec": 54.3489,
+    "id": "M 101",
+    "kind": "Galaxy",
+    "ra": 210.8023,
+    "size_arcmin": 23.99
+  },
+  "verdict": {
+    "confidence": 73,
+    "evidence": [
+      {
+        "supports": "single",
+        "text": "no STACKCNT / NCOMBINE",
+        "weight": 25
+      },
+      {
+        "supports": "light",
+        "text": "has a target (OBJECT / RA / DEC)",
+        "weight": 20
+      },
+      {
+        "supports": "single",
+        "text": "BITPIX=16",
+        "weight": 20
+      }
+    ],
+    "frame": "light",
+    "integrated": false,
+    "label": "Light sub",
+    "processed": false
+  }
+}

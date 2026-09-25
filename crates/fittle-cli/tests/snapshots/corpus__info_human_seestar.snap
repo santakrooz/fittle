@@ -1,0 +1,23 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: "String::from_utf8(out.stdout).unwrap()"
+---
+Light_NGC 6995_20.0s_LP_20260924-213412.fit
+  Light sub  confidence 95
+  evidence: IMAGETYP=Light · file name starts 'light' · no STACKCNT / NCOMBINE · BITPIX=16 · BAYERPAT=GRBG on a single-plane (raw CFA) image
+
+  TARGET    NGC 6995 (Eastern Veil) · Supernova remnant · Cygnus
+            RA 20h57m10.8s  Dec +31°14′07″
+  OPTICS    ZWO Seestar S50 · 250 mm* · ƒ/5ᵈ · 50 mm aperture*
+  CAMERA    Seestar S50 · IMX462* · 2.9 µm · gain 80 · 28.4 °C · GRBG
+  EXPOSURE  20 s · filter LP
+  SITE      33.69, −117.27
+  TIME      2026-09-25 04:34:12 UTC · night of 2026-09-24
+  MADE BY   ZWO Seestar S50
+
+  derived   scale 2.39″/px · FOV 3′×2′ · under-sampled · alt 87° · airmass 1 · moon 97% 47° away
+  image     64×48 · 16-bit
+
+  ⚠ FOCALLEN=0 in header; used ZWO Seestar S50 default (250 mm)
+  · serial number in TELESCOP (scrub before sharing)
+  * profile default   ᵈ derived
