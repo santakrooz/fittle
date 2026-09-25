@@ -72,4 +72,4 @@ Type: Bricolage Grotesque (display, big numbers), Inter (UI), JetBrains Mono (ke
 
 License (leaning MIT; confirm before publishing), shared token package name and whether "Stardog" means AstroSideKick, whether Quick Look and thumbnails ship in v1.0.
 
-Decided: frontend is React 19 + TypeScript + Vite (docs/decisions/0002). A free web edition (WASM core, Railway, opt-in scrubbed header contributions) follows M1 (docs/decisions/0003).
+Decided: frontend is React 19 + TypeScript + Vite (docs/decisions/0002). A free web edition (WASM core, Railway, opt-in scrubbed header contributions) is proposed for after the local app is solid (docs/decisions/0003); don't build it yet, but keep the core WASM-friendly.

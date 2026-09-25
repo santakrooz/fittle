@@ -185,7 +185,7 @@ fittle/
 | CLI | `clap` v4, `comfy-table`, `owo-colors`, `--json` everywhere |  |
 | MCP | `rmcp`, stdio transport; optional streamable HTTP later | Works with Claude Desktop/Code |
 | GUI framework | **Decided: React 19 + TypeScript + Vite** ([0002](decisions/0002-frontend-react.md)), matching AstroSideKick | Shared tokens/components |
-| Web edition | Same UI + core compiled to WASM, hosted on Railway ([0003](decisions/0003-web-edition.md)) | Free tool, marketing, opt-in corpus growth |
+| Web edition (proposed, after local v1) | Same UI + core compiled to WASM, possibly hosted on Railway ([0003](decisions/0003-web-edition.md)) | Free tool, marketing, opt-in corpus growth |
 | GUI shell | Tauri 2 | \~10 MB installers vs 100+ MB Electron; native menus, file associations |
 | GUI render | WebGL2 tiled texture viewer (float textures, stretch in fragment shader) | Instant re-stretch while dragging sliders |
 
@@ -341,14 +341,13 @@ Ship the read-only CLI first, because it hardens the core that every other surfa
 | --- | --- | --- |
 | M0 Spike (1 wk) | Workspace, header parser, `fitsrs` data read, `.fz` check, Tauri hello-world with WebGL float texture | Opens every corpus file; decision on FITS I/O |
 | M1 CLI read (2 wk) | `info`, `header`, `diff`, classification + evidence, derived facts, `--json` | Golden snapshots pass for all corpus files |
-| W1 Web edition (2 wk) | WASM build of core + `info`/`header` views, prerendered marketing/SEO front page, opt-in scrubbed header contributions, Railway deploy ([0003](decisions/0003-web-edition.md)) | Drop a Seestar/Dwarf/ASIAIR file in the browser and get the Overview with no upload; contribution lands in the review queue |
 | M2 Viewer GUI (3 wk) | Three-pane app, auto-STF, histogram, pixel inspector, debayer preview, Overview + Header tabs | 60 MP opens + stretches <1 s on M1 Mac and mid-range Windows laptop |
 | M3 Edit (2 wk) | Staged edits, validation, batch set, templates, privacy scrub, safe writes | Round-trip invariant + fuzzing clean |
 | M4 Export (2 wk) | All formats, resize/bin/crop/rotate, fpack, share card | Visual diff tests on exports |
 | M5 MCP (1 wk) | All read tools, preview images, dry-run writes | Works in Claude Desktop + Claude Code |
 | M6 Folders (3 wk) | Scan/session report, sub grader, blink, filmstrip, calibration matcher, organize/rename | 3,785-sub Seestar folder scanned + graded <60 s |
 | v1.0 (2 wk) | Installers, signing, Quick Look / thumbnails, docs site, sample corpus | Public GitHub release |
-| Later | Watch mode, plate-solve, WCS annotations, XISF read, AstroBin CSV, night-vision theme |  |
+| Later | Watch mode, plate-solve, WCS annotations, XISF read, AstroBin CSV, night-vision theme; web edition (proposed, [0003](decisions/0003-web-edition.md)) — design once the local app is solid |  |
 
 ## Open decisions and Claude Code kickoff
 
