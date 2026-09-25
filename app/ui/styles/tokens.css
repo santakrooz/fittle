@@ -1,0 +1,32 @@
+/* Fittle design tokens (CLAUDE.md). Destined for the shared token package. */
+:root {
+  --bg: #0a0e16;
+  --surface: #111827;
+  --surface-2: #172033;
+  --line: #1f2a3d;
+  --text: #e8ecf3;
+  --muted: #8391a7;
+  --accent: #f5b83d;
+  --nebula-orange: #e9894a;
+  --nebula-rose: #e0567a;
+  --nebula-teal: #3fc1c9;
+  --ok: #3dd68c;
+
+  --font-display: "Bricolage Grotesque Variable", system-ui, sans-serif;
+  --font-ui: "Inter Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  --radius-card: 14px;
+  --radius-pill: 999px;
+  --ease: 150ms ease-out;
+}
+
+:root[data-theme="light"] {
+  --bg: #f6f4ef;
+  --surface: #ffffff;
+  --surface-2: #eef0f4;
+  --line: #dde1e8;
+  --text: #141a26;
+  --muted: #5b6678;
+  --accent: #c98a0c;
+  --ok: #1a9e5e;
+}

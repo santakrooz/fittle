@@ -10,9 +10,12 @@ use fittle_core::Fits;
 use fittle_image::decode_hdu;
 
 fn is_fits(p: &std::path::Path) -> bool {
-    p.extension()
-        .and_then(|x| x.to_str())
-        .is_some_and(|x| matches!(x.to_ascii_lowercase().as_str(), "fit" | "fits" | "fts" | "fz"))
+    p.extension().and_then(|x| x.to_str()).is_some_and(|x| {
+        matches!(
+            x.to_ascii_lowercase().as_str(),
+            "fit" | "fits" | "fts" | "fz"
+        )
+    })
 }
 
 #[test]
@@ -25,9 +28,17 @@ fn decode_local_samples() {
     let mut picks: Vec<PathBuf> = Vec::new();
     let mut dirs = vec![root.clone()];
     while let Some(dir) = dirs.pop() {
-        let mut entries: Vec<PathBuf> = std::fs::read_dir(&dir).unwrap().flatten().map(|e| e.path()).collect();
+        let mut entries: Vec<PathBuf> = std::fs::read_dir(&dir)
+            .unwrap()
+            .flatten()
+            .map(|e| e.path())
+            .collect();
         entries.sort();
-        let files: Vec<PathBuf> = entries.iter().filter(|p| p.is_file() && is_fits(p)).cloned().collect();
+        let files: Vec<PathBuf> = entries
+            .iter()
+            .filter(|p| p.is_file() && is_fits(p))
+            .cloned()
+            .collect();
         if dir == root {
             picks.extend(files);
         } else if let Some(first) = files.into_iter().next() {
@@ -38,7 +49,11 @@ fn decode_local_samples() {
 
     for path in picks {
         let fits = Fits::open(&path).unwrap();
-        let hdu = fits.hdus.iter().find(|h| !h.shape.is_empty()).expect("image HDU");
+        let hdu = fits
+            .hdus
+            .iter()
+            .find(|h| !h.shape.is_empty())
+            .expect("image HDU");
         let t = Instant::now();
         let img = decode_hdu(&path, hdu).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
         let ms = t.elapsed().as_secs_f64() * 1000.0;

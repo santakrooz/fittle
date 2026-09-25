@@ -8,6 +8,7 @@ publish.workspace = true
 [dependencies]
 fittle-core.workspace = true
 thiserror.workspace = true
+serde.workspace = true
 
 [dev-dependencies]
 fitsrs.workspace = true
