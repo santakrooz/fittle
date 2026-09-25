@@ -1,0 +1,34 @@
+# macOS / Windows / Linux cruft
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+*~
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# Rust
+/target/
+**/target/
+**/*.rs.bk
+
+# Tauri
+app/src-tauri/target/
+app/src-tauri/gen/
+
+# Node / frontend
+node_modules/
+dist/
+build/
+.svelte-kit/
+*.log
+.env
+.env.*
+
+# Fittle outputs and backups
+*.bak
+_rejected/
