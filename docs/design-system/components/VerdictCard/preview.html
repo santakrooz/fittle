@@ -1,0 +1,13 @@
+<!-- @dsCard group="Data" height=150 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>VerdictCard — preview</title>
+<style>html,body{margin:0;background:var(--bg);} #root{padding:12px;}</style></head>
+<body>
+<div id="root" class="ft-root"></div>
+<script>
+  var F = window.Fittle, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{display:'grid',gap:12,maxWidth:356}},h(F.VerdictCard,{kind:'sub',label:'Light sub',detail:'Single 20 s exposure · Seestar S50',confidence:97,evidence:['IMAGETYP=Light','EXPTIME=20.0','no STACKCNT','BITPIX=16','BAYERPAT=GRBG']}),h(F.VerdictCard,{kind:'stack',label:'Stacked · 3,412 subs',detail:'Siril 1.4 · Winsorized sigma',confidence:99,evidence:['STACKCNT=3412','LIVETIME=68240','BITPIX=-32']})));
+</script>
+</body>
+</html>

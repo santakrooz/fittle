@@ -1,0 +1,13 @@
+<!-- @dsCard group="Actions" height=64 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Button — preview</title>
+<style>html,body{margin:0;background:var(--bg);} #root{padding:12px;}</style></head>
+<body>
+<div id="root" class="ft-root"></div>
+<script>
+  var F = window.Fittle, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ft-row'},h(F.Button,{variant:'primary',icon:'export'},'Export with this stretch'),h(F.Button,null,'Reset to Auto STF'),h(F.Button,{variant:'ghost'},'Cancel'),h(F.Button,{disabled:true},'Apply 0 changes')));
+</script>
+</body>
+</html>

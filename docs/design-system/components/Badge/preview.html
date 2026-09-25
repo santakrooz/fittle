@@ -1,0 +1,13 @@
+<!-- @dsCard group="Status" height=56 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Badge — preview</title>
+<style>html,body{margin:0;background:var(--bg);} #root{padding:12px;}</style></head>
+<body>
+<div id="root" class="ft-root"></div>
+<script>
+  var F = window.Fittle, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ft-row'},h(F.Badge,{tone:'orange'},'Supernova remnant'),h(F.Badge,{tone:'rose'},'Emission nebula'),h(F.Badge,{tone:'teal'},'Linear'),h(F.Badge,{tone:'ok'},'Kept'),h(F.Badge,{tone:'warn'},'Δ 3.6 °C'),h(F.Badge,{tone:'bad'},'Blocks calibration'),h(F.Badge,{tone:'accent'},'Master')));
+</script>
+</body>
+</html>
