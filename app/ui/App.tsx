@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { Backend } from "./backend/types";
+import { ExportModal } from "./panes/ExportModal";
 import { FileRail } from "./panes/FileRail";
 import { Inspector } from "./panes/Inspector";
 import { Palette } from "./panes/Palette";
@@ -7,6 +8,7 @@ import { Hud, StageToolbar } from "./panes/StageChrome";
 import { TitleBar } from "./panes/TitleBar";
 import { app, init, openFile, openFolder, setMode, setStretch, step, view } from "./state/app";
 import { edits } from "./state/edits";
+import { exporter, openExport } from "./state/exporter";
 import { Stage } from "./viewer/Stage";
 
 /** React's development mode runs effects twice; open the startup file once. */
@@ -36,7 +38,12 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
         app.set((s) => ({ palette: !s.palette }));
         return;
       }
-      if (typing(e) || app.get().palette || e.metaKey || e.ctrlKey || e.altKey) return;
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "e" && !app.get().palette) {
+        e.preventDefault();
+        openExport();
+        return;
+      }
+      if (typing(e) || app.get().palette || exporter.get().open || e.metaKey || e.ctrlKey || e.altKey) return;
       // In the editor, arrows must not switch files under staged edits.
       if (edits.get().editing && app.get().tab === "header") return;
       const s = app.get();
@@ -81,6 +88,7 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
       </main>
       <Inspector />
       <Palette />
+      <ExportModal />
     </div>
   );
 }

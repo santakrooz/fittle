@@ -115,6 +115,23 @@ export function demoBackend(): Backend {
         { op: "unset" as const, key: "SITELAT" },
         { op: "unset" as const, key: "SITELONG" },
       ]),
+    // Export needs the file itself; the demo only approximates the plan.
+    async exportPlan(spec, template) {
+      const f = opened?.info.fields;
+      const img = opened?.image;
+      const ext = { png: "png", jpeg: "jpg", webp: "webp", tiff: "tif", fits: "fits" }[spec.format.kind];
+      const name = template
+        .replace("{object}", f?.object?.value ?? "unknown")
+        .replace("{filter}", f?.filter?.value ?? "unknown")
+        .replace("{name}", idOf(current))
+        .replace(/\{[a-z]+\}/g, "unknown");
+      let [w, h] = [img?.width ?? 0, img?.height ?? 0];
+      if (spec.long_edge) [w, h] = [Math.round((w * spec.long_edge) / Math.max(w, h)), Math.round((h * spec.long_edge) / Math.max(w, h))];
+      const ch = img?.can_debayer && spec.debayer ? 3 : (img?.planes ?? 1);
+      return { file_name: `${name}.${ext}`, missing: [], width: w, height: h, channels: ch, estimate_bytes: w * h * ch * 0.5 };
+    },
+    exportPreview: () => Promise.reject(new Error("Export preview needs the desktop app.")),
+    exportImage: () => Promise.reject(new Error("Export needs the desktop app; the demo has no files.")),
   };
 }
 

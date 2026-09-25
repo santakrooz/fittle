@@ -11,6 +11,7 @@ path = "src/main.rs"
 
 [dependencies]
 fittle-core.workspace = true
+fittle-image.workspace = true
 clap.workspace = true
 owo-colors = { version = "4", features = ["supports-colors"] }
 serde.workspace = true
