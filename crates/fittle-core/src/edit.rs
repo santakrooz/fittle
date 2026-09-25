@@ -336,6 +336,10 @@ fn consequence(key: &str, removed: bool) -> Option<&'static str> {
             "Changes how Fittle classifies this file."
         }
         "OBJECT" => "Changes the target name other tools use to group this file.",
+        "INSTRUME" | "CREATOR" | "TELESCOP" | "SWCREATE" => {
+            "Changes which scope or app Fittle identifies. Smart scopes repeat the model in several keys \
+             (Seestar: INSTRUME, CREATOR and the TELESCOP serial); change them together or Fittle reports a conflict."
+        }
         "BAYERPAT" | "XBAYROFF" | "YBAYROFF" | "ROWORDER" => {
             "Changes how colour is reconstructed (debayering) and the image orientation."
         }
