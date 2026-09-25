@@ -130,6 +130,7 @@ export function HeaderTab() {
   const canEdit = app.use((s) => !!s.current);
   const editing = edits.use((s) => s.editing);
   const plan = edits.use((s) => s.plan);
+  const editError = edits.use((s) => s.error);
   const [view, setView] = useState<"grouped" | "raw">("grouped");
   const [hdu, setHdu] = useState<number | null>(null);
   const h = doc?.hdus[Math.min(hdu ?? imageHdu, (doc?.hdus.length ?? 1) - 1)];
@@ -294,6 +295,11 @@ export function HeaderTab() {
           </div>
         )}
         {editing && <AddRow />}
+        {editing && editError && (
+          <p className="edit-banner" role="alert">
+            {editError}
+          </p>
+        )}
         {table}
         <p className="header-foot">
           {count} of {h.cards.length} records · HDU {h.index} · {h.header_blocks} header block{h.header_blocks === 1 ? "" : "s"}

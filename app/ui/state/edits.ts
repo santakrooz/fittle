@@ -30,6 +30,17 @@ export const edits = createStore<EditState>({
 
 let seq = 0;
 
+/** Plain wording for backend failures. */
+export function editMessage(e: unknown): string {
+  const m = String(e).replace(/^Error: /, "");
+  // The UI hot-reloads but the Rust side does not: an older running app
+  // lacks the edit commands.
+  if (/command .* not found|not allowed|unknown command/i.test(m)) {
+    return "This Fittle window is running an older build without editing. Quit Fittle and start it again.";
+  }
+  return m;
+}
+
 async function replan() {
   const s = edits.get();
   const path = app.get().current;
@@ -42,7 +53,7 @@ async function replan() {
     const plan = await getBackend().planEdit(path, s.ops, s.options);
     if (n === seq) edits.set({ plan, error: null });
   } catch (e) {
-    if (n === seq) edits.set({ error: String(e).replace(/^Error: /, "") });
+    if (n === seq) edits.set({ error: editMessage(e) });
   }
 }
 
@@ -110,7 +121,7 @@ export async function write() {
       app.set({ folder: { ...folder, entries } });
     }
   } catch (e) {
-    edits.set({ error: String(e).replace(/^Error: /, "") });
+    edits.set({ error: editMessage(e) });
   } finally {
     edits.set({ busy: false });
   }
