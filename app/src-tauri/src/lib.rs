@@ -9,6 +9,8 @@ use fittle_core::dict::{self, KeywordInfo};
 use fittle_core::edit::{EditError, Op, Options, Plan};
 use fittle_core::write::WriteReport;
 use fittle_core::{Fits, HEADER_SCHEMA, HeaderDoc};
+use fittle_image::encode::Samples;
+use fittle_image::export::{self, ExportSpec};
 use fittle_image::view::{Display, OpenedInfo};
 use fittle_image::{Mode, Readout, ViewSession};
 use fittle_scan::Entry;
@@ -245,6 +247,67 @@ async fn apply_edits(
     Ok(results)
 }
 
+/// Output name, size and estimate for an export of the open file.
+#[tauri::command]
+fn export_plan(
+    spec: ExportSpec,
+    template: String,
+    state: State<'_, AppState>,
+) -> Res<export::Plan> {
+    let s = current(&state)?;
+    Ok(export::plan(&s.info, &spec, &template))
+}
+
+/// What the export will look like (8-bit, long edge ≤ max_edge).
+#[tauri::command]
+async fn export_preview(
+    spec: ExportSpec,
+    max_edge: usize,
+    state: State<'_, AppState>,
+) -> Res<Response> {
+    let s = current(&state)?;
+    let t = std::time::Instant::now();
+    let r = spawn_blocking(move || {
+        let o = s.image.as_ref().ok_or("no image")?;
+        let r = export::preview(o, &s.info, &spec, max_edge).map_err(err)?;
+        let Samples::U8(data) = export::raster(&r.image, 8).samples else {
+            unreachable!("8-bit raster")
+        };
+        Ok::<_, String>(Response::new(packed(
+            r.image.width,
+            r.image.height,
+            r.image.planes,
+            &data,
+        )))
+    })
+    .await
+    .map_err(err)?;
+    trace("export_preview", t);
+    r
+}
+
+/// Export the open file into `dir` (default: next to the source). Never
+/// replaces an existing file.
+#[tauri::command]
+async fn export_image(
+    spec: ExportSpec,
+    template: String,
+    dir: Option<String>,
+    state: State<'_, AppState>,
+) -> Res<export::Exported> {
+    let s = current(&state)?;
+    spawn_blocking(move || {
+        let src = std::path::PathBuf::from(&s.path);
+        let dir = dir
+            .map(std::path::PathBuf::from)
+            .or_else(|| src.parent().map(|p| p.to_path_buf()))
+            .ok_or("no output folder")?;
+        export::export(&src, &dir, Some(&template), &spec).map_err(err)
+    })
+    .await
+    .map_err(err)?
+}
+
 /// The privacy-scrub edits for a file, to stage in the editor.
 #[tauri::command]
 async fn scrub_ops(path: String) -> Res<Vec<Op>> {
@@ -306,7 +369,10 @@ pub fn run() {
             log,
             plan_edit,
             apply_edits,
-            scrub_ops
+            scrub_ops,
+            export_plan,
+            export_preview,
+            export_image
         ])
         .run(tauri::generate_context!())
         .expect("error while running Fittle");

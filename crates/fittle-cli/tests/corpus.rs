@@ -285,3 +285,110 @@ fn template_and_scrub() {
         Some(2)
     );
 }
+
+// ---- export -----------------------------------------------------------------
+
+#[test]
+fn export_commands() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::copy(
+        corpus_root().join("seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit"),
+        dir.path().join("sub.fit"),
+    )
+    .unwrap();
+    let before = std::fs::read(dir.path().join("sub.fit")).unwrap();
+    let json = |out: &Output| -> serde_json::Value {
+        assert!(
+            out.status.success(),
+            "{}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        serde_json::from_slice(&out.stdout).unwrap()
+    };
+
+    let v = json(&fittle_in(
+        dir.path(),
+        &[
+            "export",
+            "sub.fit",
+            "-o",
+            "out",
+            "-t",
+            "{object}_{filter}",
+            "--json",
+        ],
+    ));
+    assert_eq!(v["schema"], "fittle.export/1");
+    let row = &v["files"][0];
+    assert!(row["path"].as_str().unwrap().ends_with("NGC 6995_LP.png"));
+    assert_eq!(
+        (row["width"].as_u64(), row["channels"].as_u64()),
+        (Some(64), Some(3))
+    );
+
+    // Format from the output extension; linear FITS for geometry commands.
+    let v = json(&fittle_in(
+        dir.path(),
+        &[
+            "export",
+            "sub.fit",
+            "-o",
+            "small.jpg",
+            "--long-edge",
+            "32",
+            "--json",
+        ],
+    ));
+    assert_eq!(v["files"][0]["format"]["kind"], "jpeg");
+    assert_eq!(v["files"][0]["width"], 32);
+    let v = json(&fittle_in(
+        dir.path(),
+        &["crop", "sub.fit", "--rect", "0,0,32,16", "--json"],
+    ));
+    assert!(
+        v["files"][0]["path"]
+            .as_str()
+            .unwrap()
+            .ends_with("sub_crop.fits")
+    );
+    let v = json(&fittle_in(
+        dir.path(),
+        &["crop", "sub.fit", "--rect", "0,0,32,16", "--json"],
+    ));
+    assert!(
+        v["files"][0]["path"]
+            .as_str()
+            .unwrap()
+            .ends_with("sub_crop_2.fits")
+    );
+
+    // Validation errors exit 2 and write nothing.
+    let out = fittle_in(
+        dir.path(),
+        &["export", "sub.fit", "--rotate", "45", "-o", "bad"],
+    );
+    assert_eq!(out.status.code(), Some(2));
+    assert_eq!(
+        std::fs::read_dir(dir.path().join("bad")).unwrap().count(),
+        0
+    );
+    assert_eq!(
+        fittle_in(dir.path(), &["export", "sub.fit", "-f", "bmp"])
+            .status
+            .code(),
+        Some(2)
+    );
+    assert_eq!(
+        fittle_in(dir.path(), &["export", "sub.fit", "-o", "sub.fit"])
+            .status
+            .code(),
+        Some(2)
+    );
+
+    assert_eq!(std::fs::read(dir.path().join("sub.fit")).unwrap(), before);
+    assert!(
+        fittle_in(dir.path(), &["export", "--tokens"])
+            .status
+            .success()
+    );
+}

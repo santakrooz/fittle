@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } f
 import type { Display, Stf } from "../backend/types";
 import { Button, Card, Segmented } from "../ds";
 import { app, setStretch } from "../state/app";
+import { openExport } from "../state/exporter";
 import { applyStf, autoStf, shaderStretch, type Stretch } from "../state/stretch";
 
 const CH_COLORS = ["--nebula-rose", "--ok", "--nebula-teal"];
@@ -248,6 +249,9 @@ export function HistogramTab() {
         </Button>
         <Button variant="ghost" onClick={() => setStretch({ clipping: !stretch.clipping })}>
           {stretch.clipping ? "Hide clipping" : "Show clipping"}
+        </Button>
+        <Button variant="ghost" onClick={() => openExport(true)}>
+          Export with this stretch
         </Button>
       </div>
       <p className="muted small">The file stays linear. This stretch is for viewing; exports label it as a display stretch.</p>

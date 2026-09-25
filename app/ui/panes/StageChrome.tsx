@@ -1,6 +1,7 @@
 import { Separator, ToolButton, Toolbar } from "../ds";
 import { adu, bitDepth, decDms, num, raHms } from "../format";
 import { app, hover, setMode, setStretch, view } from "../state/app";
+import { openExport } from "../state/exporter";
 import type { StretchKind } from "../state/stretch";
 
 const KINDS: { value: StretchKind; label: string; key: string }[] = [
@@ -61,6 +62,8 @@ export function StageToolbar() {
               {c.toUpperCase()}
             </ToolButton>
           ))}
+        <Separator />
+        <ToolButton icon="export" label="Export image (⌘E)" onClick={() => openExport()} />
       </Toolbar>
     </div>
   );

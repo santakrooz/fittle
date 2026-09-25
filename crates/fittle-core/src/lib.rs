@@ -17,6 +17,7 @@ pub mod filename;
 pub mod fits;
 pub mod header;
 pub mod info;
+pub mod naming;
 pub mod privacy;
 pub mod vendor;
 pub mod write;

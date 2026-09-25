@@ -1,6 +1,6 @@
-//! Debayer preview for one-shot-colour (CFA) frames: 2×2 superpixel, which
-//! is fast and halves the size (a preview downsamples anyway). Bilinear/VNG
-//! for exports arrive with M4.
+//! Debayer for one-shot-colour (CFA) frames: 2×2 superpixel for viewing
+//! (fast, half size; a preview downsamples anyway) and full-size bilinear for
+//! exports.
 
 use rayon::prelude::*;
 
@@ -8,9 +8,9 @@ use crate::decode::Image;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Ch {
-    R,
-    G,
-    B,
+    R = 0,
+    G = 1,
+    B = 2,
 }
 
 /// A 2×2 colour filter pattern as it applies to the stored rows.
@@ -59,6 +59,56 @@ impl Cfa {
             }
         }
         Some(Cfa { cells })
+    }
+}
+
+/// Full-resolution bilinear debayer: each missing colour is the mean of the
+/// same-colour sensor pixels in the 3×3 neighbourhood (edges clamp).
+pub fn bilinear(img: &Image, cfa: Cfa) -> Image {
+    let (w, h) = (img.width, img.height);
+    let plane = w * h;
+    let mut data = vec![0f32; plane * 3];
+    let (r, rest) = data.split_at_mut(plane);
+    let (g, b) = rest.split_at_mut(plane);
+    r.par_chunks_mut(w)
+        .zip(g.par_chunks_mut(w))
+        .zip(b.par_chunks_mut(w))
+        .enumerate()
+        .for_each(|(y, ((rr, gg), bb))| {
+            for x in 0..w {
+                let mut sum = [0f32; 3];
+                let mut n = [0u32; 3];
+                let own = cfa.cells[y % 2][x % 2] as usize;
+                for dy in -1i64..=1 {
+                    for dx in -1i64..=1 {
+                        let (sx, sy) = (x as i64 + dx, y as i64 + dy);
+                        if sx < 0 || sy < 0 || sx >= w as i64 || sy >= h as i64 {
+                            continue;
+                        }
+                        let c = cfa.cells[sy as usize % 2][sx as usize % 2] as usize;
+                        sum[c] += img.data[sy as usize * w + sx as usize];
+                        n[c] += 1;
+                    }
+                }
+                let v = |c: usize| {
+                    if c == own {
+                        img.data[y * w + x]
+                    } else if n[c] > 0 {
+                        sum[c] / n[c] as f32
+                    } else {
+                        0.0
+                    }
+                };
+                rr[x] = v(0);
+                gg[x] = v(1);
+                bb[x] = v(2);
+            }
+        });
+    Image {
+        width: w,
+        height: h,
+        planes: 3,
+        data,
     }
 }
 
@@ -119,6 +169,29 @@ mod tests {
         };
         let out = superpixel(&img, Cfa::new("RGGB", 0, 0, false, 2).unwrap());
         assert_eq!(out.data, [1.0, 0.4, 0.2]);
+    }
+
+    #[test]
+    fn bilinear_flat_and_exact() {
+        // A flat grey CFA frame debayers to flat grey; sensor pixels keep their value.
+        let flat = Image {
+            width: 6,
+            height: 4,
+            planes: 1,
+            data: vec![0.5; 24],
+        };
+        let out = bilinear(&flat, Cfa::new("RGGB", 0, 0, false, 4).unwrap());
+        assert!(out.data.iter().all(|v| (v - 0.5).abs() < 1e-6));
+        let ramp = Image {
+            width: 4,
+            height: 4,
+            planes: 1,
+            data: (0..16).map(|i| i as f32).collect(),
+        };
+        let o = bilinear(&ramp, Cfa::new("RGGB", 0, 0, false, 4).unwrap());
+        assert_eq!(o.data[0], 0.0, "R at (0,0) keeps its value");
+        assert_eq!(o.data[16 + 1], 1.0, "G at (1,0) keeps its value");
+        assert_eq!(o.data[32 + 5], 5.0, "B at (1,1) keeps its value");
     }
 
     #[test]

@@ -3,6 +3,7 @@ import type { Card } from "../backend/types";
 import { Kbd } from "../ds";
 import { baseName } from "../format";
 import { app, getBackend, openFile, openFolder, setMode, setStretch, view } from "../state/app";
+import { openExport } from "../state/exporter";
 import { fuzzy } from "./fuzzy";
 
 type Item = { id: string; group: "Actions" | "Keywords" | "Files"; title: string; hint?: string; cli?: string; run: () => void };
@@ -13,6 +14,7 @@ function actions(): Item[] {
   const a: Item[] = [
     { id: "open", group: "Actions", title: "Open file…", cli: "fittle view <file>", run: async () => { const p = await getBackend().pickFile(); if (p) openFile(p); } },
     { id: "folder", group: "Actions", title: "Open folder…", cli: "fittle view <folder>", run: async () => { const p = await getBackend().pickFolder(); if (p) openFolder(p); } },
+    ...(s.opened?.image ? [{ id: "export", group: "Actions" as const, title: "Export image…", hint: "⌘E", cli: `fittle export ${file}`, run: () => openExport() }] : []),
     { id: "auto", group: "Actions", title: "Stretch: Auto STF", hint: "A", run: () => setStretch({ kind: "auto" }) },
     { id: "linear", group: "Actions", title: "Stretch: Linear", hint: "L", run: () => setStretch({ kind: "linear" }) },
     { id: "asinh", group: "Actions", title: "Stretch: Asinh", hint: "H", run: () => setStretch({ kind: "asinh" }) },

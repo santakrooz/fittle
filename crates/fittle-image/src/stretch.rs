@@ -12,7 +12,7 @@ const MAD_TO_SIGMA: f32 = 1.4826;
 const MAX_SAMPLES: usize = 1 << 20;
 
 /// Screen-transfer parameters for one channel, in normalized [0, 1] units.
-#[derive(Debug, Clone, Copy, PartialEq, serde::Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Stf {
     pub shadows: f32,
     pub midtones: f32,

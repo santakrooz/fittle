@@ -5,6 +5,9 @@
 
 pub mod debayer;
 pub mod decode;
+pub mod encode;
+pub mod export;
+pub mod geom;
 pub mod preview;
 pub mod rice;
 pub mod session;
@@ -13,6 +16,7 @@ pub mod stretch;
 pub mod thumb;
 pub mod tiles;
 pub mod view;
+pub mod xmp;
 
 pub use decode::{DecodeError, Image, decode_hdu};
 pub use preview::{Preview, PreviewInfo, preview};

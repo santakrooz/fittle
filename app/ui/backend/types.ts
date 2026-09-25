@@ -256,6 +256,59 @@ export type WriteReport = Plan & {
 
 export type FileResult = { path: string; report?: WriteReport; error?: string };
 
+export type ExportFormat =
+  | { kind: "png"; bits: 8 | 16 }
+  | { kind: "jpeg"; quality: number }
+  | { kind: "webp" }
+  | { kind: "tiff"; bits: 8 | 16 | 32 }
+  | { kind: "fits" };
+
+export type ExportStretch =
+  | { kind: "none" }
+  | { kind: "auto"; linked: boolean }
+  | { kind: "asinh" }
+  | { kind: "custom"; stf: Stf[]; asinh: number };
+
+/** Mirrors fittle-image `ExportSpec` (serde snake_case). */
+export type ExportSpec = {
+  format: ExportFormat;
+  stretch: ExportStretch;
+  debayer: boolean;
+  crop: { x: number; y: number; width: number; height: number } | null;
+  rotate: 0 | 90 | 180 | 270;
+  flip_horizontal: boolean;
+  flip_vertical: boolean;
+  bin: number | null;
+  bin_mode: "average" | "sum";
+  long_edge: number | null;
+  metadata: boolean;
+  private: boolean;
+};
+
+export type ExportPlan = {
+  file_name: string;
+  missing: string[];
+  width: number;
+  height: number;
+  channels: number;
+  estimate_bytes: number;
+  problem?: string;
+};
+
+export type Exported = {
+  path: string;
+  width: number;
+  height: number;
+  channels: number;
+  format: ExportFormat;
+  bytes: number;
+  steps: string[];
+  wcs: boolean;
+};
+
+/** 8-bit interleaved pixels (1 or 3 channels). */
+export type Bytes = { width: number; height: number; channels: number; data: Uint8Array };
+
 export interface Backend {
   /** File or folder the app was launched with. */
   initialPath(): Promise<{ path: string; dir: boolean } | null>;
@@ -278,6 +331,12 @@ export interface Backend {
   applyEdits(paths: string[], ops: Op[], options: EditOptions): Promise<FileResult[]>;
   /** Privacy-scrub edits for a file, to stage. */
   scrubOps(path: string): Promise<Op[]>;
+  /** Output name, size and estimate for exporting the open file. */
+  exportPlan(spec: ExportSpec, template: string): Promise<ExportPlan>;
+  /** What the export will look like, long edge ≤ maxEdge. */
+  exportPreview(spec: ExportSpec, maxEdge: number): Promise<Bytes>;
+  /** Export the open file into `dir` (null: next to the source). Never overwrites. */
+  exportImage(spec: ExportSpec, template: string, dir: string | null): Promise<Exported>;
   /** Development timing line (no-op unless tracing). */
   log?(msg: string): void;
 }

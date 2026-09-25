@@ -3,6 +3,7 @@
 
 mod diff;
 mod edit;
+mod export;
 mod fmt;
 mod header;
 mod info;
@@ -45,6 +46,20 @@ enum Command {
     RenameKey(edit::RenameArgs),
     /// Remove site coordinates, observer names and serial numbers
     Scrub(edit::ScrubArgs),
+    /// Export to PNG, JPEG, WebP, TIFF or FITS with a stretch and transforms
+    Export(export::ExportArgs),
+    /// Crop to a rectangle (new FITS file)
+    Crop(export::CropArgs),
+    /// Rotate by quarter turns (new FITS file)
+    Rotate(export::RotateArgs),
+    /// Mirror horizontally or vertically (new FITS file)
+    Flip(export::FlipArgs),
+    /// Software-bin N×N (new FITS file)
+    Bin(export::BinArgs),
+    /// Resample to a long edge (new FITS file)
+    Resize(export::ResizeArgs),
+    /// Debayer a colour (CFA) frame to RGB (new FITS file)
+    Debayer(export::DebayerArgs),
 }
 
 fn main() -> ExitCode {
@@ -57,6 +72,13 @@ fn main() -> ExitCode {
         Command::Unset(args) => edit::run_unset(args),
         Command::RenameKey(args) => edit::run_rename(args),
         Command::Scrub(args) => edit::run_scrub(args),
+        Command::Export(args) => export::run_export(args),
+        Command::Crop(args) => export::run_crop(args),
+        Command::Rotate(args) => export::run_rotate(args),
+        Command::Flip(args) => export::run_flip(args),
+        Command::Bin(args) => export::run_bin(args),
+        Command::Resize(args) => export::run_resize(args),
+        Command::Debayer(args) => export::run_debayer(args),
     };
     ExitCode::from(code)
 }
