@@ -1,0 +1,131 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 11520,
+  "hdus": [
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'M 57    '                                                            "
+          ],
+          "record": 5,
+          "type": "string",
+          "value": "M 57"
+        },
+        {
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =                 30.0                                                  "
+          ],
+          "record": 6,
+          "type": "float",
+          "value": 30.0
+        },
+        {
+          "keyword": "BSCALE",
+          "raw": [
+            "BSCALE  =                    1                                                  "
+          ],
+          "record": 7,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BZERO",
+          "raw": [
+            "BZERO   =                32768                                                  "
+          ],
+          "record": 8,
+          "type": "integer",
+          "value": 32768
+        },
+        {
+          "comment": "HDU checksum updated 2026-09-25T13:18:52",
+          "keyword": "CHECKSUM",
+          "raw": [
+            "CHECKSUM= 'ncZCnZZBnaZBnYZB'   / HDU checksum updated 2026-09-25T13:18:52       "
+          ],
+          "record": 9,
+          "type": "string",
+          "value": "ncZCnZZBnaZBnYZB"
+        },
+        {
+          "comment": "data unit checksum updated 2026-09-25T13:18:52",
+          "keyword": "DATASUM",
+          "raw": [
+            "DATASUM = '2133952236'         / data unit checksum updated 2026-09-25T13:18:52 "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "2133952236"
+        }
+      ],
+      "data_bytes": 6144,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "edge/checksum.fits",
+  "schema": "fittle.header/1"
+}

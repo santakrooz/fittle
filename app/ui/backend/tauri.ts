@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Opened, Pixels, Readout, Thumb } from "./types";
+import type { Backend, Display, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb } from "./types";
 
 /** Binary payloads: [u32 width][u32 height][u32 channels] little-endian, then data. */
 export function unpack(buf: ArrayBuffer): { width: number; height: number; channels: number; body: ArrayBuffer } {
@@ -21,7 +21,7 @@ function pixels(buf: ArrayBuffer): Pixels {
 const FITS = [{ name: "FITS", extensions: ["fit", "fits", "fts", "fz"] }];
 
 export const tauriBackend: Backend = {
-  initialPath: () => invoke<string | null>("initial_path"),
+  initialPath: () => invoke<{ path: string; dir: boolean } | null>("initial_path"),
   async pickFile() {
     const p = await open({ multiple: false, filters: FITS });
     return typeof p === "string" ? p : null;
@@ -48,4 +48,7 @@ export const tauriBackend: Backend = {
   header: (path) => invoke<HeaderDoc>("header", { path }),
   dictionary: () => invoke<KeywordInfo[]>("dictionary"),
   log: (msg) => void invoke("log", { msg }).catch(() => {}),
+  planEdit: (path, ops, options) => invoke<Plan>("plan_edit", { path, ops, options }),
+  applyEdits: (paths, ops, options) => invoke<FileResult[]>("apply_edits", { paths, ops, options }),
+  scrubOps: (path) => invoke<Op[]>("scrub_ops", { path }),
 };

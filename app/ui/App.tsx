@@ -6,6 +6,7 @@ import { Palette } from "./panes/Palette";
 import { Hud, StageToolbar } from "./panes/StageChrome";
 import { TitleBar } from "./panes/TitleBar";
 import { app, init, openFile, openFolder, setMode, setStretch, step, view } from "./state/app";
+import { edits } from "./state/edits";
 import { Stage } from "./viewer/Stage";
 
 /** React's development mode runs effects twice; open the startup file once. */
@@ -24,7 +25,8 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
       if (demo) openFolder("demo");
       else
         backend.initialPath().then((p) => {
-          if (p) void openFile(p);
+          if (p?.dir) void openFolder(p.path);
+          else if (p) void openFile(p.path);
         });
     }
 
@@ -35,6 +37,8 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
         return;
       }
       if (typing(e) || app.get().palette || e.metaKey || e.ctrlKey || e.altKey) return;
+      // In the editor, arrows must not switch files under staged edits.
+      if (edits.get().editing && app.get().tab === "header") return;
       const s = app.get();
       const k = e.key;
       if (k === "ArrowDown" || k === "ArrowRight") (e.preventDefault(), step(1));
@@ -57,9 +61,11 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
   const error = app.use((s) => s.error);
   const hasImage = app.use((s) => !!s.preview && !!s.opened?.image);
   const current = app.use((s) => s.current);
+  const tab = app.use((s) => s.tab);
+  const editing = edits.use((s) => s.editing) && tab === "header";
 
   return (
-    <div className="app">
+    <div className={`app ${editing ? "editing" : ""}`}>
       <TitleBar />
       <FileRail />
       <main className="stage" aria-busy={loading}>

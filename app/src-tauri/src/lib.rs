@@ -6,6 +6,8 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
 use fittle_core::dict::{self, KeywordInfo};
+use fittle_core::edit::{EditError, Op, Options, Plan};
+use fittle_core::write::WriteReport;
 use fittle_core::{Fits, HEADER_SCHEMA, HeaderDoc};
 use fittle_image::view::{Display, OpenedInfo};
 use fittle_image::{Mode, Readout, ViewSession};
@@ -185,6 +187,75 @@ async fn header(path: String) -> Res<serde_json::Value> {
     .map_err(err)?
 }
 
+/// What `ops` would do to `path` (dry run; nothing is written).
+#[tauri::command]
+async fn plan_edit(path: String, ops: Vec<Op>, options: Options) -> Res<Plan> {
+    spawn_blocking(move || fittle_core::edit::plan(&path, &ops, &options).map_err(err))
+        .await
+        .map_err(err)?
+}
+
+#[derive(Serialize)]
+struct FileResult {
+    path: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    report: Option<WriteReport>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    error: Option<String>,
+}
+
+/// Apply `ops` to every file. All files are planned and validated first; a
+/// validation error anywhere writes nothing.
+#[tauri::command]
+async fn apply_edits(
+    paths: Vec<String>,
+    ops: Vec<Op>,
+    options: Options,
+    state: State<'_, AppState>,
+) -> Res<Vec<FileResult>> {
+    let results = spawn_blocking(move || {
+        for p in &paths {
+            if let Err(e) = fittle_core::edit::plan(p, &ops, &options) {
+                return Err(match e {
+                    EditError::Invalid(m) => format!("{p}: {m}"),
+                    other => format!("{p}: {other}"),
+                });
+            }
+        }
+        Ok(paths
+            .into_iter()
+            .map(|p| match fittle_core::write::apply(&p, &ops, &options) {
+                Ok(r) => FileResult {
+                    path: p,
+                    report: Some(r),
+                    error: None,
+                },
+                Err(e) => FileResult {
+                    path: p,
+                    report: None,
+                    error: Some(e.to_string()),
+                },
+            })
+            .collect::<Vec<_>>())
+    })
+    .await
+    .map_err(err)??;
+    // Headers changed on disk; drop cached views.
+    *state.session.lock().unwrap() = None;
+    Ok(results)
+}
+
+/// The privacy-scrub edits for a file, to stage in the editor.
+#[tauri::command]
+async fn scrub_ops(path: String) -> Res<Vec<Op>> {
+    spawn_blocking(move || {
+        let fits = Fits::open(&path).map_err(err)?;
+        Ok(fittle_core::privacy::scrub_ops(&fits, &path))
+    })
+    .await
+    .map_err(err)?
+}
+
 #[tauri::command]
 fn dictionary() -> &'static [KeywordInfo] {
     dict::KEYWORDS
@@ -198,10 +269,22 @@ fn log(msg: String) {
     }
 }
 
-/// File passed on the command line (`fittle-app <file>`, later `fittle view`).
+#[derive(Serialize)]
+struct Launch {
+    path: String,
+    dir: bool,
+}
+
+/// File or folder passed on the command line (`fittle-app <path>`, later `fittle view`).
 #[tauri::command]
-fn initial_path() -> Option<String> {
-    std::env::args().skip(1).find(|a| !a.starts_with('-'))
+fn initial_path() -> Option<Launch> {
+    let arg = std::env::args().skip(1).find(|a| !a.starts_with('-'))?;
+    let p = std::path::Path::new(&arg);
+    let abs = p.canonicalize().unwrap_or_else(|_| p.to_path_buf());
+    Some(Launch {
+        dir: abs.is_dir(),
+        path: abs.to_string_lossy().to_string(),
+    })
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -220,7 +303,10 @@ pub fn run() {
             header,
             dictionary,
             initial_path,
-            log
+            log,
+            plan_edit,
+            apply_edits,
+            scrub_ops
         ])
         .run(tauri::generate_context!())
         .expect("error while running Fittle");

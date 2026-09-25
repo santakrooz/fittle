@@ -1,0 +1,10 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: "String::from_utf8(out.stdout).unwrap()"
+---
+sub.fit · HDU 0 · in place (header stays 1 block)
+  − FOCALLEN = 0
+  + FOCALLEN = 250
+  + APTDIA = 50.0
+  ! Changes the pixel scale and field of view Fittle derives.
+dry run: 1 of 1 file(s) would change; nothing written

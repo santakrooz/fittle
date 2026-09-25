@@ -92,6 +92,10 @@ impl HeaderBuilder {
                         };
                         s.pop();
                         s.push_str(&more);
+                        // Trailing spaces are not significant in a FITS string,
+                        // including across CONTINUE records.
+                        let keep = s.trim_end().len();
+                        s.truncate(keep);
                         card.comment = match (card.comment.take(), comment) {
                             (Some(a), Some(b)) => Some(format!("{a} {b}")),
                             (a, b) => a.or(b),

@@ -18,4 +18,5 @@ serde_json.workspace = true
 
 [dev-dependencies]
 insta.workspace = true
+tempfile = "3"
 serde_json.workspace = true

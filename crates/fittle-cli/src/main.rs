@@ -2,6 +2,7 @@
 //! `fittle-*` crates.
 
 mod diff;
+mod edit;
 mod fmt;
 mod header;
 mod info;
@@ -36,6 +37,14 @@ enum Command {
     Header(header::Args),
     /// Compare two headers, with calibration impact
     Diff(diff::Args),
+    /// Set keywords (KEY=VALUE) in one or more files
+    Set(edit::SetArgs),
+    /// Remove keywords from one or more files
+    Unset(edit::UnsetArgs),
+    /// Rename a keyword in one or more files
+    RenameKey(edit::RenameArgs),
+    /// Remove site coordinates, observer names and serial numbers
+    Scrub(edit::ScrubArgs),
 }
 
 fn main() -> ExitCode {
@@ -44,6 +53,10 @@ fn main() -> ExitCode {
         Command::Info(args) => info::run(args),
         Command::Header(args) => header::run(args),
         Command::Diff(args) => diff::run(args),
+        Command::Set(args) => edit::run_set(args),
+        Command::Unset(args) => edit::run_unset(args),
+        Command::RenameKey(args) => edit::run_rename(args),
+        Command::Scrub(args) => edit::run_scrub(args),
     };
     ExitCode::from(code)
 }

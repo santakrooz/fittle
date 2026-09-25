@@ -123,12 +123,14 @@ function Equipment({ info }: { info: Info }) {
       <Fields>
         {optics && <Field label="Optics" value={optics} unit={opticsUnit} fallback={isDefault(f.focal_mm)}
             title={[f.focal_mm && `Focal length: ${sourceText(f.focal_mm.source)}`, f.aperture_mm && `Aperture: ${sourceText(f.aperture_mm.source)}`].filter(Boolean).join("\n")} />}
-        {(f.sensor || f.camera) && (
+        {f.camera && <Field label="Camera" value={f.camera.value} title={sourceText(f.camera.source)} />}
+        {(f.sensor || f.pixel_um) && (
           <Field
             label="Sensor"
-            value={f.sensor?.value ?? f.camera?.value}
+            value={f.sensor?.value ?? "—"}
             unit={f.pixel_um ? `${num(f.pixel_um.value, 2)} µm` : undefined}
-            fallback={isDefault(f.sensor) || isDefault(f.pixel_um)}
+            fallback={isDefault(f.sensor)}
+            title={f.sensor ? sourceText(f.sensor.source) : undefined}
           />
         )}
         {(f.gain || f.sensor_temp_c) && (
