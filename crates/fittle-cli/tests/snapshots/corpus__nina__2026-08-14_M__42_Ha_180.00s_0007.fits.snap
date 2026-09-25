@@ -1,0 +1,441 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 14400,
+  "hdus": [
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "comment": "Type of exposure",
+          "keyword": "IMAGETYP",
+          "raw": [
+            "IMAGETYP= 'LIGHT   '           / Type of exposure                               "
+          ],
+          "record": 5,
+          "type": "string",
+          "value": "LIGHT"
+        },
+        {
+          "comment": "[s] Exposure duration",
+          "keyword": "EXPOSURE",
+          "raw": [
+            "EXPOSURE=                180.0 / [s] Exposure duration                          "
+          ],
+          "record": 6,
+          "type": "float",
+          "value": 180.0
+        },
+        {
+          "comment": "[s] Exposure duration",
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =                180.0 / [s] Exposure duration                          "
+          ],
+          "record": 7,
+          "type": "float",
+          "value": 180.0
+        },
+        {
+          "comment": "Time of observation (local)",
+          "keyword": "DATE-LOC",
+          "raw": [
+            "DATE-LOC= '2026-08-14T23:02:11.123' / Time of observation (local)               "
+          ],
+          "record": 8,
+          "type": "string",
+          "value": "2026-08-14T23:02:11.123"
+        },
+        {
+          "comment": "Time of observation (UTC)",
+          "keyword": "DATE-OBS",
+          "raw": [
+            "DATE-OBS= '2026-08-15T06:02:11.123' / Time of observation (UTC)                 "
+          ],
+          "record": 9,
+          "type": "string",
+          "value": "2026-08-15T06:02:11.123"
+        },
+        {
+          "keyword": "XBINNING",
+          "raw": [
+            "XBINNING=                    1                                                  "
+          ],
+          "record": 10,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "YBINNING",
+          "raw": [
+            "YBINNING=                    1                                                  "
+          ],
+          "record": 11,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "GAIN",
+          "raw": [
+            "GAIN    =                  139                                                  "
+          ],
+          "record": 12,
+          "type": "integer",
+          "value": 139
+        },
+        {
+          "keyword": "OFFSET",
+          "raw": [
+            "OFFSET  =                   21                                                  "
+          ],
+          "record": 13,
+          "type": "integer",
+          "value": 21
+        },
+        {
+          "comment": "[e-/ADU] Electrons per A/D unit",
+          "keyword": "EGAIN",
+          "raw": [
+            "EGAIN   =                 0.25 / [e-/ADU] Electrons per A/D unit                "
+          ],
+          "record": 14,
+          "type": "float",
+          "value": 0.25
+        },
+        {
+          "keyword": "XPIXSZ",
+          "raw": [
+            "XPIXSZ  =                 3.76                                                  "
+          ],
+          "record": 15,
+          "type": "float",
+          "value": 3.76
+        },
+        {
+          "keyword": "YPIXSZ",
+          "raw": [
+            "YPIXSZ  =                 3.76                                                  "
+          ],
+          "record": 16,
+          "type": "float",
+          "value": 3.76
+        },
+        {
+          "keyword": "INSTRUME",
+          "raw": [
+            "INSTRUME= 'ZWO ASI294MM Pro'                                                    "
+          ],
+          "record": 17,
+          "type": "string",
+          "value": "ZWO ASI294MM Pro"
+        },
+        {
+          "keyword": "SET-TEMP",
+          "raw": [
+            "SET-TEMP=                -10.0                                                  "
+          ],
+          "record": 18,
+          "type": "float",
+          "value": -10.0
+        },
+        {
+          "keyword": "CCD-TEMP",
+          "raw": [
+            "CCD-TEMP=                 -9.8                                                  "
+          ],
+          "record": 19,
+          "type": "float",
+          "value": -9.8
+        },
+        {
+          "keyword": "TELESCOP",
+          "raw": [
+            "TELESCOP= 'Esprit 100ED'                                                        "
+          ],
+          "record": 20,
+          "type": "string",
+          "value": "Esprit 100ED"
+        },
+        {
+          "keyword": "FOCALLEN",
+          "raw": [
+            "FOCALLEN=                550.0                                                  "
+          ],
+          "record": 21,
+          "type": "float",
+          "value": 550.0
+        },
+        {
+          "keyword": "FOCRATIO",
+          "raw": [
+            "FOCRATIO=                  5.5                                                  "
+          ],
+          "record": 22,
+          "type": "float",
+          "value": 5.5
+        },
+        {
+          "keyword": "RA",
+          "raw": [
+            "RA      =              83.8221                                                  "
+          ],
+          "record": 23,
+          "type": "float",
+          "value": 83.8221
+        },
+        {
+          "keyword": "DEC",
+          "raw": [
+            "DEC     =              -5.3911                                                  "
+          ],
+          "record": 24,
+          "type": "float",
+          "value": -5.3911
+        },
+        {
+          "keyword": "CENTALT",
+          "raw": [
+            "CENTALT =                 38.2                                                  "
+          ],
+          "record": 25,
+          "type": "float",
+          "value": 38.2
+        },
+        {
+          "keyword": "CENTAZ",
+          "raw": [
+            "CENTAZ  =                171.4                                                  "
+          ],
+          "record": 26,
+          "type": "float",
+          "value": 171.4
+        },
+        {
+          "keyword": "AIRMASS",
+          "raw": [
+            "AIRMASS =                 1.61                                                  "
+          ],
+          "record": 27,
+          "type": "float",
+          "value": 1.61
+        },
+        {
+          "keyword": "PIERSIDE",
+          "raw": [
+            "PIERSIDE= 'West    '                                                            "
+          ],
+          "record": 28,
+          "type": "string",
+          "value": "West"
+        },
+        {
+          "keyword": "SITEELEV",
+          "raw": [
+            "SITEELEV=               1350.0                                                  "
+          ],
+          "record": 29,
+          "type": "float",
+          "value": 1350.0
+        },
+        {
+          "keyword": "SITELAT",
+          "raw": [
+            "SITELAT =                 36.1                                                  "
+          ],
+          "record": 30,
+          "type": "float",
+          "value": 36.1
+        },
+        {
+          "keyword": "SITELONG",
+          "raw": [
+            "SITELONG=               -115.2                                                  "
+          ],
+          "record": 31,
+          "type": "float",
+          "value": -115.2
+        },
+        {
+          "keyword": "FWHEEL",
+          "raw": [
+            "FWHEEL  = 'ZWO EFW '                                                            "
+          ],
+          "record": 32,
+          "type": "string",
+          "value": "ZWO EFW"
+        },
+        {
+          "keyword": "FILTER",
+          "raw": [
+            "FILTER  = 'Ha      '                                                            "
+          ],
+          "record": 33,
+          "type": "string",
+          "value": "Ha"
+        },
+        {
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'M 42    '                                                            "
+          ],
+          "record": 34,
+          "type": "string",
+          "value": "M 42"
+        },
+        {
+          "keyword": "OBJCTRA",
+          "raw": [
+            "OBJCTRA = '05 35 17'                                                            "
+          ],
+          "record": 35,
+          "type": "string",
+          "value": "05 35 17"
+        },
+        {
+          "keyword": "OBJCTDEC",
+          "raw": [
+            "OBJCTDEC= '-05 23 28'                                                           "
+          ],
+          "record": 36,
+          "type": "string",
+          "value": "-05 23 28"
+        },
+        {
+          "keyword": "FOCNAME",
+          "raw": [
+            "FOCNAME = 'ZWO EAF '                                                            "
+          ],
+          "record": 37,
+          "type": "string",
+          "value": "ZWO EAF"
+        },
+        {
+          "keyword": "FOCPOS",
+          "raw": [
+            "FOCPOS  =                12840                                                  "
+          ],
+          "record": 38,
+          "type": "integer",
+          "value": 12840
+        },
+        {
+          "keyword": "FOCTEMP",
+          "raw": [
+            "FOCTEMP =                 11.5                                                  "
+          ],
+          "record": 39,
+          "type": "float",
+          "value": 11.5
+        },
+        {
+          "keyword": "ROWORDER",
+          "raw": [
+            "ROWORDER= 'TOP-DOWN'                                                            "
+          ],
+          "record": 40,
+          "type": "string",
+          "value": "TOP-DOWN"
+        },
+        {
+          "keyword": "EQUINOX",
+          "raw": [
+            "EQUINOX =               2000.0                                                  "
+          ],
+          "record": 41,
+          "type": "float",
+          "value": 2000.0
+        },
+        {
+          "keyword": "SWCREATE",
+          "raw": [
+            "SWCREATE= 'N.I.N.A. 3.1.2.9001'                                                 "
+          ],
+          "record": 42,
+          "type": "string",
+          "value": "N.I.N.A. 3.1.2.9001"
+        },
+        {
+          "keyword": "BSCALE",
+          "raw": [
+            "BSCALE  =                    1                                                  "
+          ],
+          "record": 43,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BZERO",
+          "raw": [
+            "BZERO   =                32768                                                  "
+          ],
+          "record": 44,
+          "type": "integer",
+          "value": 32768
+        }
+      ],
+      "data_bytes": 6144,
+      "data_offset": 5760,
+      "header_blocks": 2,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "nina/2026-08-14_M 42_Ha_180.00s_0007.fits",
+  "schema": "fittle.header/1"
+}

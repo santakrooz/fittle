@@ -1,0 +1,310 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 11520,
+  "hdus": [
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "comment": "Bayer color pattern",
+          "keyword": "BAYERPAT",
+          "raw": [
+            "BAYERPAT= 'GRBG    '           / Bayer color pattern                            "
+          ],
+          "record": 5,
+          "type": "string",
+          "value": "GRBG"
+        },
+        {
+          "keyword": "XBAYROFF",
+          "raw": [
+            "XBAYROFF=                    0                                                  "
+          ],
+          "record": 6,
+          "type": "integer",
+          "value": 0
+        },
+        {
+          "keyword": "YBAYROFF",
+          "raw": [
+            "YBAYROFF=                    0                                                  "
+          ],
+          "record": 7,
+          "type": "integer",
+          "value": 0
+        },
+        {
+          "comment": "instrument used",
+          "keyword": "INSTRUME",
+          "raw": [
+            "INSTRUME= 'Seestar S50'        / instrument used                                "
+          ],
+          "record": 8,
+          "type": "string",
+          "value": "Seestar S50"
+        },
+        {
+          "keyword": "TELESCOP",
+          "raw": [
+            "TELESCOP= 'Seestar S50'                                                         "
+          ],
+          "record": 9,
+          "type": "string",
+          "value": "Seestar S50"
+        },
+        {
+          "keyword": "CREATOR",
+          "raw": [
+            "CREATOR = 'ZWO Seestar S50'                                                     "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "ZWO Seestar S50"
+        },
+        {
+          "comment": "object name",
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'NGC 6995'           / object name                                    "
+          ],
+          "record": 11,
+          "type": "string",
+          "value": "NGC 6995"
+        },
+        {
+          "comment": "[deg] RA of image center",
+          "keyword": "RA",
+          "raw": [
+            "RA      =              314.295 / [deg] RA of image center                       "
+          ],
+          "record": 12,
+          "type": "float",
+          "value": 314.295
+        },
+        {
+          "comment": "[deg] Dec of image center",
+          "keyword": "DEC",
+          "raw": [
+            "DEC     =              31.2353 / [deg] Dec of image center                      "
+          ],
+          "record": 13,
+          "type": "float",
+          "value": 31.2353
+        },
+        {
+          "comment": "UTC start of exposure",
+          "keyword": "DATE-OBS",
+          "raw": [
+            "DATE-OBS= '2026-09-25T04:34:12.000' / UTC start of exposure                     "
+          ],
+          "record": 14,
+          "type": "string",
+          "value": "2026-09-25T04:34:12.000"
+        },
+        {
+          "comment": "[s] exposure time",
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =                 20.0 / [s] exposure time                              "
+          ],
+          "record": 15,
+          "type": "float",
+          "value": 20.0
+        },
+        {
+          "keyword": "EXPOSURE",
+          "raw": [
+            "EXPOSURE=                 20.0                                                  "
+          ],
+          "record": 16,
+          "type": "float",
+          "value": 20.0
+        },
+        {
+          "keyword": "IMAGETYP",
+          "raw": [
+            "IMAGETYP= 'Light   '                                                            "
+          ],
+          "record": 17,
+          "type": "string",
+          "value": "Light"
+        },
+        {
+          "keyword": "GAIN",
+          "raw": [
+            "GAIN    =                   80                                                  "
+          ],
+          "record": 18,
+          "type": "integer",
+          "value": 80
+        },
+        {
+          "comment": "[C] sensor temperature",
+          "keyword": "CCD-TEMP",
+          "raw": [
+            "CCD-TEMP=                 28.4 / [C] sensor temperature                         "
+          ],
+          "record": 19,
+          "type": "float",
+          "value": 28.4
+        },
+        {
+          "comment": "[um] pixel width",
+          "keyword": "XPIXSZ",
+          "raw": [
+            "XPIXSZ  =                  2.9 / [um] pixel width                               "
+          ],
+          "record": 20,
+          "type": "float",
+          "value": 2.9
+        },
+        {
+          "keyword": "YPIXSZ",
+          "raw": [
+            "YPIXSZ  =                  2.9                                                  "
+          ],
+          "record": 21,
+          "type": "float",
+          "value": 2.9
+        },
+        {
+          "keyword": "XBINNING",
+          "raw": [
+            "XBINNING=                    1                                                  "
+          ],
+          "record": 22,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "YBINNING",
+          "raw": [
+            "YBINNING=                    1                                                  "
+          ],
+          "record": 23,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "comment": "[mm] focal length",
+          "keyword": "FOCALLEN",
+          "raw": [
+            "FOCALLEN=                    0 / [mm] focal length                              "
+          ],
+          "record": 24,
+          "type": "integer",
+          "value": 0
+        },
+        {
+          "keyword": "FILTER",
+          "raw": [
+            "FILTER  = 'LP      '                                                            "
+          ],
+          "record": 25,
+          "type": "string",
+          "value": "LP"
+        },
+        {
+          "keyword": "SITELAT",
+          "raw": [
+            "SITELAT =                33.69                                                  "
+          ],
+          "record": 26,
+          "type": "float",
+          "value": 33.69
+        },
+        {
+          "keyword": "SITELONG",
+          "raw": [
+            "SITELONG=              -117.27                                                  "
+          ],
+          "record": 27,
+          "type": "float",
+          "value": -117.27
+        },
+        {
+          "keyword": "BSCALE",
+          "raw": [
+            "BSCALE  =                    1                                                  "
+          ],
+          "record": 28,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BZERO",
+          "raw": [
+            "BZERO   =                32768                                                  "
+          ],
+          "record": 29,
+          "type": "integer",
+          "value": 32768
+        }
+      ],
+      "data_bytes": 6144,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit",
+  "schema": "fittle.header/1"
+}

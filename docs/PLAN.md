@@ -167,7 +167,7 @@ fittle/
 │  ├─ fittle-scan     # folder walker, session report, sub grader, calibration matcher
 │  ├─ fittle-cli      # clap; binary `fittle`
 │  └─ fittle-mcp      # rmcp (official Rust MCP SDK), stdio; also `fittle mcp`
-├─ app/              # Tauri 2 shell + frontend (Svelte 5 or React, match Stardog)
+├─ app/              # Tauri 2 shell + React 19 frontend (matches AstroSideKick)
 │  ├─ src-tauri/      # commands call fittle-core directly
 │  └─ ui/             # components, design tokens, WebGL2 viewer
 ├─ integrations/     # quicklook (Swift), win-thumbnail (Rust COM), linux thumbnailer
@@ -177,13 +177,15 @@ fittle/
 
 | Layer | Choice | Why |
 | --- | --- | --- |
-| FITS I/O | Own header reader/writer + `fitsrs` (pure Rust) for data; `cfitsio` via `fitsio` only if a gap appears | Pure Rust = painless Windows/macOS/Linux builds, no C toolchain |
-| Tile compression | Spike: `fitsrs` support vs a small Rice codec | `.fz` files from Seestar/ASIAIR archives |
+| FITS I/O | **Decided (M0, [0001](decisions/0001-fits-io.md)):** own header reader/writer and own pixel decoder; `fitsrs` kept only as a test oracle | Pure Rust = painless Windows/macOS/Linux builds, no C toolchain |
+| Tile compression | **Decided (M0):** own RICE_1 decoder (`fitsrs` 0.4.1 mis-decodes 16-bit Rice); GZIP / quantized float later | `.fz` files from Seestar/ASIAIR archives |
 | Pixels | `ndarray` + `rayon`; SIMD stats | 60 MP median/MAD in <150 ms |
 | Export | `image` crate (PNG/JPEG/WebP/TIFF), `tiff` for 32-bit float, `ravif` for AVIF |  |
 | Ephemeris | Small built-in VSOP87/ELP-lite or `astro` crate | Offline moon/sun positions |
 | CLI | `clap` v4, `comfy-table`, `owo-colors`, `--json` everywhere |  |
 | MCP | `rmcp`, stdio transport; optional streamable HTTP later | Works with Claude Desktop/Code |
+| GUI framework | **Decided: React 19 + TypeScript + Vite** ([0002](decisions/0002-frontend-react.md)), matching AstroSideKick | Shared tokens/components |
+| Web edition (proposed, after local v1) | Same UI + core compiled to WASM, possibly hosted on Railway ([0003](decisions/0003-web-edition.md)) | Free tool, marketing, opt-in corpus growth |
 | GUI shell | Tauri 2 | \~10 MB installers vs 100+ MB Electron; native menus, file associations |
 | GUI render | WebGL2 tiled texture viewer (float textures, stretch in fragment shader) | Instant re-stretch while dragging sliders |
 
@@ -345,14 +347,14 @@ Ship the read-only CLI first, because it hardens the core that every other surfa
 | M5 MCP (1 wk) | All read tools, preview images, dry-run writes | Works in Claude Desktop + Claude Code |
 | M6 Folders (3 wk) | Scan/session report, sub grader, blink, filmstrip, calibration matcher, organize/rename | 3,785-sub Seestar folder scanned + graded <60 s |
 | v1.0 (2 wk) | Installers, signing, Quick Look / thumbnails, docs site, sample corpus | Public GitHub release |
-| Later | Watch mode, plate-solve, WCS annotations, XISF read, AstroBin CSV, night-vision theme |  |
+| Later | Watch mode, plate-solve, WCS annotations, XISF read, AstroBin CSV, night-vision theme; web edition (proposed, [0003](decisions/0003-web-edition.md)) — design once the local app is solid |  |
 
 ## Open decisions and Claude Code kickoff
 
 **Open decisions**
 
-- [ ] License: MIT/Apache-2.0 dual (Rust norm, maximally reusable) vs GPL-3.0 (matches Siril's ecosystem, keeps forks open).
-- [ ] Frontend framework: match Stardog's stack exactly so components and tokens can be shared.
+- [ ] License: MIT/Apache-2.0 dual (Rust norm, maximally reusable) vs GPL-3.0 (matches Siril's ecosystem, keeps forks open). Leaning MIT; confirm before first public release.
+- [x] Frontend framework: React 19 + TypeScript + Vite, matching AstroSideKick ([0002](decisions/0002-frontend-react.md)).
 - [ ] Name check: "fittle" on crates.io, Homebrew, winget, GitHub org, and domain.
 - [ ] Shared token package name and repo (`@astrodog/tokens`?) and who owns it.
 - [ ] Do Quick Look / Explorer thumbnails ship in v1.0 or v1.1?

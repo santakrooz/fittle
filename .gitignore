@@ -32,3 +32,6 @@ build/
 # Fittle outputs and backups
 *.bak
 _rejected/
+
+# Local real-data corpus (large, may contain site coordinates) — never commit
+/sample fits/

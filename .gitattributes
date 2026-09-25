@@ -1,0 +1,8 @@
+* text=auto eol=lf
+*.fit  binary
+*.fits binary
+*.fts  binary
+*.fz   binary
+*.png  binary
+*.jpg  binary
+*.tif  binary

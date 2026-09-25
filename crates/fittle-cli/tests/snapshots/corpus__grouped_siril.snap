@@ -1,0 +1,34 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: "String::from_utf8(out.stdout).unwrap()"
+---
+siril/r_pp_NGC6995_stacked.fit · 16.9 KB · 1 HDU
+
+HDU 0 · primary · 32-bit float · 64 × 48 · header 1 block · data 12.0 KB
+  STRUCTURE
+    SIMPLE    T                                 Conforms to FITS 🔒
+    BITPIX    -32                               Bits per pixel 🔒
+    NAXIS     2                                 Number of axes 🔒
+    NAXIS1    64                                Axis length 🔒
+    NAXIS2    48                                Axis length 🔒
+  TARGET
+    OBJECT    NGC 6995                          Object
+  OPTICS
+    TELESCOP  Seestar S50                       Telescope
+  CAMERA
+    INSTRUME  Seestar S50                       Camera
+  FILTER
+    FILTER    LP                                Filter
+  EXPOSURE
+    EXPTIME   20.0 s                            Exposure
+    STACKCNT  212                               Stacked frames
+    LIVETIME  4240.0 s                          Total integration
+  TIME
+    DATE-OBS  2026-09-25T04:34:12               Start (UTC)
+  SOFTWARE
+    PROGRAM   Siril v1.4.0                      Program
+  HISTORY & COMMENTS
+    HISTORY   Background extraction (Correction: Subtraction)
+    HISTORY   Stacking: Average stacking with Winsorized sigma clipping
+    HISTORY   Siril stack: 212 images, normalisation: additive + scaling
+    HISTORY   Registration: global star alignment

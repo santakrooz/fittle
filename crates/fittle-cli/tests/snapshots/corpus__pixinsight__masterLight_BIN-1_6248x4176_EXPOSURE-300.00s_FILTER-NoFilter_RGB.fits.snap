@@ -1,0 +1,283 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 40320,
+  "hdus": [
+    {
+      "bitpix": -32,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                  -32 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": -32
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    3 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 3
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "NAXIS3",
+          "raw": [
+            "NAXIS3  =                    3                                                  "
+          ],
+          "record": 5,
+          "type": "integer",
+          "value": 3
+        },
+        {
+          "keyword": "IMAGETYP",
+          "raw": [
+            "IMAGETYP= 'Master Light'                                                        "
+          ],
+          "record": 6,
+          "type": "string",
+          "value": "Master Light"
+        },
+        {
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'IC 1805 '                                                            "
+          ],
+          "record": 7,
+          "type": "string",
+          "value": "IC 1805"
+        },
+        {
+          "keyword": "NCOMBINE",
+          "raw": [
+            "NCOMBINE=                   96                                                  "
+          ],
+          "record": 8,
+          "type": "integer",
+          "value": 96
+        },
+        {
+          "keyword": "EXPTIME",
+          "raw": [
+            "EXPTIME =                300.0                                                  "
+          ],
+          "record": 9,
+          "type": "float",
+          "value": 300.0
+        },
+        {
+          "keyword": "TELESCOP",
+          "raw": [
+            "TELESCOP= 'Esprit 100ED'                                                        "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "Esprit 100ED"
+        },
+        {
+          "keyword": "INSTRUME",
+          "raw": [
+            "INSTRUME= 'ZWO ASI2600MC Pro'                                                   "
+          ],
+          "record": 11,
+          "type": "string",
+          "value": "ZWO ASI2600MC Pro"
+        },
+        {
+          "keyword": "FOCALLEN",
+          "raw": [
+            "FOCALLEN=                550.0                                                  "
+          ],
+          "record": 12,
+          "type": "float",
+          "value": 550.0
+        },
+        {
+          "keyword": "XPIXSZ",
+          "raw": [
+            "XPIXSZ  =                 3.76                                                  "
+          ],
+          "record": 13,
+          "type": "float",
+          "value": 3.76
+        },
+        {
+          "keyword": "CTYPE1",
+          "raw": [
+            "CTYPE1  = 'RA---TAN'                                                            "
+          ],
+          "record": 14,
+          "type": "string",
+          "value": "RA---TAN"
+        },
+        {
+          "keyword": "CTYPE2",
+          "raw": [
+            "CTYPE2  = 'DEC--TAN'                                                            "
+          ],
+          "record": 15,
+          "type": "string",
+          "value": "DEC--TAN"
+        },
+        {
+          "keyword": "CRVAL1",
+          "raw": [
+            "CRVAL1  =               38.175                                                  "
+          ],
+          "record": 16,
+          "type": "float",
+          "value": 38.175
+        },
+        {
+          "keyword": "CRVAL2",
+          "raw": [
+            "CRVAL2  =                61.45                                                  "
+          ],
+          "record": 17,
+          "type": "float",
+          "value": 61.45
+        },
+        {
+          "keyword": "CRPIX1",
+          "raw": [
+            "CRPIX1  =                 32.5                                                  "
+          ],
+          "record": 18,
+          "type": "float",
+          "value": 32.5
+        },
+        {
+          "keyword": "CRPIX2",
+          "raw": [
+            "CRPIX2  =                 24.5                                                  "
+          ],
+          "record": 19,
+          "type": "float",
+          "value": 24.5
+        },
+        {
+          "keyword": "CD1_1",
+          "raw": [
+            "CD1_1   =            -0.000392                                                  "
+          ],
+          "record": 20,
+          "type": "float",
+          "value": -0.000392
+        },
+        {
+          "keyword": "CD1_2",
+          "raw": [
+            "CD1_2   =                  0.0                                                  "
+          ],
+          "record": 21,
+          "type": "float",
+          "value": 0.0
+        },
+        {
+          "keyword": "CD2_1",
+          "raw": [
+            "CD2_1   =                  0.0                                                  "
+          ],
+          "record": 22,
+          "type": "float",
+          "value": 0.0
+        },
+        {
+          "keyword": "CD2_2",
+          "raw": [
+            "CD2_2   =             0.000392                                                  "
+          ],
+          "record": 23,
+          "type": "float",
+          "value": 0.000392
+        },
+        {
+          "keyword": "SWCREATE",
+          "raw": [
+            "SWCREATE= 'PixInsight 1.9.3'                                                    "
+          ],
+          "record": 24,
+          "type": "string",
+          "value": "PixInsight 1.9.3"
+        },
+        {
+          "keyword": "HISTORY",
+          "raw": [
+            "HISTORY ImageIntegration.pixelCombination: average                              "
+          ],
+          "record": 25,
+          "type": "commentary",
+          "value": "ImageIntegration.pixelCombination: average"
+        },
+        {
+          "keyword": "HISTORY",
+          "raw": [
+            "HISTORY ImageIntegration.pixelRejection: ESD                                    "
+          ],
+          "record": 26,
+          "type": "commentary",
+          "value": "ImageIntegration.pixelRejection: ESD"
+        },
+        {
+          "keyword": "HISTORY",
+          "raw": [
+            "HISTORY ImageIntegration.numberOfImages: 96                                     "
+          ],
+          "record": 27,
+          "type": "commentary",
+          "value": "ImageIntegration.numberOfImages: 96"
+        }
+      ],
+      "data_bytes": 36864,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48,
+        3
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "pixinsight/masterLight_BIN-1_6248x4176_EXPOSURE-300.00s_FILTER-NoFilter_RGB.fits",
+  "schema": "fittle.header/1"
+}

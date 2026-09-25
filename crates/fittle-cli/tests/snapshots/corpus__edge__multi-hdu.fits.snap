@@ -1,0 +1,360 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 20160,
+  "hdus": [
+    {
+      "bitpix": 8,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                    8 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 8
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    0 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 0
+        },
+        {
+          "keyword": "EXTEND",
+          "raw": [
+            "EXTEND  =                    T                                                  "
+          ],
+          "record": 3,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "keyword": "OBJECT",
+          "raw": [
+            "OBJECT  = 'M 27    '                                                            "
+          ],
+          "record": 4,
+          "type": "string",
+          "value": "M 27"
+        },
+        {
+          "keyword": "SWCREATE",
+          "raw": [
+            "SWCREATE= 'fittle corpus'                                                       "
+          ],
+          "record": 5,
+          "type": "string",
+          "value": "fittle corpus"
+        }
+      ],
+      "data_bytes": 0,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": []
+    },
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "Image extension",
+          "keyword": "XTENSION",
+          "raw": [
+            "XTENSION= 'IMAGE   '           / Image extension                                "
+          ],
+          "record": 0,
+          "type": "string",
+          "value": "IMAGE"
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "comment": "number of parameters",
+          "keyword": "PCOUNT",
+          "raw": [
+            "PCOUNT  =                    0 / number of parameters                           "
+          ],
+          "record": 5,
+          "type": "integer",
+          "value": 0
+        },
+        {
+          "comment": "number of groups",
+          "keyword": "GCOUNT",
+          "raw": [
+            "GCOUNT  =                    1 / number of groups                               "
+          ],
+          "record": 6,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BSCALE",
+          "raw": [
+            "BSCALE  =                    1                                                  "
+          ],
+          "record": 7,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "keyword": "BZERO",
+          "raw": [
+            "BZERO   =                32768                                                  "
+          ],
+          "record": 8,
+          "type": "integer",
+          "value": 32768
+        },
+        {
+          "comment": "extension name",
+          "keyword": "EXTNAME",
+          "raw": [
+            "EXTNAME = 'SCI     '           / extension name                                 "
+          ],
+          "record": 9,
+          "type": "string",
+          "value": "SCI"
+        }
+      ],
+      "data_bytes": 6144,
+      "data_offset": 5760,
+      "header_blocks": 1,
+      "header_offset": 2880,
+      "index": 1,
+      "kind": "image",
+      "shape": [
+        64,
+        48
+      ]
+    },
+    {
+      "bitpix": 8,
+      "cards": [
+        {
+          "comment": "binary table extension",
+          "keyword": "XTENSION",
+          "raw": [
+            "XTENSION= 'BINTABLE'           / binary table extension                         "
+          ],
+          "record": 0,
+          "type": "string",
+          "value": "BINTABLE"
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                    8 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 8
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "comment": "length of dimension 1",
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   12 / length of dimension 1                          "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 12
+        },
+        {
+          "comment": "length of dimension 2",
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                    2 / length of dimension 2                          "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "comment": "number of group parameters",
+          "keyword": "PCOUNT",
+          "raw": [
+            "PCOUNT  =                    0 / number of group parameters                     "
+          ],
+          "record": 5,
+          "type": "integer",
+          "value": 0
+        },
+        {
+          "comment": "number of groups",
+          "keyword": "GCOUNT",
+          "raw": [
+            "GCOUNT  =                    1 / number of groups                               "
+          ],
+          "record": 6,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "comment": "number of table fields",
+          "keyword": "TFIELDS",
+          "raw": [
+            "TFIELDS =                    3 / number of table fields                         "
+          ],
+          "record": 7,
+          "type": "integer",
+          "value": 3
+        },
+        {
+          "keyword": "TTYPE1",
+          "raw": [
+            "TTYPE1  = 'X       '                                                            "
+          ],
+          "record": 8,
+          "type": "string",
+          "value": "X"
+        },
+        {
+          "keyword": "TFORM1",
+          "raw": [
+            "TFORM1  = 'E       '                                                            "
+          ],
+          "record": 9,
+          "type": "string",
+          "value": "E"
+        },
+        {
+          "keyword": "TTYPE2",
+          "raw": [
+            "TTYPE2  = 'Y       '                                                            "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "Y"
+        },
+        {
+          "keyword": "TFORM2",
+          "raw": [
+            "TFORM2  = 'E       '                                                            "
+          ],
+          "record": 11,
+          "type": "string",
+          "value": "E"
+        },
+        {
+          "keyword": "TTYPE3",
+          "raw": [
+            "TTYPE3  = 'HFR     '                                                            "
+          ],
+          "record": 12,
+          "type": "string",
+          "value": "HFR"
+        },
+        {
+          "keyword": "TFORM3",
+          "raw": [
+            "TFORM3  = 'E       '                                                            "
+          ],
+          "record": 13,
+          "type": "string",
+          "value": "E"
+        },
+        {
+          "keyword": "TUNIT3",
+          "raw": [
+            "TUNIT3  = 'px      '                                                            "
+          ],
+          "record": 14,
+          "type": "string",
+          "value": "px"
+        },
+        {
+          "comment": "extension name",
+          "keyword": "EXTNAME",
+          "raw": [
+            "EXTNAME = 'STARS   '           / extension name                                 "
+          ],
+          "record": 15,
+          "type": "string",
+          "value": "STARS"
+        }
+      ],
+      "data_bytes": 24,
+      "data_offset": 17280,
+      "header_blocks": 1,
+      "header_offset": 14400,
+      "index": 2,
+      "kind": "bin_table",
+      "shape": [
+        12,
+        2
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "edge/multi-hdu.fits",
+  "schema": "fittle.header/1"
+}
