@@ -281,7 +281,10 @@ fn initial_path() -> Option<Launch> {
     let arg = std::env::args().skip(1).find(|a| !a.starts_with('-'))?;
     let p = std::path::Path::new(&arg);
     let abs = p.canonicalize().unwrap_or_else(|_| p.to_path_buf());
-    Some(Launch { dir: abs.is_dir(), path: abs.to_string_lossy().to_string() })
+    Some(Launch {
+        dir: abs.is_dir(),
+        path: abs.to_string_lossy().to_string(),
+    })
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
