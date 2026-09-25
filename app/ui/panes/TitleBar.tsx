@@ -8,11 +8,11 @@ export function TitleBar() {
   const mac = navigator.platform.toLowerCase().includes("mac");
   return (
     <header className="titlebar" data-tauri-drag-region>
-      <span className="brand" aria-hidden="true" />
-      <nav className="crumbs" aria-label="Location">
-        {folder && <span className="crumb">{folder}</span>}
-        {folder && current && <span className="crumb-sep">›</span>}
-        {current && <span className="crumb current">{current.startsWith("demo:") ? "" : baseName(current)}</span>}
+      <span className="brand" aria-hidden="true" data-tauri-drag-region />
+      <nav className="crumbs" aria-label="Location" data-tauri-drag-region>
+        {folder && <span className="crumb" data-tauri-drag-region>{folder}</span>}
+        {folder && current && <span className="crumb-sep" data-tauri-drag-region>›</span>}
+        {current && <span className="crumb current" data-tauri-drag-region>{current.startsWith("demo:") ? "" : baseName(current)}</span>}
       </nav>
       <button type="button" className="search-pill" onClick={() => app.set({ palette: true })}>
         <svg viewBox="0 0 24 24" aria-hidden="true">

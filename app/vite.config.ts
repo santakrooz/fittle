@@ -7,7 +7,7 @@ const host = process.env.TAURI_DEV_HOST;
 
 /** Dev-only: serve `?demo` fixtures from app/demo-fixtures at /demo/* (never bundled). */
 function demoFixtures(): Plugin {
-  const root = join(__dirname, "demo-fixtures");
+  const root = join(import.meta.dirname, "demo-fixtures");
   return {
     name: "fittle-demo-fixtures",
     apply: "serve",
