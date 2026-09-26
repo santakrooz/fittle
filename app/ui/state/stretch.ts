@@ -67,8 +67,12 @@ export function shaderStretch(d: Display, s: Stretch): ShaderStretch {
     asinh,
   });
   switch (s.kind) {
-    case "linear":
-      return pack([IDENTITY, IDENTITY, IDENTITY]);
+    case "linear": {
+      // A straight line over the data's own range: visible, and relative
+      // brightness stays true (older fixtures lack the range: full scale).
+      const l = d.stf_linear;
+      return pack(l?.length ? [0, 1, 2].map((i) => l[Math.min(i, l.length - 1)]) : [IDENTITY, IDENTITY, IDENTITY]);
+    }
     case "manual":
       return pack([0, 1, 2].map((i) => s.manual[Math.min(i, s.manual.length - 1)] ?? IDENTITY));
     case "asinh": {

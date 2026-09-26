@@ -39,6 +39,11 @@ pub struct Display {
     pub stf: Vec<Stf>,
     /// Auto-STF from the luminance-weighted mean of channels (linked).
     pub stf_linked: Stf,
+    /// Viewer "Linear": a straight line from the auto black point to a white
+    /// point that puts the background at 15 % grey (at most the 99.99th
+    /// percentile), per channel. Relative brightness stays true; the
+    /// frame is visible instead of black.
+    pub stf_linear: Vec<Stf>,
 }
 
 struct Shown {
@@ -94,6 +99,20 @@ fn shown(img: Image, mode: Mode, source_step: usize) -> Shown {
     } else {
         stf[0]
     };
+    let stf_linear = stf
+        .iter()
+        .zip(&stats)
+        .map(|(s, c)| Stf {
+            shadows: s.shadows,
+            midtones: 0.5,
+            // White point where the background lands at 15 % grey, but never
+            // past the bright end of the data: still a straight line.
+            highlights: (s.shadows + (c.median - s.shadows).max(1e-5) / 0.15)
+                .min(c.p9999)
+                .max(s.shadows + 1e-4)
+                .min(1.0),
+        })
+        .collect();
     let display = Display {
         mode,
         width: img.width,
@@ -103,6 +122,7 @@ fn shown(img: Image, mode: Mode, source_step: usize) -> Shown {
         stats,
         stf,
         stf_linked,
+        stf_linear,
     };
     Shown { img, display }
 }

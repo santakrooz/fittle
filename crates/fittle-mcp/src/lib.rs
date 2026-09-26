@@ -457,7 +457,7 @@ fn spec_label(s: Option<&str>) -> &'static str {
     match s.unwrap_or("auto") {
         "linked" => "auto STF, linked",
         "asinh" => "arcsinh",
-        "none" | "linear" => "none (linear)",
+        "none" | "linear" => "linear over the data's range",
         _ => "auto STF",
     }
 }
@@ -546,6 +546,15 @@ impl Fittle {
                 .image
                 .as_ref()
                 .ok_or_else(|| s.image_error.clone().unwrap_or_else(|| "no image".into()))?;
+            // "none" in a preview means the viewer's Linear: a straight line
+            // over the data's own range, so the frame is visible.
+            let stretch = match stretch {
+                Stretch::None => Stretch::Custom {
+                    stf: o.display(o.info().default_mode).stf_linear.clone(),
+                    asinh: 0.0,
+                },
+                other => other,
+            };
             let spec = ExportSpec {
                 stretch,
                 ..Default::default()

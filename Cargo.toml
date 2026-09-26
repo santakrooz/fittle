@@ -8,8 +8,8 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
 repository = "https://github.com/santakrooz/fittle"
-# License is an open decision (MIT/Apache-2.0 vs GPL-3.0); see docs/PLAN.md.
 publish = false
+license = "MIT"
 
 [workspace.dependencies]
 fittle-core = { path = "crates/fittle-core" }

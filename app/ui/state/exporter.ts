@@ -93,7 +93,6 @@ function format(c: ExportChoices): ExportFormat {
 function viewStretch(): ExportStretch {
   const s = app.get();
   if (!s.display) return { kind: "auto", linked: s.stretch.linked };
-  if (s.stretch.kind === "linear") return { kind: "none" };
   const sh = shaderStretch(s.display, s.stretch);
   return {
     kind: "custom",
