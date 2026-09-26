@@ -234,3 +234,10 @@ canvas.ft-thumb { display: block; object-fit: cover; }
   .export { grid-template-columns: 1fr; overflow-y: auto; }
   .ex-preview { border-right: 0; border-bottom: 1px solid var(--line); min-height: 200px; }
 }
+
+/* Result toast */
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 30; max-width: min(560px, calc(100% - 32px));
+  padding: 10px 16px; border-radius: var(--radius-pill); background: var(--surface-2); border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-float); font-size: 13px; color: var(--text); }
+.toast.ok { border-color: color-mix(in srgb, var(--ok) 45%, var(--line-strong)); }
+.toast.bad { border-color: var(--bad); color: var(--bad); }

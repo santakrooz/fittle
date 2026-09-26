@@ -1,0 +1,84 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 11520,
+  "hdus": [
+    {
+      "bitpix": 16,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                   16 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 16
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   64                                                  "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48                                                  "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "keyword": "EXTEND",
+          "raw": [
+            "EXTEND  =                    T                                                  "
+          ],
+          "record": 5,
+          "type": "logical",
+          "value": true
+        }
+      ],
+      "data_bytes": 6144,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "edge/rice/gzip2-i16-original.fits",
+  "schema": "fittle.header/1"
+}

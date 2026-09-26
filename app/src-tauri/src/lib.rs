@@ -308,6 +308,22 @@ async fn export_image(
     .map_err(err)?
 }
 
+/// fpack (or funpack) a file into a new file beside it. Never overwrites.
+#[tauri::command]
+async fn pack_file(path: String, unpack: bool) -> Res<fittle_image::fpack::PackReport> {
+    use fittle_image::fpack;
+    spawn_blocking(move || {
+        let src = std::path::PathBuf::from(&path);
+        if unpack {
+            fpack::funpack(&src, &fpack::unpacked_name(&src)).map_err(err)
+        } else {
+            fpack::fpack(&src, &fpack::packed_name(&src), &fpack::PackOptions::default()).map_err(err)
+        }
+    })
+    .await
+    .map_err(err)?
+}
+
 /// The privacy-scrub edits for a file, to stage in the editor.
 #[tauri::command]
 async fn scrub_ops(path: String) -> Res<Vec<Op>> {
@@ -372,7 +388,8 @@ pub fn run() {
             scrub_ops,
             export_plan,
             export_preview,
-            export_image
+            export_image,
+            pack_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running Fittle");

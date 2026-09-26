@@ -309,6 +309,14 @@ export type Exported = {
 /** 8-bit interleaved pixels (1 or 3 channels). */
 export type Bytes = { width: number; height: number; channels: number; data: Uint8Array };
 
+export type PackReport = {
+  source: string;
+  path: string;
+  bytes_in: number;
+  bytes_out: number;
+  verified: boolean;
+};
+
 export interface Backend {
   /** File or folder the app was launched with. */
   initialPath(): Promise<{ path: string; dir: boolean } | null>;
@@ -337,6 +345,8 @@ export interface Backend {
   exportPreview(spec: ExportSpec, maxEdge: number): Promise<Bytes>;
   /** Export the open file into `dir` (null: next to the source). Never overwrites. */
   exportImage(spec: ExportSpec, template: string, dir: string | null): Promise<Exported>;
+  /** fpack (unpack=false) or funpack a file into a new file beside it. */
+  packFile(path: string, unpack: boolean): Promise<PackReport>;
   /** Development timing line (no-op unless tracing). */
   log?(msg: string): void;
 }

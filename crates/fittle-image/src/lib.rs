@@ -7,6 +7,7 @@ pub mod debayer;
 pub mod decode;
 pub mod encode;
 pub mod export;
+pub mod fpack;
 pub mod geom;
 pub mod preview;
 pub mod rice;

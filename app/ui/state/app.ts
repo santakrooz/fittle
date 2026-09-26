@@ -35,6 +35,8 @@ type AppState = {
   header: HeaderDoc | null;
   headerQuery: string;
   dictionary: Map<string, KeywordInfo>;
+  /** Short result message shown as a toast. */
+  notice: { text: string; tone: "ok" | "bad" } | null;
 };
 
 export const app = createStore<AppState>({
@@ -53,6 +55,7 @@ export const app = createStore<AppState>({
   header: null,
   headerQuery: "",
   dictionary: new Map(),
+  notice: null,
 });
 
 /** Pixel under the cursor; updated at pointer rate, read only by the HUD. */
@@ -169,3 +172,30 @@ export const onViewCommand = (l: (c: ViewCommand) => void) => {
   return () => viewListeners.delete(l);
 };
 export const view = (c: ViewCommand) => viewListeners.forEach((l) => l(c));
+
+let noticeTimer: ReturnType<typeof setTimeout> | undefined;
+export function notify(text: string, tone: "ok" | "bad" = "ok") {
+  clearTimeout(noticeTimer);
+  app.set({ notice: { text, tone } });
+  noticeTimer = setTimeout(() => app.set({ notice: null }), 6000);
+}
+
+const mb = (b: number) => (b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : `${Math.round(b / 1e3)} kB`);
+
+/** Compress (fpack) or expand (funpack) the current file into a new file beside it. */
+export async function packCurrent(unpack: boolean) {
+  const path = app.get().current;
+  if (!path) return;
+  notify(unpack ? "Expanding…" : "Compressing…");
+  try {
+    const r = await backend.packFile(path, unpack);
+    notify(`Saved ${baseName(r.path)} · ${mb(r.bytes_in)} → ${mb(r.bytes_out)}, verified`);
+    const folder = app.get().folder;
+    if (folder && folder.path === dirName(r.path)) {
+      const entries = await backend.listFolder(folder.path);
+      app.set({ folder: { ...folder, entries } });
+    }
+  } catch (e) {
+    notify(e instanceof Error ? e.message : String(e), "bad");
+  }
+}

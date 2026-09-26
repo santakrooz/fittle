@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboa
 import type { Card } from "../backend/types";
 import { Kbd } from "../ds";
 import { baseName } from "../format";
-import { app, getBackend, openFile, openFolder, setMode, setStretch, view } from "../state/app";
+import { app, getBackend, openFile, openFolder, packCurrent, setMode, setStretch, view } from "../state/app";
 import { openExport } from "../state/exporter";
 import { fuzzy } from "./fuzzy";
 
@@ -39,6 +39,14 @@ function actions(): Item[] {
       run: () => { const i = app.get().opened?.info; if (i) navigator.clipboard?.writeText(JSON.stringify(i, null, 2)).catch(() => {}); },
     },
   ];
+  if (s.current && !s.current.startsWith("demo:")) {
+    const packed = s.current.toLowerCase().endsWith(".fz");
+    a.push(
+      packed
+        ? { id: "funpack", group: "Actions", title: "Expand compressed file (funpack)", cli: `fittle funpack ${file}`, run: () => packCurrent(true) }
+        : { id: "fpack", group: "Actions", title: "Compress file losslessly (fpack)", cli: `fittle fpack ${file}`, run: () => packCurrent(false) },
+    );
+  }
   if (s.opened?.image?.can_debayer) {
     a.push({ id: "debayer", group: "Actions", title: s.mode === "debayer" ? "Show raw CFA" : "Debayer preview", hint: "D", run: () => setMode(s.mode === "debayer" ? "raw" : "debayer") });
   }
