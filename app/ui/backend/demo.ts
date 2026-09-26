@@ -137,6 +137,12 @@ export function demoBackend(): Backend {
     sessionReport: () => json<Report>("/demo/report.json"),
     saveReport: () => Promise.reject(new Error("Session reports need the desktop app.")),
     moveRejects: () => Promise.reject(new Error("Moving files needs the desktop app.")),
+    // Blink in the demo uses the (small) thumbnails; stretch is baked in.
+    async blinkFrame(path) {
+      const p = unpack(await bin(`/demo/files/${idOf(path)}/thumb.bin`));
+      return { width: p.width, height: p.height, bottomUp: false, stf: [0, 0.5, 1, 0, 0.5, 1, 0, 0.5, 1], rgba: new Uint8ClampedArray(p.body) };
+    },
+    subStats: () => Promise.reject(new Error("Star metrics need the desktop app.")),
     // Fixture written by `fittle match-cal <lights> --library <dir> --json > app/demo-fixtures/calmatch.json`.
     matchCalibration: () => json<Matching>("/demo/calmatch.json"),
   };

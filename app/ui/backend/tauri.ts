@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import type { Backend, Bytes, Matching, Move, PackReport, Report, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb } from "./types";
+import type { Backend, BlinkFrame, Bytes, FrameStats, Matching, Move, PackReport, Report, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb } from "./types";
 
 /** Binary payloads: [u32 width][u32 height][u32 channels] little-endian, then data. */
 export function unpack(buf: ArrayBuffer): { width: number; height: number; channels: number; body: ArrayBuffer } {
@@ -61,5 +61,13 @@ export const tauriBackend: Backend = {
   sessionReport: (path, recursive, grade, rules) => invoke<Report>("session_report", { path, recursive, grade, rules: rules ?? null }),
   saveReport: (format) => invoke<string>("save_report", { format }),
   moveRejects: (paths, dryRun) => invoke<Move[]>("move_rejects", { paths, dryRun }),
+  async blinkFrame(path, maxEdge, stf) {
+    const buf = await invoke<ArrayBuffer>("blink_frame", { path, maxEdge, stf: stf ?? null });
+    const head = new DataView(buf, 0, 52);
+    const u = (i: number) => head.getUint32(i * 4, true);
+    const f = Array.from({ length: 9 }, (_, i) => head.getFloat32(16 + i * 4, true));
+    return { width: u(0), height: u(1), bottomUp: u(3) === 1, stf: f, rgba: new Uint8ClampedArray(buf, 52) } satisfies BlinkFrame;
+  },
+  subStats: (path) => invoke<FrameStats>("sub_stats", { path }),
   matchCalibration: (lights, library) => invoke<Matching>("match_calibration", { lights, library }),
 };
