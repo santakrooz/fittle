@@ -36,6 +36,10 @@ pub enum Format {
     },
     /// 32-bit float, header kept.
     Fits,
+    /// AV1 still image (8-bit), lossy.
+    Avif {
+        quality: u8,
+    },
 }
 
 impl Format {
@@ -46,10 +50,11 @@ impl Format {
             Format::Webp => "webp",
             Format::Tiff { .. } => "tif",
             Format::Fits => "fits",
+            Format::Avif { .. } => "avif",
         }
     }
 
-    /// Parse `png`, `png16`, `jpeg`, `jpg`, `webp`, `tiff`, `tiff16`, `tiff32`, `fits`.
+    /// Parse `png`, `png16`, `jpeg`, `jpg`, `webp`, `avif`, `tiff`, `tiff16`, `tiff32`, `fits`.
     pub fn parse(s: &str) -> Option<Format> {
         Some(match s.to_ascii_lowercase().as_str() {
             "png" | "png8" => Format::Png { bits: 8 },
@@ -60,6 +65,7 @@ impl Format {
             "tiff8" | "tif8" => Format::Tiff { bits: 8 },
             "tiff32" | "tif32" => Format::Tiff { bits: 32 },
             "fit" | "fits" | "fts" => Format::Fits,
+            "avif" => Format::Avif { quality: 80 },
             _ => return None,
         })
     }
@@ -124,6 +130,8 @@ pub struct ExportSpec {
     pub metadata: bool,
     /// Leave out site location, observer and serial numbers.
     pub private: bool,
+    /// Add the share-card caption strip (target, rig, integration, date).
+    pub card: bool,
 }
 
 impl Default for ExportSpec {
@@ -141,6 +149,7 @@ impl Default for ExportSpec {
             long_edge: None,
             metadata: true,
             private: true,
+            card: false,
         }
     }
 }
@@ -226,7 +235,7 @@ pub fn render(
             .as_ref()
             .map(|(p, x, y)| (p.as_str(), *x, *y, bottom_up)),
     )?;
-    render_opened(&opened, Some(hdu.header()), bottom_up, spec, None)
+    render_opened(&opened, info, Some(hdu.header()), bottom_up, spec, None)
 }
 
 /// Whether stored rows run bottom-up for this file.
@@ -246,11 +255,19 @@ pub fn preview(
     spec: &ExportSpec,
     max_edge: usize,
 ) -> Result<Rendered, ExportError> {
-    render_opened(opened, None, bottom_up(info), spec, Some(max_edge.max(16)))
+    render_opened(
+        opened,
+        info,
+        None,
+        bottom_up(info),
+        spec,
+        Some(max_edge.max(16)),
+    )
 }
 
 fn render_opened(
     opened: &Opened,
+    info: &Info,
     header: Option<&fittle_core::Header>,
     bottom_up: bool,
     spec: &ExportSpec,
@@ -456,6 +473,16 @@ fn render_opened(
             "display stretch: {} (non-linear)",
             spec.stretch.label()
         ));
+    }
+    if spec.card {
+        if spec.format == Format::Fits {
+            return Err(ExportError::Invalid(
+                "a share card is an image; pick PNG, JPEG, WebP, AVIF or TIFF".into(),
+            ));
+        }
+        let cap = crate::card::caption(info, spec.stretch.label(), spec.private);
+        img = crate::card::compose(&img, &cap);
+        steps.push("share card: caption strip added".into());
     }
     Ok(Rendered {
         image: img,
@@ -780,6 +807,14 @@ pub fn write(
         Format::Jpeg { quality } => encode::jpeg(&tmp, &raster(&r.image, 8), quality, x),
         Format::Webp => encode::webp(&tmp, &raster(&r.image, 8), x),
         Format::Tiff { bits } => encode::tiff(&tmp, &raster(&r.image, bits), x),
+        Format::Avif { quality } => encode::avif(
+            &tmp,
+            &raster(&r.image, 8),
+            quality,
+            // The summary line carries no site or serial numbers.
+            spec.metadata
+                .then(|| encode::exif(&crate::xmp::summary(info), "Fittle")),
+        ),
         Format::Fits => {
             let (lo, hi) = r.normalized_from;
             let physical = spec.stretch == Stretch::None;
@@ -912,6 +947,15 @@ pub fn plan(info: &Info, spec: &ExportSpec, template: &str) -> Plan {
             ((h as f64 * f).round() as usize).max(1),
         );
     }
+    let mut channels = channels;
+    if spec.card {
+        if spec.format == Format::Fits {
+            problem = Some("a share card is an image; pick PNG, JPEG, WebP, AVIF or TIFF".into());
+        } else {
+            (w, h, _) = crate::card::size(w, h);
+            channels = 3;
+        }
+    }
     let samples = (w * h * channels) as f64;
     let estimate = match spec.format {
         Format::Png { bits } => samples * bits as f64 / 8.0 * 0.6,
@@ -919,6 +963,7 @@ pub fn plan(info: &Info, spec: &ExportSpec, template: &str) -> Plan {
         Format::Webp => samples * 0.45,
         Format::Tiff { bits } => samples * bits as f64 / 8.0,
         Format::Fits => (samples * 4.0 / 2880.0).ceil() * 2880.0 + 2880.0 * 4.0,
+        Format::Avif { quality } => samples * (0.02 + 0.12 * (quality as f64 / 100.0).powi(3)),
     };
     Plan {
         file_name,

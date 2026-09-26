@@ -32,15 +32,15 @@ pub struct Output {
     /// Output directory, or a file name for a single input
     #[arg(short, long, value_name = "PATH")]
     out: Option<PathBuf>,
-    /// png, png16, jpeg, webp, tiff8, tiff16, tiff32, fits (default from -o's extension)
+    /// png, png16, jpeg, webp, avif, tiff8, tiff16, tiff32, fits (default from -o's extension)
     #[arg(short, long, value_name = "FORMAT")]
     format: Option<String>,
     /// Display stretch baked into the pixels
     #[arg(long, value_enum)]
     stretch: Option<StretchArg>,
-    /// JPEG quality 1–100
-    #[arg(long, default_value_t = 92)]
-    quality: u8,
+    /// JPEG / AVIF quality 1–100 (default 92 / 80)
+    #[arg(long)]
+    quality: Option<u8>,
     /// File-name template, e.g. '{object}_{filter}_{integration}' (see `fittle export --tokens`)
     #[arg(short, long)]
     template: Option<String>,
@@ -85,6 +85,9 @@ pub struct ExportArgs {
     /// Resample so the long edge is N pixels
     #[arg(long, value_name = "N")]
     long_edge: Option<usize>,
+    /// Add a share-card caption strip (target, rig, integration, date)
+    #[arg(long)]
+    card: bool,
     /// List file-name template tokens
     #[arg(long)]
     tokens: bool,
@@ -207,8 +210,13 @@ impl Output {
             Some(f) => Format::parse(f).ok_or_else(|| format!("unknown format '{f}'"))?,
             None => from_ext.unwrap_or(d.format),
         };
-        if let Format::Jpeg { quality } = &mut format {
-            *quality = self.quality.clamp(1, 100);
+        let default_quality = if matches!(format, Format::Avif { .. }) {
+            80
+        } else {
+            92
+        };
+        if let Format::Jpeg { quality } | Format::Avif { quality } = &mut format {
+            *quality = self.quality.unwrap_or(default_quality).clamp(1, 100);
         }
         let stretch = match self.stretch {
             None => d.stretch.clone(),
@@ -360,6 +368,7 @@ pub fn run_export(a: ExportArgs) -> u8 {
             BinMode::Average
         };
         s.long_edge = a.long_edge;
+        s.card = a.card;
     })
 }
 

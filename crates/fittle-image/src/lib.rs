@@ -3,6 +3,7 @@
 //! M0 scope: decode an image HDU (plain or RICE_1 tile-compressed) into
 //! physical `f32` values, normalize, and compute auto-STF display parameters.
 
+pub mod card;
 pub mod debayer;
 pub mod decode;
 pub mod encode;

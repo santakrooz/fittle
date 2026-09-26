@@ -180,7 +180,7 @@ fittle/
 | FITS I/O | **Decided (M0, [0001](decisions/0001-fits-io.md)):** own header reader/writer and own pixel decoder; `fitsrs` kept only as a test oracle | Pure Rust = painless Windows/macOS/Linux builds, no C toolchain |
 | Tile compression | **Decided (M0):** own RICE_1 decoder (`fitsrs` 0.4.1 mis-decodes 16-bit Rice); GZIP / quantized float later | `.fz` files from Seestar/ASIAIR archives |
 | Pixels | `ndarray` + `rayon`; SIMD stats | 60 MP median/MAD in <150 ms |
-| Export | **Decided (M4, [0005](decisions/0005-export-encoders.md)):** `png`, `jpeg-encoder`, `image-webp` (lossless only), `tiff` (8/16/32f) directly, own FITS writer; `ravif` for AVIF later | XMP in every format, no C deps |
+| Export | **Decided (M4, [0005](decisions/0005-export-encoders.md)):** `png`, `jpeg-encoder`, `image-webp` (lossless only), `tiff` (8/16/32f) directly, own FITS writer; `ravif` (no asm) for AVIF; `swash` + embedded OFL fonts for share cards | XMP in every format (EXIF for AVIF), no C deps |
 | Ephemeris | Small built-in VSOP87/ELP-lite or `astro` crate | Offline moon/sun positions |
 | CLI | `clap` v4, `comfy-table`, `owo-colors`, `--json` everywhere |  |
 | MCP | `rmcp`, stdio transport; optional streamable HTTP later | Works with Claude Desktop/Code |

@@ -207,7 +207,7 @@ canvas.ft-thumb { display: block; object-fit: cover; }
 .ex-esc { background: none; border: 0; padding: 0; cursor: pointer; }
 .ex-group { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
 .ex-label { font-size: 12px; color: var(--text-muted); }
-.ex-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.ex-tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
 .ex-tile { height: 36px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text-muted); font: 500 13px var(--font-ui); cursor: pointer; }
 .ex-tile:hover { color: var(--text); border-color: var(--line-strong); }
 .ex-tile[aria-checked="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-fg); }

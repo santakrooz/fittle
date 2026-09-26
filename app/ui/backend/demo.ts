@@ -119,7 +119,7 @@ export function demoBackend(): Backend {
     async exportPlan(spec, template) {
       const f = opened?.info.fields;
       const img = opened?.image;
-      const ext = { png: "png", jpeg: "jpg", webp: "webp", tiff: "tif", fits: "fits" }[spec.format.kind];
+      const ext = { png: "png", jpeg: "jpg", webp: "webp", avif: "avif", tiff: "tif", fits: "fits" }[spec.format.kind];
       const name = template
         .replace("{object}", f?.object?.value ?? "unknown")
         .replace("{filter}", f?.filter?.value ?? "unknown")

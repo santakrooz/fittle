@@ -140,3 +140,73 @@ pub fn fits(path: &Path, records: &[String], data: &[u8]) -> io::Result<()> {
     w.write_all(&vec![0u8; pad])?;
     w.flush()
 }
+
+/// Minimal big-endian EXIF (TIFF) block: ImageDescription and Software.
+pub fn exif(description: &str, software: &str) -> Vec<u8> {
+    let ascii = |s: &str| -> Vec<u8> {
+        let mut v: Vec<u8> = s
+            .chars()
+            .map(|c| {
+                if c.is_ascii() && !c.is_ascii_control() {
+                    c as u8
+                } else {
+                    b'?'
+                }
+            })
+            .collect();
+        v.push(0);
+        v
+    };
+    let entries = [
+        (0x010Eu16, ascii(description)),
+        (0x0131u16, ascii(software)),
+    ];
+    let ifd_len = 2 + entries.len() * 12 + 4;
+    let mut out = b"MM\0\x2a".to_vec();
+    out.extend(8u32.to_be_bytes());
+    out.extend((entries.len() as u16).to_be_bytes());
+    let mut data_at = 8 + ifd_len;
+    let mut values = Vec::new();
+    for (tag, v) in &entries {
+        out.extend(tag.to_be_bytes());
+        out.extend(2u16.to_be_bytes()); // ASCII
+        out.extend((v.len() as u32).to_be_bytes());
+        if v.len() <= 4 {
+            let mut inline = v.clone();
+            inline.resize(4, 0);
+            out.extend(inline);
+        } else {
+            out.extend((data_at as u32).to_be_bytes());
+            data_at += v.len();
+            values.extend_from_slice(v);
+        }
+    }
+    out.extend(0u32.to_be_bytes()); // no next IFD
+    out.extend(values);
+    out
+}
+
+/// AVIF (AV1, 8-bit, pure-Rust rav1e). `quality` 1–100. Metadata goes in as
+/// EXIF (`exif`), since the AVIF writer has no XMP slot.
+pub fn avif(path: &Path, r: &Raster, quality: u8, exif: Option<Vec<u8>>) -> io::Result<()> {
+    let Samples::U8(d) = &r.samples else {
+        return Err(other("AVIF needs 8-bit samples"));
+    };
+    let rgb: Vec<ravif::RGB8> = if r.channels == 3 {
+        d.chunks_exact(3)
+            .map(|c| ravif::RGB8::new(c[0], c[1], c[2]))
+            .collect()
+    } else {
+        d.iter().map(|&v| ravif::RGB8::new(v, v, v)).collect()
+    };
+    let mut enc = ravif::Encoder::new()
+        .with_quality(quality.clamp(1, 100) as f32)
+        .with_speed(6);
+    if let Some(e) = exif {
+        enc = enc.with_exif(e);
+    }
+    let out = enc
+        .encode_rgb(ravif::Img::new(&rgb[..], r.width, r.height))
+        .map_err(other)?;
+    std::fs::write(path, out.avif_file)
+}

@@ -405,3 +405,93 @@ fn plan_matches_export_and_preview_runs() {
             .is_some()
     );
 }
+
+#[test]
+fn share_card_and_avif() {
+    let dir = tmp("card");
+    let src = corpus(SEESTAR);
+    let spec = ExportSpec {
+        card: true,
+        format: Format::Png { bits: 8 },
+        ..Default::default()
+    };
+    let out = export(&src, &dir, Some("card"), &spec).unwrap();
+    let (w, h, _) = fittle_image::card::size(64, 48);
+    assert_eq!((out.width, out.height, out.channels), (w, h, 3));
+    let info = fittle_core::info(&src).unwrap();
+    let plan = fittle_image::export::plan(&info, &spec, "x");
+    assert_eq!((plan.width, plan.height, plan.channels), (w, h, 3));
+    // Caption comes from info; private hides the site.
+    let cap = fittle_image::card::caption(&info, "auto STF", true);
+    assert_eq!(cap.title, "NGC 6995");
+    assert!(
+        cap.rig.starts_with("ZWO Seestar S50") && cap.rig.contains("20 s"),
+        "{}",
+        cap.rig
+    );
+    assert!(!cap.details.contains('°'));
+    assert!(
+        fittle_image::card::caption(&info, "auto STF", false)
+            .details
+            .contains("33.7°N")
+    );
+    // Not for FITS.
+    let fits = ExportSpec {
+        card: true,
+        format: Format::Fits,
+        ..Default::default()
+    };
+    assert!(export(&src, &dir, None, &fits).is_err());
+    assert!(
+        fittle_image::export::plan(&info, &fits, "x")
+            .problem
+            .is_some()
+    );
+
+    let avif = export(
+        &src,
+        &dir,
+        Some("small"),
+        &ExportSpec {
+            format: Format::parse("avif").unwrap(),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let bytes = std::fs::read(&avif.path).unwrap();
+    assert_eq!(&bytes[4..12], b"ftypavif");
+    // EXIF summary, no site.
+    let text = String::from_utf8_lossy(&bytes);
+    assert!(text.contains("NGC 6995") && text.contains("Fittle") && !text.contains("33.69"));
+}
+
+/// Visual regression for the share card; text edges may differ slightly
+/// across CPUs, so allow a few pixels off by more than 2.
+#[test]
+fn golden_share_card() {
+    let golden = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../testdata/golden/export/seestar-card.png");
+    let dir = tmp("card-golden");
+    let spec = ExportSpec {
+        card: true,
+        format: Format::Png { bits: 8 },
+        ..Default::default()
+    };
+    let out = export(&corpus(SEESTAR), &dir, Some("card"), &spec).unwrap();
+    if std::env::var_os("FITTLE_UPDATE_GOLDEN").is_some() || !golden.exists() {
+        std::fs::copy(&out.path, &golden).unwrap();
+        assert!(
+            std::env::var_os("FITTLE_UPDATE_GOLDEN").is_some(),
+            "golden written; review and commit it"
+        );
+        return;
+    }
+    let (a, b) = (png_pixels(Path::new(&out.path)), png_pixels(&golden));
+    assert_eq!((a.0, a.1), (b.0, b.1));
+    let off =
+        a.3.iter()
+            .zip(&b.3)
+            .filter(|(x, y)| x.abs_diff(**y) > 2)
+            .count();
+    assert!(off * 1000 < a.3.len(), "{off} samples differ");
+}

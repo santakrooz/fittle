@@ -19,6 +19,8 @@ export type ExportChoices = {
   metadata: boolean;
   private: boolean;
   debayer: boolean;
+  /** Add the share-card caption strip. */
+  card: boolean;
   /** Output folder; null = next to the source. */
   dir: string | null;
 };
@@ -34,6 +36,7 @@ const DEFAULTS: ExportChoices = {
   metadata: true,
   private: true,
   debayer: true,
+  card: false,
   dir: null,
 };
 
@@ -75,10 +78,14 @@ function format(c: ExportChoices): ExportFormat {
       return { kind: "png", bits: c.pngBits };
     case "jpeg":
       return { kind: "jpeg", quality: c.quality };
+    case "avif":
+      return { kind: "avif", quality: c.quality };
     case "tiff":
       return { kind: "tiff", bits: c.tiffBits };
+    case "webp":
+      return { kind: "webp" };
     default:
-      return { kind: c.format };
+      return { kind: "fits" };
   }
 }
 
@@ -111,5 +118,6 @@ export function specOf(c: ExportChoices): ExportSpec {
     long_edge: c.longEdge,
     metadata: c.metadata,
     private: c.private,
+    card: c.card && c.format !== "fits",
   };
 }
