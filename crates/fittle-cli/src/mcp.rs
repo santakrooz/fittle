@@ -45,6 +45,54 @@ pub struct ScanArgs {
     /// Print JSON (schema fittle.scan/1), with one row per file
     #[arg(long)]
     json: bool,
+    /// Also grade every light sub (stars, HFR, background, trails)
+    #[arg(long)]
+    grade: bool,
+    /// Grading limits, e.g. 'hfr>3.5,stars<50' (implies --grade)
+    #[arg(long, value_name = "RULES")]
+    reject: Option<String>,
+    /// Write a session report: md, html or json (schema fittle.report/1)
+    #[arg(long, value_name = "FORMAT")]
+    report: Option<String>,
+    /// Write an AstroBin acquisition CSV (kept subs when graded)
+    #[arg(long)]
+    astrobin: bool,
+    /// Output file for --report / --astrobin (default: stdout); never overwritten
+    #[arg(short, long, value_name = "FILE")]
+    out: Option<PathBuf>,
+}
+
+fn emit(text: &str, out: Option<&PathBuf>) -> u8 {
+    let Some(p) = out else {
+        print!("{text}");
+        return exit::OK;
+    };
+    match std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(p)
+    {
+        Ok(mut f) => {
+            use std::io::Write;
+            if let Err(e) = f.write_all(text.as_bytes()) {
+                eprintln!("fittle: {}: {e}", p.display());
+                return exit::ERROR;
+            }
+            eprintln!("{} {}", good("✓"), p.display());
+            exit::OK
+        }
+        Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {
+            eprintln!(
+                "fittle: {} already exists; Fittle never overwrites",
+                p.display()
+            );
+            exit::VALIDATION
+        }
+        Err(e) => {
+            eprintln!("fittle: {}: {e}", p.display());
+            exit::ERROR
+        }
+    }
 }
 
 fn hours(s: f64) -> String {
@@ -68,6 +116,45 @@ pub fn run_scan(a: ScanArgs) -> u8 {
             return exit::ERROR;
         }
     };
+    let rules = match a
+        .reject
+        .as_deref()
+        .map(fittle_scan::grade::Rules::parse)
+        .transpose()
+    {
+        Ok(r) => r,
+        Err(e) => {
+            eprintln!("fittle: {e}");
+            return exit::VALIDATION;
+        }
+    };
+    let graded = a.grade || rules.is_some();
+    if a.report.is_some() || a.astrobin || graded {
+        let rules = rules.unwrap_or_default();
+        let r = fittle_scan::report::report(
+            &a.folder.to_string_lossy(),
+            &entries,
+            graded.then_some(&rules),
+        );
+        if a.astrobin {
+            return emit(
+                &fittle_scan::report::astrobin_csv(&r, &entries),
+                a.out.as_ref(),
+            );
+        }
+        let text = match a.report.as_deref() {
+            Some("md" | "markdown") | None => fittle_scan::report::markdown(&r),
+            Some("html") => fittle_scan::report::html(&r),
+            Some("json") => serde_json::to_string_pretty(&r).expect("serializable") + "\n",
+            Some(other) => {
+                eprintln!("fittle: report format '{other}': use md, html or json");
+                return exit::VALIDATION;
+            }
+        };
+        if a.report.is_some() || a.json {
+            return emit(&text, a.out.as_ref());
+        }
+    }
     let s = fittle_scan::summarize(&a.folder.to_string_lossy(), &entries);
     if a.json {
         let mut v = serde_json::to_value(&s).expect("serializable");

@@ -158,7 +158,15 @@ fn mcp_end_to_end() {
     assert_eq!(grade["dry_run"], true);
     assert!(sub.exists(), "dry run must not move");
     let scan = c.call_json("fits_scan_folder", json!({ "path": dir.path() }));
-    assert_eq!(scan["files"], 1);
+    assert_eq!(scan["schema"], "fittle.report/1");
+    assert_eq!(scan["summary"]["files"], 1);
+    assert!(
+        scan["checks"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|c| c["text"] == "Exposure 20 s on all subs")
+    );
     assert_eq!(
         c.call_json("fits_header", json!({ "path": s, "grep": "EXPTIME" }))["schema"],
         "fittle.header/1"

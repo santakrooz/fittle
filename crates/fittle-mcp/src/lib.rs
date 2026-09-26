@@ -194,6 +194,9 @@ pub struct ScanArg {
     /// Also return one row per file (at most 500).
     #[serde(default)]
     pub include_files: bool,
+    /// Also grade every light sub (a few seconds per thousand).
+    #[serde(default)]
+    pub grade: bool,
 }
 
 #[derive(Debug, Deserialize, JsonSchema)]
@@ -595,7 +598,7 @@ impl Fittle {
     }
 
     #[tool(
-        description = "Summarize a folder of FITS files: frame counts, stacks, nights, light subs and integration per target and filter, and warnings (mixed gain or sub length, damaged files). Schema fittle.scan/1.",
+        description = "Session report for a folder of FITS files: frame counts, stacks, nights, light subs and integration per target and filter, consistency checks (exposure, filter, gain, sensor temperature, damaged or duplicate files, missing FOCALLEN), and with grade: true per-sub grading and usable integration. Schema fittle.report/1 (summary is fittle.scan/1).",
         annotations(read_only_hint = true)
     )]
     async fn fits_scan_folder(
@@ -610,8 +613,24 @@ impl Fittle {
                 fittle_scan::list(&dir)
             }
             .map_err(|e| format!("{}: {e}", dir.display()))?;
-            let summary = fittle_scan::summarize(&dir.to_string_lossy(), &entries);
-            let mut v = json!(summary);
+            let rules = fittle_scan::grade::Rules::default();
+            let r = fittle_scan::report::report(
+                &dir.to_string_lossy(),
+                &entries,
+                a.grade.then_some(&rules),
+            );
+            let mut v = json!(r);
+            if let Some(g) = v.get_mut("grading") {
+                // Worst 50 only; the full list is large.
+                let mut subs = r
+                    .grading
+                    .as_ref()
+                    .map(|g| g.subs.clone())
+                    .unwrap_or_default();
+                subs.sort_by(|x, y| y.badness.total_cmp(&x.badness));
+                subs.truncate(50);
+                g["subs"] = json!(subs);
+            }
             if a.include_files {
                 v["entries"] = json!(entries.iter().take(500).collect::<Vec<_>>());
             }

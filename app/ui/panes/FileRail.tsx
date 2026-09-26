@@ -4,6 +4,7 @@ import type { Entry } from "../backend/types";
 import { Button, Chip } from "../ds";
 import { group, num, shortName } from "../format";
 import { app, getBackend, openFile, openFolder, visibleEntries, type Filter } from "../state/app";
+import { openReport } from "../state/report";
 
 /** Row pitch in the rail, px. */
 const ROW = 52;
@@ -94,6 +95,11 @@ export function FileRail() {
     <aside className="rail" aria-label="Files">
       <div className="rail-head">
         <span className="ft-label">{folder ? `Folder · ${group(folder.entries.length)}` : "No folder"}</span>
+        {folder && (
+          <button type="button" className="rail-scan" onClick={() => void openReport(folder.path)} title="Session report: nights, integration, sub grades (includes subfolders)">
+            Scan
+          </button>
+        )}
         <Button variant="ghost" icon="folder" onClick={choose}>
           Open
         </Button>

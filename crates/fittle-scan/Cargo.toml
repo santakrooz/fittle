@@ -10,3 +10,4 @@ fittle-core.workspace = true
 fittle-image.workspace = true
 rayon = "1"
 serde.workspace = true
+serde_json.workspace = true

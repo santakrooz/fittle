@@ -392,3 +392,58 @@ fn export_commands() {
             .success()
     );
 }
+
+#[test]
+fn scan_report_and_grade() {
+    let dir = tempfile::tempdir().unwrap();
+    for i in 0..3 {
+        std::fs::copy(
+            corpus_root().join("seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit"),
+            dir.path().join(format!("sub{i}.fit")),
+        )
+        .unwrap();
+    }
+    let out = fittle_in(dir.path(), &["scan", ".", "--grade", "--report", "json"]);
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(v["schema"], "fittle.report/1");
+    assert_eq!(v["grading"]["subs"].as_array().unwrap().len(), 3);
+    // Written files are new; a second write to the same path is refused.
+    assert!(
+        fittle_in(dir.path(), &["scan", ".", "--report", "md", "-o", "r.md"])
+            .status
+            .success()
+    );
+    assert!(
+        std::fs::read_to_string(dir.path().join("r.md"))
+            .unwrap()
+            .starts_with("# Session report")
+    );
+    assert_eq!(
+        fittle_in(dir.path(), &["scan", ".", "--report", "md", "-o", "r.md"])
+            .status
+            .code(),
+        Some(2)
+    );
+    assert_eq!(
+        fittle_in(dir.path(), &["scan", ".", "--report", "pdf"])
+            .status
+            .code(),
+        Some(2)
+    );
+    let csv = fittle_in(dir.path(), &["scan", ".", "--astrobin", "--grade"]);
+    assert!(String::from_utf8_lossy(&csv.stdout).starts_with("date,filter,number,duration"));
+    let g = fittle_in(dir.path(), &["grade", ".", "--json"]);
+    let v: serde_json::Value = serde_json::from_slice(&g.stdout).unwrap();
+    assert_eq!(v["schema"], "fittle.grade/1");
+    assert_eq!(
+        fittle_in(dir.path(), &["grade", ".", "--reject", "hfr<2"])
+            .status
+            .code(),
+        Some(2)
+    );
+}

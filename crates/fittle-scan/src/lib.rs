@@ -8,6 +8,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
 pub mod grade;
+pub mod report;
 
 use rayon::prelude::*;
 use serde::Serialize;
@@ -42,6 +43,18 @@ pub struct Entry {
     pub night: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gain: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub focal_mm: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sensor_temp_c: Option<f64>,
+    /// Cooler set point, if cooled.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub set_temp_c: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub binning: Option<i64>,
+    /// Arcsec per pixel (derived from pixel size and focal length).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pixel_scale: Option<f64>,
     /// Structural error (e.g. truncated), if any.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
@@ -256,6 +269,11 @@ fn entry(p: &Path) -> Entry {
         date_obs: None,
         night: None,
         gain: None,
+        focal_mm: None,
+        sensor_temp_c: None,
+        set_temp_c: None,
+        binning: None,
+        pixel_scale: None,
         error: None,
     };
     match fittle_core::info(p) {
@@ -270,6 +288,11 @@ fn entry(p: &Path) -> Entry {
             e.date_obs = i.fields.date_obs.map(|f| f.value);
             e.night = i.derived.session_night.map(|f| f.value);
             e.gain = i.fields.gain.map(|f| f.value);
+            e.focal_mm = i.fields.focal_mm.map(|f| f.value);
+            e.sensor_temp_c = i.fields.sensor_temp_c.map(|f| f.value);
+            e.set_temp_c = i.fields.set_temp_c.map(|f| f.value);
+            e.binning = i.fields.binning.map(|f| f.value);
+            e.pixel_scale = i.derived.pixel_scale.map(|f| f.value);
             e.error = i
                 .health
                 .iter()
