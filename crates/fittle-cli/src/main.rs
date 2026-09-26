@@ -7,6 +7,7 @@ mod export;
 mod fmt;
 mod header;
 mod info;
+mod mcp;
 mod pack;
 
 use std::process::ExitCode;
@@ -65,6 +66,10 @@ enum Command {
     Fpack(pack::PackArgs),
     /// Expand compressed images (x.fits.fz → x.fits)
     Funpack(pack::UnpackArgs),
+    /// Summarize a folder: frames, nights, integration per target and filter
+    Scan(mcp::ScanArgs),
+    /// Run the MCP server on stdio (for Claude and other agents)
+    Mcp(mcp::McpArgs),
 }
 
 fn main() -> ExitCode {
@@ -86,6 +91,8 @@ fn main() -> ExitCode {
         Command::Debayer(args) => export::run_debayer(args),
         Command::Fpack(args) => pack::run_fpack(args),
         Command::Funpack(args) => pack::run_funpack(args),
+        Command::Scan(args) => mcp::run_scan(args),
+        Command::Mcp(args) => mcp::run_mcp(args),
     };
     ExitCode::from(code)
 }

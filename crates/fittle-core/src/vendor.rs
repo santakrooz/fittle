@@ -132,13 +132,16 @@ struct Data {
     quirks: Vec<Quirk>,
 }
 
+/// Fittle's software fingerprints and vendor quirks, as shipped.
+pub const APPS_JSON: &str = include_str!("../data/apps.json");
+/// The smart-scope registry (shared with AstroSideKick), as shipped.
+pub const SCOPES_JSON: &str = include_str!("../data/scope-profiles.json");
+
 fn data() -> &'static Data {
     static DATA: OnceLock<Data> = OnceLock::new();
     DATA.get_or_init(|| {
-        let reg: Registry = serde_json::from_str(include_str!("../data/scope-profiles.json"))
-            .expect("valid scope-profiles.json");
-        let apps: AppsFile =
-            serde_json::from_str(include_str!("../data/apps.json")).expect("valid apps.json");
+        let reg: Registry = serde_json::from_str(SCOPES_JSON).expect("valid scope-profiles.json");
+        let apps: AppsFile = serde_json::from_str(APPS_JSON).expect("valid apps.json");
         Data {
             profiles: reg.profiles,
             apps: apps.apps,
