@@ -1,6 +1,7 @@
 //! `fittle` command-line front end. Formatting only; all logic lives in the
 //! `fittle-*` crates.
 
+mod batch;
 mod diff;
 mod edit;
 mod export;
@@ -72,6 +73,10 @@ enum Command {
     Grade(mcp::GradeArgs),
     /// Match lights to darks, flats and bias in a calibration library
     MatchCal(mcp::MatchArgs),
+    /// How each keyword varies across files (same, mixed, range, unique)
+    Keys(batch::KeysArgs),
+    /// Rig profiles: saved scope/camera/filter values to apply to headers
+    Rig(batch::RigArgs),
     /// Sort files into folders by header facts (object/filter/night), with undo
     Organize(mcp::OrganizeArgs),
     /// Rename files from a template ({object}_{filter}_{exptime}s_{seq})
@@ -102,6 +107,8 @@ fn main() -> ExitCode {
         Command::Scan(args) => mcp::run_scan(args),
         Command::Grade(args) => mcp::run_grade(args),
         Command::MatchCal(args) => mcp::run_match(args),
+        Command::Keys(args) => batch::run_keys(args),
+        Command::Rig(args) => batch::run_rig(args),
         Command::Organize(args) => mcp::run_organize(args),
         Command::Rename(args) => mcp::run_rename(args),
         Command::Mcp(args) => mcp::run_mcp(args),

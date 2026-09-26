@@ -7,6 +7,8 @@ import { Palette } from "./panes/Palette";
 import { SessionReport } from "./panes/SessionReport";
 import { CalMatch } from "./panes/CalMatch";
 import { Blink } from "./panes/Blink";
+import { BatchEdit } from "./panes/BatchEdit";
+import { batch } from "./state/batch";
 import { Organize, organizeStore } from "./panes/Organize";
 import { blink, openBlink } from "./state/blink";
 import { calStore } from "./state/calmatch";
@@ -50,7 +52,7 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
         openExport();
         return;
       }
-      if (typing(e) || app.get().palette || exporter.get().open || reportStore.get().open || calStore.get().open || blink.get().open || organizeStore.get().open || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (typing(e) || app.get().palette || exporter.get().open || reportStore.get().open || calStore.get().open || blink.get().open || batch.get().open || organizeStore.get().open || e.metaKey || e.ctrlKey || e.altKey) return;
       // In the editor, arrows must not switch files under staged edits.
       if (edits.get().editing && app.get().tab === "header") return;
       const s = app.get();
@@ -99,6 +101,7 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
       <SessionReport />
       <CalMatch />
       <Blink />
+      <BatchEdit />
       <Organize />
       <Palette />
       <ExportModal />

@@ -3,8 +3,9 @@ import { memo, useEffect, useRef } from "react";
 import type { Entry } from "../backend/types";
 import { Button, Chip } from "../ds";
 import { group, num, shortName } from "../format";
-import { app, getBackend, openFile, openFolder, visibleEntries, type Filter } from "../state/app";
+import { app, getBackend, openFolder, visibleEntries, type Filter } from "../state/app";
 import { openReport } from "../state/report";
+import { clearSelection, openBatch, railClick, selectAll } from "../state/batch";
 
 /** Row pitch in the rail, px. */
 const ROW = 52;
@@ -70,6 +71,7 @@ export function FileRail() {
   const folder = app.use((s) => s.folder);
   const filter = app.use((s) => s.filter);
   const current = app.use((s) => s.current);
+  const selection = app.use((s) => s.selection);
   const list = visibleEntries({ folder, filter });
   const scroller = useRef<HTMLDivElement>(null);
   const v = useVirtualizer({ count: list.length, getScrollElement: () => scroller.current, estimateSize: () => ROW, overscan: 8 });
@@ -104,6 +106,13 @@ export function FileRail() {
           Open
         </Button>
       </div>
+      {folder && selection.length > 1 && (
+        <div className="rail-selection">
+          <span>{group(selection.length)} selected</span>
+          <button type="button" className="rail-scan" onClick={() => void openBatch()}>Edit…</button>
+          <button type="button" className="rail-link" onClick={clearSelection}>Clear</button>
+        </div>
+      )}
       {folder && (
         <div className="rail-filters" role="group" aria-label="Filter files">
           {FILTERS.map((f) => (
@@ -111,6 +120,9 @@ export function FileRail() {
               {f.label}
             </Chip>
           ))}
+          <button type="button" className="rail-link" onClick={selectAll} title="Select every file shown (⌘/Ctrl-click and Shift-click also select)">
+            Select all
+          </button>
         </div>
       )}
       <div ref={scroller} className="rail-list">
@@ -126,10 +138,10 @@ export function FileRail() {
                 key={e.path}
                 type="button"
                 className="ft-file"
-                aria-selected={e.path === current}
+                aria-selected={selection.length ? selection.includes(e.path) : e.path === current}
                 title={e.name}
                 style={{ position: "absolute", top: 0, left: 0, transform: `translateY(${row.start}px)` }}
-                onClick={() => openFile(e.path, false)}
+                onClick={(ev) => railClick(e.path, ev)}
               >
                 <Thumb path={e.path} />
                 <span style={{ minWidth: 0 }}>

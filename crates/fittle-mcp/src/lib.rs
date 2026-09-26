@@ -227,6 +227,15 @@ pub struct MatchArg {
 }
 
 #[derive(Debug, Deserialize, JsonSchema)]
+pub struct SpreadArg {
+    /// Files and/or folders (folders include subfolders).
+    pub paths: Vec<String>,
+    /// Only keywords that differ between files.
+    #[serde(default)]
+    pub differ: bool,
+}
+
+#[derive(Debug, Deserialize, JsonSchema)]
 pub struct OrganizeArg {
     /// Folder to organize (subfolders included).
     pub path: Option<String>,
@@ -252,6 +261,8 @@ pub struct SetArg {
     /// Keywords to set: numbers, booleans or strings.
     #[serde(default)]
     pub set: BTreeMap<String, Value>,
+    /// Also set a rig profile's values (see resource fits://rigs).
+    pub rig: Option<String>,
     /// Keywords to remove.
     #[serde(default)]
     pub unset: Vec<String>,
@@ -758,6 +769,37 @@ impl Fittle {
     }
 
     #[tool(
+        description = "How each header keyword varies across many files: same, mixed (with the files per value), range (min–max) or unique, and on how many it is missing. Use before a batch edit to find inconsistencies (e.g. mixed GAIN, missing FOCALLEN). Schema fittle.batch/1.",
+        annotations(read_only_hint = true)
+    )]
+    async fn fits_keyword_spread(
+        &self,
+        Parameters(a): Parameters<SpreadArg>,
+    ) -> Result<CallToolResult, ErrorData> {
+        let mut inputs = Vec::new();
+        for p in &a.paths {
+            inputs.push(tri!(self.roots.check(p)));
+        }
+        let v = blocking(move || -> Result<Value, String> {
+            let paths = fittle_scan::batch::resolve(&inputs).map_err(|e| e.to_string())?;
+            let mut d = fittle_scan::batch::distribution(&paths);
+            if a.differ {
+                let n = d.files;
+                d.keys
+                    .retain(|k| k.spread != fittle_scan::batch::Spread::Same || k.present < n);
+            }
+            for k in &mut d.keys {
+                for v in &mut k.values {
+                    v.paths.truncate(20);
+                }
+            }
+            Ok(json!(d))
+        })
+        .await?;
+        ok(tri!(v))
+    }
+
+    #[tool(
         description = "Sort FITS files into folders built from their headers (by: `{object}/{filter}/{night}`) and/or rename them (rename: `{object}_{filter}_{exptime}s_{seq}`). Moves are renames within the allowed folders; companion files (same stem, e.g. .jpg) follow; clashes get a suffix, nothing is replaced; an undo manifest is written. PLAN FIRST: dry_run defaults to true; call with dry_run: false only after the user agrees. `undo` reverses an earlier run. Schema fittle.organize/1.",
         annotations(destructive_hint = false, idempotent_hint = false)
     )]
@@ -822,6 +864,12 @@ impl Fittle {
     ) -> Result<CallToolResult, ErrorData> {
         let files = tri!(self.roots.files(&a.paths, a.glob.as_deref()));
         let mut ops = Vec::new();
+        if let Some(name) = &a.rig {
+            match fittle_core::rigs::find(name) {
+                Some(r) => ops.extend(tri!(r.ops())),
+                None => return fail(format!("no rig named '{name}'; see resource fits://rigs")),
+            }
+        }
         for (k, v) in &a.set {
             ops.push(Op::Set {
                 key: k.to_uppercase(),
@@ -1011,6 +1059,9 @@ impl ServerHandler for Fittle {
                     "Capture and processing software fingerprints and header quirks (apps.json)",
                 )
                 .with_mime_type("application/json"),
+            Resource::new("fits://rigs", "rigs")
+                .with_description("Rig profiles (built-in from the scope registry, plus saved ones) usable as fits_set_keywords rig")
+                .with_mime_type("application/json"),
             Resource::new("fits://scopes", "scopes")
                 .with_description(
                     "Smart-scope registry: match rules and optics (scope-profiles.json)",
@@ -1030,6 +1081,9 @@ impl ServerHandler for Fittle {
             }
             "fits://quirks" => fittle_core::vendor::APPS_JSON.to_string(),
             "fits://scopes" => fittle_core::vendor::SCOPES_JSON.to_string(),
+            "fits://rigs" => {
+                serde_json::to_string_pretty(&fittle_core::rigs::all()).unwrap_or_default()
+            }
             other => {
                 return Err(ErrorData::resource_not_found(
                     format!("no resource {other}"),

@@ -509,6 +509,77 @@ async fn organize_apply(
     .map_err(err)?
 }
 
+/// How each keyword varies across the selected files.
+#[tauri::command]
+async fn keyword_spread(paths: Vec<String>) -> Res<fittle_scan::batch::Distribution> {
+    spawn_blocking(move || {
+        let p: Vec<std::path::PathBuf> = paths.into_iter().map(Into::into).collect();
+        fittle_scan::batch::distribution(&p)
+    })
+    .await
+    .map_err(err)
+}
+
+/// Dry run of edits over many files.
+#[tauri::command]
+async fn batch_plan(
+    paths: Vec<String>,
+    ops: Vec<Op>,
+    options: Options,
+) -> Res<fittle_scan::batch::BatchPlan> {
+    spawn_blocking(move || {
+        let p: Vec<std::path::PathBuf> = paths.into_iter().map(Into::into).collect();
+        fittle_scan::batch::plan_batch(&p, &ops, &options)
+    })
+    .await
+    .map_err(err)
+}
+
+/// Apply edits to many files (validated first); returns per-file errors.
+#[tauri::command]
+async fn batch_apply(
+    paths: Vec<String>,
+    ops: Vec<Op>,
+    options: Options,
+) -> Res<Vec<(String, String)>> {
+    spawn_blocking(move || {
+        let p: Vec<std::path::PathBuf> = paths.into_iter().map(Into::into).collect();
+        fittle_scan::batch::apply_batch(&p, &ops, &options)
+    })
+    .await
+    .map_err(err)
+}
+
+/// Built-in and saved rig profiles.
+#[tauri::command]
+fn rigs_list() -> Vec<fittle_core::rigs::Rig> {
+    fittle_core::rigs::all()
+}
+
+/// Save a rig from a file's header (default keys when `keys` is empty).
+#[tauri::command]
+async fn rig_save(name: String, from: String, keys: Vec<String>) -> Res<fittle_core::rigs::Rig> {
+    spawn_blocking(move || {
+        let fits = Fits::open(&from).map_err(err)?;
+        let h = fits.hdus[fittle_core::edit::default_hdu(&fits)].header();
+        let keys: Vec<&str> = if keys.is_empty() {
+            fittle_core::rigs::RIG_KEYS.to_vec()
+        } else {
+            keys.iter().map(String::as_str).collect()
+        };
+        let rig = fittle_core::rigs::from_header(&name, h, &keys);
+        fittle_core::rigs::save(rig.clone())?;
+        Ok(rig)
+    })
+    .await
+    .map_err(err)?
+}
+
+#[tauri::command]
+fn rig_delete(name: String) -> Res<bool> {
+    fittle_core::rigs::delete(&name)
+}
+
 /// The privacy-scrub edits for a file, to stage in the editor.
 #[tauri::command]
 async fn scrub_ops(path: String) -> Res<Vec<Op>> {
@@ -582,7 +653,13 @@ pub fn run() {
             blink_frame,
             sub_stats,
             organize_plan,
-            organize_apply
+            organize_apply,
+            keyword_spread,
+            batch_plan,
+            batch_apply,
+            rigs_list,
+            rig_save,
+            rig_delete
         ])
         .run(tauri::generate_context!())
         .expect("error while running Fittle");

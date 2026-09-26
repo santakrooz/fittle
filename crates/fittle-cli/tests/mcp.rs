@@ -131,7 +131,7 @@ fn mcp_end_to_end() {
         assert!(names.contains(&t), "missing {t}");
     }
     let res = c.request("resources/list", json!({}));
-    assert_eq!(res["resources"].as_array().unwrap().len(), 3);
+    assert_eq!(res["resources"].as_array().unwrap().len(), 4);
     let kw = c.request("resources/read", json!({ "uri": "fits://keywords" }));
     assert!(
         kw["contents"][0]["text"]
