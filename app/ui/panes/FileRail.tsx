@@ -6,6 +6,7 @@ import { group, num, shortName } from "../format";
 import { app, getBackend, openFolder, visibleEntries, type Filter } from "../state/app";
 import { openReport } from "../state/report";
 import { clearSelection, openBatch, railClick, selectAll } from "../state/batch";
+import { openDiff } from "./HeaderDiff";
 
 /** Row pitch in the rail, px. */
 const ROW = 52;
@@ -109,6 +110,9 @@ export function FileRail() {
       {folder && selection.length > 1 && (
         <div className="rail-selection">
           <span>{group(selection.length)} selected</span>
+          {selection.length === 2 && (
+            <button type="button" className="rail-scan" onClick={() => void openDiff()} title="Compare headers (D)">Diff</button>
+          )}
           <button type="button" className="rail-scan" onClick={() => void openBatch()}>Edit…</button>
           <button type="button" className="rail-link" onClick={clearSelection}>Clear</button>
         </div>

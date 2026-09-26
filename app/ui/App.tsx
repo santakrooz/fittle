@@ -8,6 +8,8 @@ import { SessionReport } from "./panes/SessionReport";
 import { CalMatch } from "./panes/CalMatch";
 import { Blink } from "./panes/Blink";
 import { BatchEdit } from "./panes/BatchEdit";
+import { HeaderDiff, diffStore, openDiff } from "./panes/HeaderDiff";
+import { Filmstrip, filmstrip } from "./panes/Filmstrip";
 import { batch } from "./state/batch";
 import { Organize, organizeStore } from "./panes/Organize";
 import { blink, openBlink } from "./state/blink";
@@ -52,7 +54,7 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
         openExport();
         return;
       }
-      if (typing(e) || app.get().palette || exporter.get().open || reportStore.get().open || calStore.get().open || blink.get().open || batch.get().open || organizeStore.get().open || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (typing(e) || app.get().palette || exporter.get().open || reportStore.get().open || calStore.get().open || blink.get().open || batch.get().open || organizeStore.get().open || diffStore.get().open || e.metaKey || e.ctrlKey || e.altKey) return;
       // In the editor, arrows must not switch files under staged edits.
       if (edits.get().editing && app.get().tab === "header") return;
       const s = app.get();
@@ -68,6 +70,7 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
       else if (k === "h") setStretch({ kind: "asinh" });
       else if (k === "c") setStretch({ clipping: !s.stretch.clipping });
       else if (k === "b" && s.folder) openBlink();
+      else if (k === "d" && s.selection.length === 2) void openDiff();
       else if (k === "d" && s.opened?.image?.can_debayer) setMode(s.mode === "debayer" ? "raw" : "debayer");
     };
     window.addEventListener("keydown", onKey);
@@ -81,9 +84,12 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
   const tab = app.use((s) => s.tab);
   const editing = edits.use((s) => s.editing) && tab === "header";
   const notice = app.use((s) => s.notice);
+  const stripOn = filmstrip.use((s) => s.on);
+  const files = app.use((s) => s.folder?.entries.length ?? 0);
+  const strip = stripOn && files > 1;
 
   return (
-    <div className={`app ${editing ? "editing" : ""}`}>
+    <div className={`app ${editing ? "editing" : ""} ${strip ? "with-strip" : ""}`}>
       <TitleBar />
       <FileRail />
       <main className="stage" aria-busy={loading}>
@@ -98,10 +104,18 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
         {loading && hasImage && <div className="stage-busy" aria-hidden="true" />}
       </main>
       <Inspector />
+      <Filmstrip />
+      {/* Night-vision: images become luminance in deep red. */}
+      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+        <filter id="night-red" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values="0.30 0.59 0.11 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+        </filter>
+      </svg>
       <SessionReport />
       <CalMatch />
       <Blink />
       <BatchEdit />
+      <HeaderDiff />
       <Organize />
       <Palette />
       <ExportModal />

@@ -355,6 +355,23 @@ export type Op =
 
 export type EditOptions = { backup: boolean; history: boolean; checksum: boolean; hdu: number | null };
 
+export type DiffRow = {
+  keyword: string;
+  a?: string;
+  b?: string;
+  status: "same" | "changed" | "only_a" | "only_b";
+  impact?: { level: "ok" | "info" | "warning" | "blocker"; text: string };
+  group?: string;
+};
+export type HeaderDiff = {
+  schema: "fittle.diff/1";
+  a: { path: string; hdu: number; verdict: string };
+  b: { path: string; hdu: number; verdict: string };
+  rows: DiffRow[];
+  differences: number;
+  blockers: number;
+};
+
 export type Spread = "same" | "mixed" | "range" | "unique";
 export type KeyDist = {
   keyword: string;
@@ -505,6 +522,8 @@ export interface Backend {
   blinkFrame(path: string, maxEdge: number, stf?: number[]): Promise<BlinkFrame>;
   /** Star metrics for one sub. */
   subStats(path: string): Promise<FrameStats>;
+  /** Header diff of two files, with calibration impact. */
+  diffFiles(a: string, b: string): Promise<HeaderDiff>;
   keywordSpread(paths: string[]): Promise<Distribution>;
   batchPlan(paths: string[], ops: Op[], options: EditOptions): Promise<BatchPlan>;
   /** Validated first; returns [path, error] for files that failed. */

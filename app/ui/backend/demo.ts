@@ -3,7 +3,7 @@
 // dev server from app/demo-fixtures). Regions and readouts come from the
 // preview, so they are approximate; RA/Dec is not available.
 import { unpack } from "./tauri";
-import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Mode, Opened, Pixels, Plan, Report, Matching, Distribution } from "./types";
+import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Mode, Opened, Pixels, Plan, Report, Matching, Distribution, HeaderDiff } from "./types";
 
 export const isDemo = () => new URLSearchParams(location.search).has("demo");
 
@@ -143,6 +143,8 @@ export function demoBackend(): Backend {
       return { width: p.width, height: p.height, bottomUp: false, stf: [0, 0.5, 1, 0, 0.5, 1, 0, 0.5, 1], rgba: new Uint8ClampedArray(p.body) };
     },
     subStats: () => Promise.reject(new Error("Star metrics need the desktop app.")),
+    // Fixture: `fittle diff <a> <b> --json > app/demo-fixtures/diff.json`.
+    diffFiles: () => json<HeaderDiff>("/demo/diff.json"),
     // Fixture: `fittle keys <folder> --json > app/demo-fixtures/keys.json`.
     keywordSpread: () => json<Distribution>("/demo/keys.json"),
     batchPlan: async (paths) => ({ files: paths.length, changed: paths.length, in_place: paths.length, rewrite: 0, backup_bytes: paths.length * 4.2e6, est_seconds: 2, errors: [], notes: [], sample: [], cli: "fittle set … (demo)" }),
