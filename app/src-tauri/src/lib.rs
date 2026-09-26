@@ -580,6 +580,14 @@ fn rig_delete(name: String) -> Res<bool> {
     fittle_core::rigs::delete(&name)
 }
 
+/// Header diff of two files (image HDUs), with calibration impact.
+#[tauri::command]
+async fn diff_files(a: String, b: String) -> Res<fittle_core::diff::Diff> {
+    spawn_blocking(move || fittle_core::diff::diff_files(&a, &b, None).map_err(err))
+        .await
+        .map_err(err)?
+}
+
 /// The privacy-scrub edits for a file, to stage in the editor.
 #[tauri::command]
 async fn scrub_ops(path: String) -> Res<Vec<Op>> {
@@ -659,7 +667,8 @@ pub fn run() {
             batch_apply,
             rigs_list,
             rig_save,
-            rig_delete
+            rig_delete,
+            diff_files
         ])
         .run(tauri::generate_context!())
         .expect("error while running Fittle");

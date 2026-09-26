@@ -7,6 +7,7 @@ import { openExport } from "../state/exporter";
 import { openReport } from "../state/report";
 import { openCalMatch } from "../state/calmatch";
 import { openBlink } from "../state/blink";
+import { openDiff } from "./HeaderDiff";
 import { openOrganize } from "./Organize";
 import { fuzzy } from "./fuzzy";
 
@@ -43,6 +44,9 @@ function actions(): Item[] {
       run: () => { const i = app.get().opened?.info; if (i) navigator.clipboard?.writeText(JSON.stringify(i, null, 2)).catch(() => {}); },
     },
   ];
+  if (s.selection.length === 2) {
+    a.push({ id: "diff", group: "Actions", title: "Compare headers of the two selected files", hint: "D", cli: "fittle diff <a> <b>", run: () => void openDiff() });
+  }
   if (s.folder && !s.folder.path.startsWith("demo")) {
     a.push({ id: "organize", group: "Actions", title: "Organize folder (sort and rename)…", cli: `fittle organize "${s.folder.name}" --by object/filter/night --dry-run`, run: () => openOrganize() });
     a.push({ id: "blink", group: "Actions", title: "Blink through subs", hint: "B", run: () => openBlink() });

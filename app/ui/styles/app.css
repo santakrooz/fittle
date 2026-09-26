@@ -415,3 +415,14 @@ tr.queued .dist-bar .seg.s0 { background: var(--accent); }
 .org-preview p { margin: 0 0 8px; }
 .org-list { margin: 0; padding-left: 18px; font-size: 12px; display: flex; flex-direction: column; gap: 4px; overflow-wrap: anywhere; }
 .org-result p { margin: 0 0 6px; }
+
+/* Header diff (screen 10) */
+.diffview { grid-template-columns: minmax(0, 1fr); }
+.difftable { table-layout: fixed; }
+.difftable td { overflow-wrap: anywhere; }
+.difftable .kw { color: var(--accent-fg); }
+.difftable tr.flag { background: var(--surface-2); box-shadow: inset 3px 0 var(--accent); }
+.impact { color: var(--text-muted); }
+.impact.ok { color: var(--ok-fg); }
+.impact.warning { color: var(--accent-fg); }
+.impact.blocker { color: var(--rose-fg); }
