@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import type { Backend, BatchPlan, BlinkFrame, Bytes, Distribution, Rig, FrameStats, Matching, Move, PackReport, Report, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb } from "./types";
+import type { Backend, BatchPlan, BlinkFrame, Bytes, Distribution, Rig, FrameStats, Matching, Move, PackReport, Report, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb, OrganizePlan } from "./types";
 
 /** Binary payloads: [u32 width][u32 height][u32 channels] little-endian, then data. */
 export function unpack(buf: ArrayBuffer): { width: number; height: number; channels: number; body: ArrayBuffer } {
@@ -75,5 +75,7 @@ export const tauriBackend: Backend = {
   rigsList: () => invoke<Rig[]>("rigs_list"),
   rigSave: (name, from, keys) => invoke<Rig>("rig_save", { name, from, keys }),
   rigDelete: (name) => invoke<boolean>("rig_delete", { name }),
+  organizePlan: (folder, by, rename) => invoke<OrganizePlan>("organize_plan", { folder, by, rename: rename ?? null }),
+  organizeApply: (plan, undo) => invoke<OrganizePlan>("organize_apply", { plan, undo: undo ?? null }),
   matchCalibration: (lights, library) => invoke<Matching>("match_calibration", { lights, library }),
 };

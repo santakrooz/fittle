@@ -150,6 +150,8 @@ export function demoBackend(): Backend {
     rigsList: async () => [{ name: "ZWO Seestar S50", values: { FOCALLEN: 250, APTDIA: 50, FOCRATIO: 5, XPIXSZ: 2.9, YPIXSZ: 2.9 }, builtin: true }],
     rigSave: () => Promise.reject(new Error("Saving rigs needs the desktop app.")),
     rigDelete: async () => false,
+    organizePlan: () => Promise.reject(new Error("Organizing needs the desktop app.")),
+    organizeApply: () => Promise.reject(new Error("Organizing needs the desktop app.")),
     // Fixture written by `fittle match-cal <lights> --library <dir> --json > app/demo-fixtures/calmatch.json`.
     matchCalibration: () => json<Matching>("/demo/calmatch.json"),
   };

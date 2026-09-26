@@ -77,6 +77,10 @@ enum Command {
     Keys(batch::KeysArgs),
     /// Rig profiles: saved scope/camera/filter values to apply to headers
     Rig(batch::RigArgs),
+    /// Sort files into folders by header facts (object/filter/night), with undo
+    Organize(mcp::OrganizeArgs),
+    /// Rename files from a template ({object}_{filter}_{exptime}s_{seq})
+    Rename(mcp::RenameArgs),
     /// Run the MCP server on stdio (for Claude and other agents)
     Mcp(mcp::McpArgs),
 }
@@ -105,6 +109,8 @@ fn main() -> ExitCode {
         Command::MatchCal(args) => mcp::run_match(args),
         Command::Keys(args) => batch::run_keys(args),
         Command::Rig(args) => batch::run_rig(args),
+        Command::Organize(args) => mcp::run_organize(args),
+        Command::Rename(args) => mcp::run_rename(args),
         Command::Mcp(args) => mcp::run_mcp(args),
     };
     ExitCode::from(code)

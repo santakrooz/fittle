@@ -406,3 +406,12 @@ tr.queued .dist-bar .seg.s0 { background: var(--accent); }
 .warn-line { color: var(--accent-fg); margin: 0; }
 .check { display: flex; align-items: center; gap: 8px; }
 .check input { accent-color: var(--accent); }
+/* Organize dialog */
+.organize { width: min(720px, calc(100% - 32px)); max-height: calc(100vh - 48px); overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
+  padding: 22px 24px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius-window); box-shadow: var(--shadow-float); }
+.org-presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.org-presets .ft-chip { font-family: var(--font-mono); font-size: 11.5px; }
+.org-preview { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.org-preview p { margin: 0 0 8px; }
+.org-list { margin: 0; padding-left: 18px; font-size: 12px; display: flex; flex-direction: column; gap: 4px; overflow-wrap: anywhere; }
+.org-result p { margin: 0 0 6px; }

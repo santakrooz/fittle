@@ -469,6 +469,46 @@ async fn sub_stats(path: String) -> Res<fittle_image::stars::FrameStats> {
     .map_err(err)?
 }
 
+/// Plan organizing a folder (by folder template and/or rename template).
+#[tauri::command]
+async fn organize_plan(
+    folder: String,
+    by: String,
+    rename: Option<String>,
+) -> Res<fittle_scan::organize::Plan> {
+    spawn_blocking(move || {
+        let root = std::path::PathBuf::from(&folder);
+        let entries = fittle_scan::list_recursive(&root).map_err(err)?;
+        let spec = fittle_scan::organize::Spec {
+            by,
+            rename: rename.filter(|r| !r.trim().is_empty()),
+        };
+        Ok(fittle_scan::organize::plan(&root, &entries, &spec))
+    })
+    .await
+    .map_err(err)?
+}
+
+/// Carry out a plan (renames only; never replaces) or undo a manifest.
+#[tauri::command]
+async fn organize_apply(
+    plan: Option<fittle_scan::organize::Plan>,
+    undo: Option<String>,
+) -> Res<fittle_scan::organize::Plan> {
+    spawn_blocking(move || {
+        let p = match (plan, undo) {
+            (_, Some(m)) => {
+                fittle_scan::organize::undo_plan(std::path::Path::new(&m)).map_err(err)?
+            }
+            (Some(p), None) => p,
+            _ => return Err("nothing to apply".to_string()),
+        };
+        Ok(fittle_scan::organize::apply(p))
+    })
+    .await
+    .map_err(err)?
+}
+
 /// How each keyword varies across the selected files.
 #[tauri::command]
 async fn keyword_spread(paths: Vec<String>) -> Res<fittle_scan::batch::Distribution> {
@@ -612,6 +652,8 @@ pub fn run() {
             match_calibration,
             blink_frame,
             sub_stats,
+            organize_plan,
+            organize_apply,
             keyword_spread,
             batch_plan,
             batch_apply,

@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 pub mod batch;
 pub mod calmatch;
 pub mod grade;
+pub mod organize;
 pub mod report;
 
 use rayon::prelude::*;
@@ -258,6 +259,11 @@ fn serde_json_kind(k: fittle_core::classify::FrameKind) -> String {
             }
         })
         .collect()
+}
+
+/// The list entry for one file, if it is a FITS file.
+pub fn entry_for(p: &Path) -> Option<Entry> {
+    (p.is_file() && is_fits(p)).then(|| entry(p))
 }
 
 fn entry(p: &Path) -> Entry {
