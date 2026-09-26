@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import type { Backend, BlinkFrame, Bytes, FrameStats, Matching, Move, PackReport, Report, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb } from "./types";
+import type { Backend, BatchPlan, BlinkFrame, Bytes, Distribution, Rig, FrameStats, Matching, Move, PackReport, Report, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb } from "./types";
 
 /** Binary payloads: [u32 width][u32 height][u32 channels] little-endian, then data. */
 export function unpack(buf: ArrayBuffer): { width: number; height: number; channels: number; body: ArrayBuffer } {
@@ -69,5 +69,11 @@ export const tauriBackend: Backend = {
     return { width: u(0), height: u(1), bottomUp: u(3) === 1, stf: f, rgba: new Uint8ClampedArray(buf, 52) } satisfies BlinkFrame;
   },
   subStats: (path) => invoke<FrameStats>("sub_stats", { path }),
+  keywordSpread: (paths) => invoke<Distribution>("keyword_spread", { paths }),
+  batchPlan: (paths, ops, options) => invoke<BatchPlan>("batch_plan", { paths, ops, options }),
+  batchApply: (paths, ops, options) => invoke<[string, string][]>("batch_apply", { paths, ops, options }),
+  rigsList: () => invoke<Rig[]>("rigs_list"),
+  rigSave: (name, from, keys) => invoke<Rig>("rig_save", { name, from, keys }),
+  rigDelete: (name) => invoke<boolean>("rig_delete", { name }),
   matchCalibration: (lights, library) => invoke<Matching>("match_calibration", { lights, library }),
 };

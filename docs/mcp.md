@@ -37,7 +37,8 @@ matches and output folders, must be inside an allowed root.
 | `fits_scan_folder` | Session report: frame counts, nights, integration per target and filter, consistency checks; `grade: true` adds per-sub grading | No |
 | `fits_grade_subs` | Stars, HFR, background, trails per sub; suggested rejects with reasons | Moving rejects: dry run by default |
 | `fits_match_calibration` | Light groups vs a calibration library: best darks, flats, bias/dark-flats, mismatch reasons, what to shoot | No |
-| `fits_set_keywords` | Set, remove or rename keywords (paths and/or glob) | Header only; dry run by default |
+| `fits_keyword_spread` | How each keyword varies across files: same, mixed (files per value), range, unique, missing | No |
+| `fits_set_keywords` | Set, remove or rename keywords (paths and/or glob), or apply a rig profile (`rig`) | Header only; dry run by default |
 | `fits_scrub` | Remove site coordinates, observer names and serials | Header only; dry run by default |
 | `fits_export` | PNG/JPEG/WebP/AVIF/TIFF/FITS with stretch, crop, rotate, bin, resize, share card | New files only; dry run by default |
 | `fits_fpack` | Lossless compress or expand (`unpack: true`) | New files only; dry run by default |
@@ -48,6 +49,6 @@ Header edits never change pixel data and keep `.bak` backups by default; exports
 compression never replace an existing file.
 
 Resources: `fits://keywords` (keyword dictionary), `fits://quirks` (software fingerprints
-and vendor quirks), `fits://scopes` (smart-scope registry).
+and vendor quirks), `fits://scopes` (smart-scope registry), `fits://rigs` (rig profiles).
 
 Coming later in M6: `fits_organize`.

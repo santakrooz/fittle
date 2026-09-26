@@ -7,6 +7,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
+pub mod batch;
 pub mod calmatch;
 pub mod grade;
 pub mod report;

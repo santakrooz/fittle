@@ -343,6 +343,31 @@ export type Op =
 
 export type EditOptions = { backup: boolean; history: boolean; checksum: boolean; hdu: number | null };
 
+export type Spread = "same" | "mixed" | "range" | "unique";
+export type KeyDist = {
+  keyword: string;
+  present: number;
+  spread: Spread;
+  values: { text: string; count: number; paths?: string[] }[];
+  distinct: number;
+  min?: number;
+  max?: number;
+};
+export type Distribution = { schema: "fittle.batch/1"; files: number; unreadable: string[]; keys: KeyDist[] };
+export type BatchPlan = {
+  files: number;
+  changed: number;
+  in_place: number;
+  rewrite: number;
+  backup_bytes: number;
+  est_seconds: number;
+  errors: [string, string][];
+  notes: string[];
+  sample: Plan[];
+  cli: string;
+};
+export type Rig = { name: string; values: Record<string, number | string | boolean>; builtin?: boolean };
+
 export type ChangeKind = "added" | "modified" | "removed" | "renamed" | "history";
 export type Change = { kind: ChangeKind; key: string; before?: string; after?: string };
 
@@ -468,6 +493,13 @@ export interface Backend {
   blinkFrame(path: string, maxEdge: number, stf?: number[]): Promise<BlinkFrame>;
   /** Star metrics for one sub. */
   subStats(path: string): Promise<FrameStats>;
+  keywordSpread(paths: string[]): Promise<Distribution>;
+  batchPlan(paths: string[], ops: Op[], options: EditOptions): Promise<BatchPlan>;
+  /** Validated first; returns [path, error] for files that failed. */
+  batchApply(paths: string[], ops: Op[], options: EditOptions): Promise<[string, string][]>;
+  rigsList(): Promise<Rig[]>;
+  rigSave(name: string, from: string, keys: string[]): Promise<Rig>;
+  rigDelete(name: string): Promise<boolean>;
   /** Match the lights in a folder to a calibration library. */
   matchCalibration(lights: string, library: string): Promise<Matching>;
   /** fpack (unpack=false) or funpack a file into a new file beside it. */

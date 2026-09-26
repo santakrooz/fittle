@@ -19,6 +19,7 @@ pub mod header;
 pub mod info;
 pub mod naming;
 pub mod privacy;
+pub mod rigs;
 pub mod vendor;
 pub mod write;
 

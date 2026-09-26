@@ -359,3 +359,50 @@ canvas.ft-thumb { display: block; object-fit: cover; }
 .strip-thumb.rej { opacity: .55; border-color: color-mix(in srgb, var(--rose-fg) 70%, transparent); }
 .strip-thumb.on.rej { border-color: var(--rose-fg); opacity: 1; }
 .strip-more { color: var(--text-muted); font-size: 13px; padding-left: 6px; }
+
+/* Batch edit (screen 6) + rail selection */
+.rail-selection { display: flex; align-items: center; gap: 8px; margin: 0 var(--space-14) 8px; padding: 6px 10px; border-radius: 10px;
+  background: var(--accent-soft); color: var(--accent-fg); font-size: 12.5px; }
+.rail-selection span { margin-right: auto; font-weight: 600; }
+.rail-link { background: none; border: 0; padding: 2px 4px; color: var(--text-muted); font: 12px var(--font-ui); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.rail-link:hover { color: var(--text); }
+.rail-filters .rail-link { margin-left: auto; }
+.batch { grid-template-columns: minmax(0, 1fr) var(--layout-inspector); }
+.batch-table-wrap { overflow-y: auto; padding: 18px 20px 28px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.batch-table { table-layout: fixed; }
+.batch-table td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.batch-table .kw { color: var(--accent-fg); }
+.batch-table tr.queued { background: color-mix(in srgb, var(--accent) 7%, transparent); box-shadow: inset 3px 0 var(--accent); }
+.batch-table tr.queued.add { box-shadow: inset 3px 0 var(--ok); background: color-mix(in srgb, var(--ok) 6%, transparent); }
+.batch-table .to { color: var(--accent-fg); }
+.batch-table tr.add .to { color: var(--ok-fg); }
+.dist-bar { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: var(--surface-3); gap: 1px; }
+.dist-bar .seg.s0 { background: var(--ok); }
+.dist-bar .seg.s1 { background: var(--rose-fg); }
+.dist-bar .seg.s2 { background: var(--accent); }
+.dist-bar .seg.s3 { background: var(--teal-fg); }
+.dist-bar .seg.missing { background: var(--line-strong); }
+.dist-bar .seg.add { background: var(--ok); }
+.dist-bar.range { background: linear-gradient(90deg, #2c4a6b, var(--teal-fg), var(--orange-fg, #e9894a)); }
+.dist-bar.unique { background: #2c3d5a; }
+tr.queued .dist-bar .seg.s0 { background: var(--accent); }
+.act { color: var(--text-muted); }
+.act.mixed, .act.partial { color: var(--rose-fg); }
+.act.set, .act.rename { color: var(--accent-fg); }
+.act.add { color: var(--ok-fg); }
+.act.remove { color: var(--rose-fg); }
+.batch-side { border-left: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.batch-side .rcard { display: flex; flex-direction: column; gap: 8px; }
+.batch-side hr { border: 0; border-top: 1px solid var(--line); width: 100%; margin: 6px 0; }
+.ops { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; }
+.ops li { display: flex; align-items: center; gap: 6px; }
+.ops li .plus { color: var(--ok-fg); }
+.ops li .rail-link { margin-left: auto; text-decoration: none; font-size: 15px; }
+.add-op { display: flex; gap: 6px; flex-wrap: wrap; }
+.add-op .ex-input { flex: 1 1 90px; }
+.add-op .mode { flex: 0 0 90px; }
+.rcard.note { font-size: 13px; color: var(--text-muted); display: block; line-height: 1.6; }
+.rig-vals { color: var(--text-muted); margin: 0; overflow-wrap: anywhere; }
+.warn-line { color: var(--accent-fg); margin: 0; }
+.check { display: flex; align-items: center; gap: 8px; }
+.check input { accent-color: var(--accent); }

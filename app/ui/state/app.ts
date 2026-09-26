@@ -32,6 +32,8 @@ type AppState = {
   stretch: Stretch;
   tab: Tab;
   palette: boolean;
+  /** Files selected in the rail for batch editing (empty = none). */
+  selection: string[];
   header: HeaderDoc | null;
   headerQuery: string;
   dictionary: Map<string, KeywordInfo>;
@@ -52,6 +54,7 @@ export const app = createStore<AppState>({
   stretch: DEFAULT_STRETCH,
   tab: "overview",
   palette: false,
+  selection: [],
   header: null,
   headerQuery: "",
   dictionary: new Map(),
