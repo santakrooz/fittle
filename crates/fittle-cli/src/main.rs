@@ -70,6 +70,8 @@ enum Command {
     Scan(mcp::ScanArgs),
     /// Grade light subs (stars, HFR, background, trails) and suggest rejects
     Grade(mcp::GradeArgs),
+    /// Match lights to darks, flats and bias in a calibration library
+    MatchCal(mcp::MatchArgs),
     /// Run the MCP server on stdio (for Claude and other agents)
     Mcp(mcp::McpArgs),
 }
@@ -95,6 +97,7 @@ fn main() -> ExitCode {
         Command::Funpack(args) => pack::run_funpack(args),
         Command::Scan(args) => mcp::run_scan(args),
         Command::Grade(args) => mcp::run_grade(args),
+        Command::MatchCal(args) => mcp::run_match(args),
         Command::Mcp(args) => mcp::run_mcp(args),
     };
     ExitCode::from(code)

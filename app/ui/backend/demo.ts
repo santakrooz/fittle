@@ -3,7 +3,7 @@
 // dev server from app/demo-fixtures). Regions and readouts come from the
 // preview, so they are approximate; RA/Dec is not available.
 import { unpack } from "./tauri";
-import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Mode, Opened, Pixels, Plan, Report } from "./types";
+import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Mode, Opened, Pixels, Plan, Report, Matching } from "./types";
 
 export const isDemo = () => new URLSearchParams(location.search).has("demo");
 
@@ -137,6 +137,8 @@ export function demoBackend(): Backend {
     sessionReport: () => json<Report>("/demo/report.json"),
     saveReport: () => Promise.reject(new Error("Session reports need the desktop app.")),
     moveRejects: () => Promise.reject(new Error("Moving files needs the desktop app.")),
+    // Fixture written by `fittle match-cal <lights> --library <dir> --json > app/demo-fixtures/calmatch.json`.
+    matchCalibration: () => json<Matching>("/demo/calmatch.json"),
   };
 }
 

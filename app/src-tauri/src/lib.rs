@@ -403,6 +403,23 @@ async fn move_rejects(paths: Vec<String>, dry_run: bool) -> Res<Vec<fittle_scan:
     .map_err(err)
 }
 
+/// Match the lights in a folder to a calibration library (both recursive).
+#[tauri::command]
+async fn match_calibration(
+    lights: String,
+    library: String,
+) -> Res<fittle_scan::calmatch::Matching> {
+    spawn_blocking(move || {
+        let l = fittle_scan::list_recursive(&lights).map_err(err)?;
+        let c = fittle_scan::list_recursive(&library).map_err(err)?;
+        Ok(fittle_scan::calmatch::match_calibration(
+            &lights, &l, &library, &c,
+        ))
+    })
+    .await
+    .map_err(err)?
+}
+
 /// The privacy-scrub edits for a file, to stage in the editor.
 #[tauri::command]
 async fn scrub_ops(path: String) -> Res<Vec<Op>> {
@@ -471,7 +488,8 @@ pub fn run() {
             pack_file,
             session_report,
             save_report,
-            move_rejects
+            move_rejects,
+            match_calibration
         ])
         .run(tauri::generate_context!())
         .expect("error while running Fittle");
