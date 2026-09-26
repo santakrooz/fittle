@@ -5,11 +5,12 @@ import { createStore } from "../state/createStore";
 import { reportStore } from "../state/report";
 
 const KEY = "fittle.filmstrip";
+/** Off unless turned on: the file rail already navigates; blink has its own strip. */
 function saved() {
   try {
-    return localStorage.getItem(KEY) !== "off";
+    return localStorage.getItem(KEY) === "on";
   } catch {
-    return true;
+    return false;
   }
 }
 export const filmstrip = createStore<{ on: boolean }>({ on: saved() });
