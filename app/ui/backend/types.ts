@@ -285,6 +285,18 @@ export type Move = { from: string; to: string; error?: string };
 /** A pre-stretched blink frame; `stf` is 9 numbers (s, m, h × 3 channels). */
 export type BlinkFrame = { width: number; height: number; bottomUp: boolean; stf: number[]; rgba: Uint8ClampedArray<ArrayBuffer> };
 
+export type OrganizeMove = { from: string; to: string; companion?: boolean; note?: string; error?: string };
+export type OrganizePlan = {
+  schema: "fittle.organize/1";
+  root: string;
+  spec: { by: string; rename?: string | null };
+  moves: OrganizeMove[];
+  unchanged: number;
+  new_folders: string[];
+  missing_tokens: string[];
+  manifest?: string;
+};
+
 export type MatchStatus = "ok" | "warn" | "bad" | "none";
 export type CalSet = { kind: "dark" | "flat" | "bias" | "dark_flat"; name: string; master: boolean; frames: number; gain?: number; exposure_s?: number; temp_c?: number; filter?: string };
 export type KindMatch = { kind: CalSet["kind"]; status: MatchStatus; set?: CalSet; notes: string[] };
@@ -468,6 +480,10 @@ export interface Backend {
   blinkFrame(path: string, maxEdge: number, stf?: number[]): Promise<BlinkFrame>;
   /** Star metrics for one sub. */
   subStats(path: string): Promise<FrameStats>;
+  /** Plan organizing a folder: folder template and/or rename template. */
+  organizePlan(folder: string, by: string, rename?: string): Promise<OrganizePlan>;
+  /** Apply a plan (renames only, never replaces) or undo a manifest. */
+  organizeApply(plan: OrganizePlan | null, undo?: string): Promise<OrganizePlan>;
   /** Match the lights in a folder to a calibration library. */
   matchCalibration(lights: string, library: string): Promise<Matching>;
   /** fpack (unpack=false) or funpack a file into a new file beside it. */

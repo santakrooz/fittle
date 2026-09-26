@@ -227,6 +227,22 @@ pub struct MatchArg {
 }
 
 #[derive(Debug, Deserialize, JsonSchema)]
+pub struct OrganizeArg {
+    /// Folder to organize (subfolders included).
+    pub path: Option<String>,
+    /// Folder template, e.g. `{object}/{filter}/{night}`.
+    #[serde(default)]
+    pub by: String,
+    /// File-name template (extension kept), e.g. `{object}_{filter}_{exptime}s_{seq}`.
+    pub rename: Option<String>,
+    /// Reverse an earlier run from its fittle-organize-*.json manifest.
+    pub undo: Option<String>,
+    /// Plan only (default true). Set false to move.
+    #[serde(default = "yes")]
+    pub dry_run: bool,
+}
+
+#[derive(Debug, Deserialize, JsonSchema)]
 pub struct SetArg {
     /// Files to edit.
     #[serde(default)]
@@ -739,6 +755,61 @@ impl Fittle {
         })
         .await?;
         ok(tri!(v))
+    }
+
+    #[tool(
+        description = "Sort FITS files into folders built from their headers (by: `{object}/{filter}/{night}`) and/or rename them (rename: `{object}_{filter}_{exptime}s_{seq}`). Moves are renames within the allowed folders; companion files (same stem, e.g. .jpg) follow; clashes get a suffix, nothing is replaced; an undo manifest is written. PLAN FIRST: dry_run defaults to true; call with dry_run: false only after the user agrees. `undo` reverses an earlier run. Schema fittle.organize/1.",
+        annotations(destructive_hint = false, idempotent_hint = false)
+    )]
+    async fn fits_organize(
+        &self,
+        Parameters(a): Parameters<OrganizeArg>,
+    ) -> Result<CallToolResult, ErrorData> {
+        use fittle_scan::organize::{Spec, apply, plan, undo_plan};
+        let roots = self.roots.clone();
+        let plan = if let Some(m) = &a.undo {
+            let m = tri!(self.roots.check(m));
+            tri!(undo_plan(&m))
+        } else {
+            let Some(p) = &a.path else {
+                return fail("give path (or undo)");
+            };
+            if a.by.trim().is_empty() && a.rename.is_none() {
+                return fail("give by and/or rename");
+            }
+            let dir = tri!(self.roots.check(p));
+            let spec = Spec {
+                by: a.by.clone(),
+                rename: a.rename.clone(),
+            };
+            tri!(
+                blocking(move || fittle_scan::list_recursive(&dir)
+                    .map(|e| plan(&dir, &e, &spec))
+                    .map_err(|e| e.to_string()))
+                .await?
+            )
+        };
+        // Every source and target must be allowed.
+        for m in &plan.moves {
+            tri!(roots.check(&m.from));
+            tri!(roots.check(&m.to));
+        }
+        let dry = a.dry_run;
+        let v = blocking(move || {
+            let mut out = if dry { plan } else { apply(plan) };
+            let total = out.moves.len();
+            out.moves.truncate(50);
+            let mut v = json!(out);
+            v["moves_total"] = json!(total);
+            v["dry_run"] = json!(dry);
+            if dry {
+                v["next"] =
+                    json!("show the user this plan; call again with dry_run: false to move");
+            }
+            v
+        })
+        .await?;
+        ok(v)
     }
 
     #[tool(

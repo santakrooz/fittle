@@ -37,6 +37,7 @@ matches and output folders, must be inside an allowed root.
 | `fits_scan_folder` | Session report: frame counts, nights, integration per target and filter, consistency checks; `grade: true` adds per-sub grading | No |
 | `fits_grade_subs` | Stars, HFR, background, trails per sub; suggested rejects with reasons | Moving rejects: dry run by default |
 | `fits_match_calibration` | Light groups vs a calibration library: best darks, flats, bias/dark-flats, mismatch reasons, what to shoot | No |
+| `fits_organize` | Sort into `{object}/{filter}/{night}` folders and/or rename from a template; companions follow; undo manifest | Renames only; plan first (dry run by default) |
 | `fits_set_keywords` | Set, remove or rename keywords (paths and/or glob) | Header only; dry run by default |
 | `fits_scrub` | Remove site coordinates, observer names and serials | Header only; dry run by default |
 | `fits_export` | PNG/JPEG/WebP/AVIF/TIFF/FITS with stretch, crop, rotate, bin, resize, share card | New files only; dry run by default |
@@ -50,4 +51,3 @@ compression never replace an existing file.
 Resources: `fits://keywords` (keyword dictionary), `fits://quirks` (software fingerprints
 and vendor quirks), `fits://scopes` (smart-scope registry).
 
-Coming later in M6: `fits_organize`.

@@ -120,6 +120,9 @@ fn mcp_end_to_end() {
         "fits_stats",
         "fits_diff",
         "fits_scan_folder",
+        "fits_grade_subs",
+        "fits_match_calibration",
+        "fits_organize",
         "fits_set_keywords",
         "fits_scrub",
         "fits_export",
@@ -178,6 +181,14 @@ fn mcp_end_to_end() {
     );
     assert_eq!(m["schema"], "fittle.calmatch/1");
     assert_eq!(m["groups"][0]["status"], "missing");
+
+    let org = c.call_json(
+        "fits_organize",
+        json!({ "path": dir.path(), "by": "{object}" }),
+    );
+    assert_eq!(org["dry_run"], true);
+    assert!(org["moves"][0]["to"].as_str().unwrap().contains("NGC 6995"));
+    assert!(sub.exists(), "dry run moves nothing");
 
     // Outside the allowed folder: refused, as a tool error the agent can read.
     let outside = corpus("siril/r_pp_NGC6995_stacked.fit");

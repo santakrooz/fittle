@@ -417,3 +417,202 @@ pub fn run_match(a: MatchArgs) -> u8 {
     }
     exit::OK
 }
+
+#[derive(ClapArgs)]
+pub struct OrganizeArgs {
+    /// Folder to organize (subfolders included)
+    folder: Option<PathBuf>,
+    /// Folder template, e.g. 'object/filter/night' or '{object}/{filter}/{night}'
+    #[arg(long, value_name = "TEMPLATE")]
+    by: Option<String>,
+    /// Also rename files, e.g. '{object}_{filter}_{exptime}s_{seq}'
+    #[arg(long, value_name = "TEMPLATE")]
+    rename: Option<String>,
+    /// Show the plan; move nothing
+    #[arg(long)]
+    dry_run: bool,
+    /// Reverse a previous run from its fittle-organize-*.json manifest
+    #[arg(long, value_name = "MANIFEST", conflicts_with_all = ["folder", "by", "rename"])]
+    undo: Option<PathBuf>,
+    /// Print JSON (schema fittle.organize/1)
+    #[arg(long)]
+    json: bool,
+}
+
+#[derive(ClapArgs)]
+pub struct RenameArgs {
+    /// FITS files to rename in place
+    #[arg(required = true)]
+    files: Vec<PathBuf>,
+    /// File-name template (extension kept), e.g. '{object}_{filter}_{exptime}s_{seq}'
+    #[arg(long, value_name = "TEMPLATE")]
+    template: String,
+    /// Show the plan; rename nothing
+    #[arg(long)]
+    dry_run: bool,
+    /// Print JSON (schema fittle.organize/1)
+    #[arg(long)]
+    json: bool,
+}
+
+/// `object/filter/night` → `{object}/{filter}/{night}`; templates pass through.
+fn folder_template(by: &str) -> String {
+    by.split('/')
+        .map(|seg| {
+            let seg = seg.trim();
+            if seg.contains('{') || seg.is_empty() {
+                seg.to_string()
+            } else {
+                format!("{{{seg}}}")
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("/")
+}
+
+fn show_plan(p: &fittle_scan::organize::Plan, dry_run: bool, json: bool) -> u8 {
+    if json {
+        println!("{}", serde_json::to_string_pretty(p).expect("serializable"));
+        return exit::OK;
+    }
+    let root = std::path::Path::new(&p.root);
+    let rel = |s: &str| {
+        std::path::Path::new(s)
+            .strip_prefix(root)
+            .map_or(s.to_string(), |r| r.to_string_lossy().into_owned())
+    };
+    let failed = p.moves.iter().filter(|m| m.error.is_some()).count();
+    for m in p
+        .moves
+        .iter()
+        .filter(|m| !m.companion)
+        .take(if dry_run { 20 } else { 0 })
+    {
+        println!("  {} {} {}", rel(&m.from), muted("→"), rel(&m.to));
+    }
+    let files = p.moves.iter().filter(|m| !m.companion).count();
+    let comp = p.moves.len() - files;
+    println!(
+        "{} {} file(s){}, {} already in place, {} new folder(s)",
+        if dry_run { "Would move" } else { "Moved" },
+        files
+            - if dry_run {
+                0
+            } else {
+                p.moves
+                    .iter()
+                    .filter(|m| !m.companion && m.error.is_some())
+                    .count()
+            },
+        if comp > 0 {
+            format!(" and {comp} companion file(s)")
+        } else {
+            String::new()
+        },
+        p.unchanged,
+        p.new_folders.len()
+    );
+    if !p.missing_tokens.is_empty() {
+        println!(
+            "{} some files lack {}; written as 'unknown'",
+            warn("!"),
+            p.missing_tokens
+                .iter()
+                .map(|t| format!("{{{t}}}"))
+                .collect::<Vec<_>>()
+                .join(", ")
+        );
+    }
+    for m in p.moves.iter().filter(|m| m.error.is_some()) {
+        eprintln!(
+            "{} {}: {}",
+            bad("✗"),
+            rel(&m.from),
+            m.error.as_deref().unwrap_or("")
+        );
+    }
+    if let Some(man) = &p.manifest {
+        println!("Undo with: fittle organize --undo \"{man}\"");
+    }
+    if dry_run && files > 0 {
+        println!("{}", muted("Run again without --dry-run to move them."));
+    }
+    if failed > 0 { exit::ERROR } else { exit::OK }
+}
+
+pub fn run_organize(a: OrganizeArgs) -> u8 {
+    use fittle_scan::organize::{Spec, apply, plan, undo_plan};
+    if let Some(m) = &a.undo {
+        return match undo_plan(m) {
+            Ok(p) if a.dry_run => show_plan(&p, true, a.json),
+            Ok(p) => show_plan(&apply(p), false, a.json),
+            Err(e) => {
+                eprintln!("fittle: {}: {e}", m.display());
+                exit::ERROR
+            }
+        };
+    }
+    let Some(folder) = a.folder else {
+        eprintln!("fittle: give a folder (or --undo <manifest>)");
+        return exit::VALIDATION;
+    };
+    if a.by.is_none() && a.rename.is_none() {
+        eprintln!("fittle: give --by and/or --rename");
+        return exit::VALIDATION;
+    }
+    let entries = match fittle_scan::list_recursive(&folder) {
+        Ok(e) => e,
+        Err(e) => {
+            eprintln!("fittle: {}: {e}", folder.display());
+            return exit::ERROR;
+        }
+    };
+    let spec = Spec {
+        by: a.by.as_deref().map(folder_template).unwrap_or_default(),
+        rename: a.rename,
+    };
+    let root = folder.canonicalize().unwrap_or(folder);
+    let p = plan(&root, &entries, &spec);
+    if a.dry_run {
+        show_plan(&p, true, a.json)
+    } else {
+        show_plan(&apply(p), false, a.json)
+    }
+}
+
+pub fn run_rename(a: RenameArgs) -> u8 {
+    use fittle_scan::organize::{Spec, apply, plan};
+    let entries: Vec<fittle_scan::Entry> = match a
+        .files
+        .iter()
+        .map(|f| {
+            fittle_scan::entry_for(f)
+                .ok_or_else(|| format!("{}: not a readable FITS file", f.display()))
+        })
+        .collect::<Result<_, _>>()
+    {
+        Ok(e) => e,
+        Err(e) => {
+            eprintln!("fittle: {e}");
+            return exit::VALIDATION;
+        }
+    };
+    let root = a.files[0]
+        .parent()
+        .filter(|p| !p.as_os_str().is_empty())
+        .unwrap_or(std::path::Path::new("."))
+        .to_path_buf();
+    let p = plan(
+        &root,
+        &entries,
+        &Spec {
+            by: String::new(),
+            rename: Some(a.template),
+        },
+    );
+    if a.dry_run {
+        show_plan(&p, true, a.json)
+    } else {
+        show_plan(&apply(p), false, a.json)
+    }
+}
