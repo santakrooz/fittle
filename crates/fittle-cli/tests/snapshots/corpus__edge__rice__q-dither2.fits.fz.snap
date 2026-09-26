@@ -1,0 +1,437 @@
+---
+source: crates/fittle-cli/tests/corpus.rs
+expression: json
+---
+{
+  "file_bytes": 14400,
+  "hdus": [
+    {
+      "bitpix": 8,
+      "cards": [
+        {
+          "comment": "conforms to FITS standard",
+          "keyword": "SIMPLE",
+          "raw": [
+            "SIMPLE  =                    T / conforms to FITS standard                      "
+          ],
+          "record": 0,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                    8 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 8
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    0 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 0
+        },
+        {
+          "keyword": "EXTEND",
+          "raw": [
+            "EXTEND  =                    T                                                  "
+          ],
+          "record": 3,
+          "type": "logical",
+          "value": true
+        }
+      ],
+      "data_bytes": 0,
+      "data_offset": 2880,
+      "header_blocks": 1,
+      "header_offset": 0,
+      "index": 0,
+      "kind": "primary",
+      "shape": []
+    },
+    {
+      "bitpix": -32,
+      "cards": [
+        {
+          "comment": "binary table extension",
+          "keyword": "XTENSION",
+          "raw": [
+            "XTENSION= 'BINTABLE'           / binary table extension                         "
+          ],
+          "record": 0,
+          "type": "string",
+          "value": "BINTABLE"
+        },
+        {
+          "comment": "array data type",
+          "keyword": "BITPIX",
+          "raw": [
+            "BITPIX  =                    8 / array data type                                "
+          ],
+          "record": 1,
+          "type": "integer",
+          "value": 8
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "NAXIS",
+          "raw": [
+            "NAXIS   =                    2 / number of array dimensions                     "
+          ],
+          "record": 2,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "comment": "width of table in bytes",
+          "keyword": "NAXIS1",
+          "raw": [
+            "NAXIS1  =                   32 / width of table in bytes                        "
+          ],
+          "record": 3,
+          "type": "integer",
+          "value": 32
+        },
+        {
+          "comment": "number of rows in table",
+          "keyword": "NAXIS2",
+          "raw": [
+            "NAXIS2  =                   48 / number of rows in table                        "
+          ],
+          "record": 4,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "comment": "number of group parameters",
+          "keyword": "PCOUNT",
+          "raw": [
+            "PCOUNT  =                 2889 / number of group parameters                     "
+          ],
+          "record": 5,
+          "type": "integer",
+          "value": 2889
+        },
+        {
+          "comment": "number of groups",
+          "keyword": "GCOUNT",
+          "raw": [
+            "GCOUNT  =                    1 / number of groups                               "
+          ],
+          "record": 6,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "comment": "number of fields in each row",
+          "keyword": "TFIELDS",
+          "raw": [
+            "TFIELDS =                    4 / number of fields in each row                   "
+          ],
+          "record": 7,
+          "type": "integer",
+          "value": 4
+        },
+        {
+          "keyword": "TTYPE1",
+          "raw": [
+            "TTYPE1  = 'COMPRESSED_DATA'                                                     "
+          ],
+          "record": 8,
+          "type": "string",
+          "value": "COMPRESSED_DATA"
+        },
+        {
+          "keyword": "TFORM1",
+          "raw": [
+            "TFORM1  = '1PB(66) '                                                            "
+          ],
+          "record": 9,
+          "type": "string",
+          "value": "1PB(66)"
+        },
+        {
+          "keyword": "TTYPE2",
+          "raw": [
+            "TTYPE2  = 'GZIP_COMPRESSED_DATA'                                                "
+          ],
+          "record": 10,
+          "type": "string",
+          "value": "GZIP_COMPRESSED_DATA"
+        },
+        {
+          "keyword": "TFORM2",
+          "raw": [
+            "TFORM2  = '1PB(0)  '                                                            "
+          ],
+          "record": 11,
+          "type": "string",
+          "value": "1PB(0)"
+        },
+        {
+          "keyword": "TTYPE3",
+          "raw": [
+            "TTYPE3  = 'ZSCALE  '                                                            "
+          ],
+          "record": 12,
+          "type": "string",
+          "value": "ZSCALE"
+        },
+        {
+          "keyword": "TFORM3",
+          "raw": [
+            "TFORM3  = '1D      '                                                            "
+          ],
+          "record": 13,
+          "type": "string",
+          "value": "1D"
+        },
+        {
+          "keyword": "TTYPE4",
+          "raw": [
+            "TTYPE4  = 'ZZERO   '                                                            "
+          ],
+          "record": 14,
+          "type": "string",
+          "value": "ZZERO"
+        },
+        {
+          "keyword": "TFORM4",
+          "raw": [
+            "TFORM4  = '1D      '                                                            "
+          ],
+          "record": 15,
+          "type": "string",
+          "value": "1D"
+        },
+        {
+          "comment": "extension contains compressed image",
+          "keyword": "ZIMAGE",
+          "raw": [
+            "ZIMAGE  =                    T / extension contains compressed image            "
+          ],
+          "record": 16,
+          "type": "logical",
+          "value": true
+        },
+        {
+          "comment": "Image extension",
+          "keyword": "ZTENSION",
+          "raw": [
+            "ZTENSION= 'IMAGE   '           / Image extension                                "
+          ],
+          "record": 17,
+          "type": "string",
+          "value": "IMAGE"
+        },
+        {
+          "comment": "array data type",
+          "keyword": "ZBITPIX",
+          "raw": [
+            "ZBITPIX =                  -32 / array data type                                "
+          ],
+          "record": 18,
+          "type": "integer",
+          "value": -32
+        },
+        {
+          "comment": "number of array dimensions",
+          "keyword": "ZNAXIS",
+          "raw": [
+            "ZNAXIS  =                    2 / number of array dimensions                     "
+          ],
+          "record": 19,
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "keyword": "ZNAXIS1",
+          "raw": [
+            "ZNAXIS1 =                   64                                                  "
+          ],
+          "record": 20,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "keyword": "ZNAXIS2",
+          "raw": [
+            "ZNAXIS2 =                   48                                                  "
+          ],
+          "record": 21,
+          "type": "integer",
+          "value": 48
+        },
+        {
+          "comment": "number of parameters",
+          "keyword": "ZPCOUNT",
+          "raw": [
+            "ZPCOUNT =                    0 / number of parameters                           "
+          ],
+          "record": 22,
+          "type": "integer",
+          "value": 0
+        },
+        {
+          "comment": "number of groups",
+          "keyword": "ZGCOUNT",
+          "raw": [
+            "ZGCOUNT =                    1 / number of groups                               "
+          ],
+          "record": 23,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "comment": "size of tiles to be compressed",
+          "keyword": "ZTILE1",
+          "raw": [
+            "ZTILE1  =                   64 / size of tiles to be compressed                 "
+          ],
+          "record": 24,
+          "type": "integer",
+          "value": 64
+        },
+        {
+          "comment": "size of tiles to be compressed",
+          "keyword": "ZTILE2",
+          "raw": [
+            "ZTILE2  =                    1 / size of tiles to be compressed                 "
+          ],
+          "record": 25,
+          "type": "integer",
+          "value": 1
+        },
+        {
+          "comment": "compression algorithm",
+          "keyword": "ZCMPTYPE",
+          "raw": [
+            "ZCMPTYPE= 'RICE_1  '           / compression algorithm                          "
+          ],
+          "record": 26,
+          "type": "string",
+          "value": "RICE_1"
+        },
+        {
+          "comment": "compression block size",
+          "keyword": "ZNAME1",
+          "raw": [
+            "ZNAME1  = 'BLOCKSIZE'          / compression block size                         "
+          ],
+          "record": 27,
+          "type": "string",
+          "value": "BLOCKSIZE"
+        },
+        {
+          "comment": "pixels per block",
+          "keyword": "ZVAL1",
+          "raw": [
+            "ZVAL1   =                   32 / pixels per block                               "
+          ],
+          "record": 28,
+          "type": "integer",
+          "value": 32
+        },
+        {
+          "comment": "bytes per pixel (1, 2, 4, or 8)",
+          "keyword": "ZNAME2",
+          "raw": [
+            "ZNAME2  = 'BYTEPIX '           / bytes per pixel (1, 2, 4, or 8)                "
+          ],
+          "record": 29,
+          "type": "string",
+          "value": "BYTEPIX"
+        },
+        {
+          "comment": "bytes per pixel (1, 2, 4, or 8)",
+          "keyword": "ZVAL2",
+          "raw": [
+            "ZVAL2   =                    4 / bytes per pixel (1, 2, 4, or 8)                "
+          ],
+          "record": 30,
+          "type": "integer",
+          "value": 4
+        },
+        {
+          "comment": "floating point quantization level",
+          "keyword": "ZNAME3",
+          "raw": [
+            "ZNAME3  = 'NOISEBIT'           / floating point quantization level              "
+          ],
+          "record": 31,
+          "type": "string",
+          "value": "NOISEBIT"
+        },
+        {
+          "comment": "floating point quantization level",
+          "keyword": "ZVAL3",
+          "raw": [
+            "ZVAL3   =                 16.0 / floating point quantization level              "
+          ],
+          "record": 32,
+          "type": "float",
+          "value": 16.0
+        },
+        {
+          "comment": "Pixel Quantization Algorithm",
+          "keyword": "ZQUANTIZ",
+          "raw": [
+            "ZQUANTIZ= 'SUBTRACTIVE_DITHER_2' / Pixel Quantization Algorithm                 "
+          ],
+          "record": 33,
+          "type": "string",
+          "value": "SUBTRACTIVE_DITHER_2"
+        },
+        {
+          "comment": "dithering offset when quantizing floats",
+          "keyword": "ZDITHER0",
+          "raw": [
+            "ZDITHER0=                    3 / dithering offset when quantizing floats        "
+          ],
+          "record": 34,
+          "type": "integer",
+          "value": 3
+        },
+        {
+          "comment": "name of this binary table extension",
+          "keyword": "EXTNAME",
+          "raw": [
+            "EXTNAME = 'COMPRESSED_IMAGE'   / name of this binary table extension            "
+          ],
+          "record": 35,
+          "type": "string",
+          "value": "COMPRESSED_IMAGE"
+        },
+        {
+          "keyword": "ZBLANK",
+          "raw": [
+            "ZBLANK  =          -2147483648                                                  "
+          ],
+          "record": 36,
+          "type": "integer",
+          "value": -2147483648
+        }
+      ],
+      "data_bytes": 4425,
+      "data_offset": 8640,
+      "header_blocks": 2,
+      "header_offset": 2880,
+      "index": 1,
+      "kind": "compressed_image",
+      "shape": [
+        64,
+        48
+      ]
+    }
+  ],
+  "issues": [],
+  "path": "edge/rice/q-dither2.fits.fz",
+  "schema": "fittle.header/1"
+}

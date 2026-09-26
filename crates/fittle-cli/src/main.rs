@@ -7,6 +7,7 @@ mod export;
 mod fmt;
 mod header;
 mod info;
+mod pack;
 
 use std::process::ExitCode;
 
@@ -60,6 +61,10 @@ enum Command {
     Resize(export::ResizeArgs),
     /// Debayer a colour (CFA) frame to RGB (new FITS file)
     Debayer(export::DebayerArgs),
+    /// Compress images losslessly (x.fits → x.fits.fz)
+    Fpack(pack::PackArgs),
+    /// Expand compressed images (x.fits.fz → x.fits)
+    Funpack(pack::UnpackArgs),
 }
 
 fn main() -> ExitCode {
@@ -79,6 +84,8 @@ fn main() -> ExitCode {
         Command::Bin(args) => export::run_bin(args),
         Command::Resize(args) => export::run_resize(args),
         Command::Debayer(args) => export::run_debayer(args),
+        Command::Fpack(args) => pack::run_fpack(args),
+        Command::Funpack(args) => pack::run_funpack(args),
     };
     ExitCode::from(code)
 }

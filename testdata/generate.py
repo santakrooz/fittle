@@ -338,6 +338,46 @@ def checksummed():
         p, overwrite=True, checksum=True)
 
 
+def compressed_variants():
+    """GZIP and quantized-float tile compression, written by astropy (cfitsio).
+    Own RNG so earlier fixtures keep their draws. Lossless files have an
+    `-original` twin; quantized (lossy) files have a `-decoded` twin holding
+    what cfitsio reads back, which a decoder must reproduce."""
+    r = np.random.default_rng(7000)
+    f32 = (r.normal(0.02, 0.003, (H, W)) + 0.0).astype(np.float32)
+    f32[5, 7] = np.nan
+    i16 = np.clip(r.normal(900, 40, (H, W)), -32768, 32767).astype(np.int16)
+    lossless = {
+        "gzip1-f32": (f32, "GZIP_1"),
+        "gzip2-f32": (f32, "GZIP_2"),
+        "gzip1-i16": (i16, "GZIP_1"),
+        "gzip2-i16": (i16, "GZIP_2"),
+    }
+    for name, (img, kind) in lossless.items():
+        write(f"edge/rice/{name}.fits.fz", [
+            fits.PrimaryHDU(),
+            fits.CompImageHDU(img, compression_type=kind, quantize_level=0.0 if img.dtype.kind == "f" else 16),
+        ])
+        write(f"edge/rice/{name}-original.fits", [fits.PrimaryHDU(img)])
+    zeros = f32.copy()
+    zeros[10:12, 20:30] = 0.0
+    quantized = {
+        "q-dither1": (f32, "SUBTRACTIVE_DITHER_1", 7),
+        "q-nodither": (f32, "NO_DITHER", 0),
+        "q-dither2": (zeros, "SUBTRACTIVE_DITHER_2", 3),
+    }
+    for name, (img, method, seed) in quantized.items():
+        p = write(f"edge/rice/{name}.fits.fz", [
+            fits.PrimaryHDU(),
+            fits.CompImageHDU(img, compression_type="RICE_1", quantize_level=16.0,
+                              quantize_method={"NO_DITHER": -1, "SUBTRACTIVE_DITHER_1": 1, "SUBTRACTIVE_DITHER_2": 2}[method],
+                              dither_seed=seed or 0),
+        ])
+        with fits.open(p) as h:
+            decoded = np.asarray(h[1].data, dtype=np.float32)
+        write(f"edge/rice/{name}-decoded.fits", [fits.PrimaryHDU(decoded)])
+
+
 def patch_card(raw, key, record):
     key = key.ljust(8)
     for i in range(0, 2880 * 4, 80):
@@ -357,6 +397,7 @@ if __name__ == "__main__":
     edge_cases()
     documented()
     checksummed()
+    compressed_variants()
     for p in sorted(OUT.rglob("*")):
         if p.is_file():
             print(f"{p.stat().st_size:>8}  {p.relative_to(OUT)}")

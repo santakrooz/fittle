@@ -1008,6 +1008,7 @@ dependencies = [
  "fittle-astro",
  "fittle-core",
  "fittle-scan",
+ "flate2",
  "half",
  "image-webp",
  "jpeg-encoder",

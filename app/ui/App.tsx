@@ -70,6 +70,7 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
   const current = app.use((s) => s.current);
   const tab = app.use((s) => s.tab);
   const editing = edits.use((s) => s.editing) && tab === "header";
+  const notice = app.use((s) => s.notice);
 
   return (
     <div className={`app ${editing ? "editing" : ""}`}>
@@ -89,6 +90,11 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
       <Inspector />
       <Palette />
       <ExportModal />
+      {notice && (
+        <div className={`toast ${notice.tone}`} role="status" aria-live="polite">
+          {notice.text}
+        </div>
+      )}
     </div>
   );
 }

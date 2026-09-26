@@ -71,8 +71,10 @@ pub fn decode_hdu(path: impl AsRef<Path>, hdu: &Hdu) -> Result<Image, DecodeErro
     let phys = |v: f64| (zero + scale * v) as f32;
 
     if hdu.kind == HduKind::CompressedImage {
-        let raw = tiles::decode(hdu, &bytes)?;
-        let data = raw.into_iter().map(|v| phys(v as f64)).collect();
+        let data = match tiles::decode(hdu, &bytes)?.samples {
+            tiles::Samples::Int(v) => v.into_iter().map(|v| phys(v as f64)).collect(),
+            tiles::Samples::Float(v) => v.into_iter().map(phys).collect(),
+        };
         return Ok(Image {
             width,
             height,

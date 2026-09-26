@@ -132,6 +132,7 @@ export function demoBackend(): Backend {
     },
     exportPreview: () => Promise.reject(new Error("Export preview needs the desktop app.")),
     exportImage: () => Promise.reject(new Error("Export needs the desktop app; the demo has no files.")),
+    packFile: () => Promise.reject(new Error("Compression needs the desktop app; the demo has no files.")),
   };
 }
 
