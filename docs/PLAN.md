@@ -183,7 +183,7 @@ fittle/
 | Export | **Decided (M4, [0005](decisions/0005-export-encoders.md)):** `png`, `jpeg-encoder`, `image-webp` (lossless only), `tiff` (8/16/32f) directly, own FITS writer; `ravif` (no asm) for AVIF; `swash` + embedded OFL fonts for share cards | XMP in every format (EXIF for AVIF), no C deps |
 | Ephemeris | Small built-in VSOP87/ELP-lite or `astro` crate | Offline moon/sun positions |
 | CLI | `clap` v4, `comfy-table`, `owo-colors`, `--json` everywhere |  |
-| MCP | `rmcp`, stdio transport; optional streamable HTTP later | Works with Claude Desktop/Code |
+| MCP | **Decided (M5):** `rmcp` 3.x, stdio transport ([docs/mcp.md](mcp.md)); roots from `--root` / `FITTLE_MCP_ROOTS` / home; every writing tool dry-run by default; optional streamable HTTP later | Works with Claude Desktop/Code |
 | GUI framework | **Decided: React 19 + TypeScript + Vite** ([0002](decisions/0002-frontend-react.md)), matching AstroSideKick | Shared tokens/components |
 | Vendor knowledge | **Decided (M1, [0004](decisions/0004-shared-scope-data.md)):** data files in `fittle-core/data/`: scope registry + OpenNGC catalogue shared with AstroSideKick, plus Fittle's `apps.json` (fingerprints and quirks) | One place to fix vendor mistakes; no vendor names in code |
 | Web edition (proposed, after local v1) | Same UI + core compiled to WASM, possibly hosted on Railway ([0003](decisions/0003-web-edition.md)) | Free tool, marketing, opt-in corpus growth |

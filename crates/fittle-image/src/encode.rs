@@ -28,7 +28,17 @@ fn other(e: impl std::fmt::Display) -> io::Error {
 }
 
 pub fn png(path: &Path, r: &Raster, xmp: Option<&str>) -> io::Result<()> {
-    let w = BufWriter::new(File::create(path)?);
+    png_to(BufWriter::new(File::create(path)?), r, xmp)
+}
+
+/// PNG in memory (e.g. MCP image content).
+pub fn png_bytes(r: &Raster) -> io::Result<Vec<u8>> {
+    let mut out = Vec::new();
+    png_to(&mut out, r, None)?;
+    Ok(out)
+}
+
+fn png_to<W: Write>(w: W, r: &Raster, xmp: Option<&str>) -> io::Result<()> {
     let mut enc = png::Encoder::new(w, r.width as u32, r.height as u32);
     enc.set_color(if r.channels == 3 {
         png::ColorType::Rgb
@@ -53,6 +63,23 @@ pub fn png(path: &Path, r: &Raster, xmp: Option<&str>) -> io::Result<()> {
     let mut wr = enc.write_header().map_err(other)?;
     wr.write_image_data(&bytes).map_err(other)?;
     wr.finish().map_err(other)
+}
+
+/// JPEG in memory (e.g. MCP image content).
+pub fn jpeg_bytes(r: &Raster, quality: u8) -> io::Result<Vec<u8>> {
+    let Samples::U8(d) = &r.samples else {
+        return Err(other("JPEG needs 8-bit samples"));
+    };
+    let mut out = Vec::new();
+    let enc = jpeg_encoder::Encoder::new(&mut out, quality.clamp(1, 100));
+    let ct = if r.channels == 3 {
+        jpeg_encoder::ColorType::Rgb
+    } else {
+        jpeg_encoder::ColorType::Luma
+    };
+    enc.encode(d, r.width as u16, r.height as u16, ct)
+        .map_err(other)?;
+    Ok(out)
 }
 
 pub fn jpeg(path: &Path, r: &Raster, quality: u8, xmp: Option<&str>) -> io::Result<()> {
