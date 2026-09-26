@@ -7,6 +7,7 @@ import { openExport } from "../state/exporter";
 import { openReport } from "../state/report";
 import { openCalMatch } from "../state/calmatch";
 import { openBlink } from "../state/blink";
+import { setTheme } from "../state/theme";
 import { openDiff } from "./HeaderDiff";
 import { openOrganize } from "./Organize";
 import { fuzzy } from "./fuzzy";
@@ -24,6 +25,10 @@ function actions(): Item[] {
     { id: "linear", group: "Actions", title: "Stretch: Linear", hint: "L", run: () => setStretch({ kind: "linear" }) },
     { id: "asinh", group: "Actions", title: "Stretch: Asinh", hint: "H", run: () => setStretch({ kind: "asinh" }) },
     { id: "clip", group: "Actions", title: "Toggle clipping overlay", hint: "C", run: () => setStretch({ clipping: !app.get().stretch.clipping }) },
+    { id: "theme-dark", group: "Actions", title: "Theme: Dark", run: () => setTheme("dark") },
+    { id: "theme-light", group: "Actions", title: "Theme: Light", run: () => setTheme("light") },
+    { id: "theme-night", group: "Actions", title: "Theme: Night-vision (red)", run: () => setTheme("night") },
+    { id: "theme-system", group: "Actions", title: "Theme: Follow system", run: () => setTheme("system") },
     { id: "fit", group: "Actions", title: "Zoom to fit", hint: "F", run: () => view("fit") },
     { id: "one", group: "Actions", title: "Zoom to actual pixels", hint: "1", run: () => view("one") },
     { id: "overview", group: "Actions", title: "Show overview", cli: `fittle info ${file}`, run: () => app.set({ tab: "overview" }) },

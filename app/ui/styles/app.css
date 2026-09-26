@@ -426,3 +426,10 @@ tr.queued .dist-bar .seg.s0 { background: var(--accent); }
 .impact.ok { color: var(--ok-fg); }
 .impact.warning { color: var(--accent-fg); }
 .impact.blocker { color: var(--rose-fg); }
+
+/* Themes (screen 12) */
+.theme-btn { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2);
+  color: var(--text-muted); cursor: pointer; flex: none; }
+.theme-btn:hover { color: var(--text); }
+.theme-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+[data-theme="night"] canvas, [data-theme="night"] img, [data-theme="night"] .brand { filter: url(#night-red); }

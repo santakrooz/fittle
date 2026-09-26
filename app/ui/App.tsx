@@ -100,6 +100,12 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
         {loading && hasImage && <div className="stage-busy" aria-hidden="true" />}
       </main>
       <Inspector />
+      {/* Night-vision: images become luminance in deep red. */}
+      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+        <filter id="night-red" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values="0.30 0.59 0.11 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+        </filter>
+      </svg>
       <SessionReport />
       <CalMatch />
       <Blink />
