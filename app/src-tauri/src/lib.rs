@@ -317,7 +317,12 @@ async fn pack_file(path: String, unpack: bool) -> Res<fittle_image::fpack::PackR
         if unpack {
             fpack::funpack(&src, &fpack::unpacked_name(&src)).map_err(err)
         } else {
-            fpack::fpack(&src, &fpack::packed_name(&src), &fpack::PackOptions::default()).map_err(err)
+            fpack::fpack(
+                &src,
+                &fpack::packed_name(&src),
+                &fpack::PackOptions::default(),
+            )
+            .map_err(err)
         }
     })
     .await
