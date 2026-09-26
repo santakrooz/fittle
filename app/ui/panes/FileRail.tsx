@@ -99,8 +99,8 @@ export function FileRail() {
       <div className="rail-head">
         <span className="ft-label">{folder ? `Folder · ${group(folder.entries.length)}` : "No folder"}</span>
         {folder && (
-          <button type="button" className="rail-scan" onClick={() => void openReport(folder.path)} title="Session report: nights, integration, sub grades (includes subfolders)">
-            Scan
+          <button type="button" className="rail-scan" onClick={() => void openReport(folder.path)} title="Analyze this folder: nights, integration, consistency checks and sub grades (includes subfolders)">
+            Analyze
           </button>
         )}
         <Button variant="ghost" icon="folder" onClick={choose}>
