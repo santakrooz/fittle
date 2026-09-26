@@ -3,6 +3,7 @@ import type { Report, Reason, SubGrade } from "../backend/types";
 import { Button, Kbd } from "../ds";
 import { baseName, group } from "../format";
 import { openFile } from "../state/app";
+import { openCalMatch } from "../state/calmatch";
 import { closeReport, moveRejects, reportStore, saveReport } from "../state/report";
 
 const REASON_LABEL: Record<Reason, string> = {
@@ -153,6 +154,7 @@ export function SessionReport() {
             Session report <span className="muted">· {folder ? baseName(folder) : ""}</span>
           </h1>
           <div className="report-actions">
+            <Button variant="ghost" disabled={!folder} onClick={() => (closeReport(), void openCalMatch(folder ?? undefined))}>Match calibration</Button>
             <Button variant="secondary" disabled={!report} onClick={() => saveReport("md")}>Export Markdown</Button>
             <Button variant="secondary" disabled={!report} onClick={() => saveReport("html")}>HTML</Button>
             <Button variant="secondary" disabled={!g} onClick={() => saveReport("astrobin")} title="Acquisition CSV for AstroBin (kept subs)">AstroBin CSV</Button>

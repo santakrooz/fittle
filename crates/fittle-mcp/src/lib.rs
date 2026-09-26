@@ -219,6 +219,14 @@ pub struct GradeArg {
 }
 
 #[derive(Debug, Deserialize, JsonSchema)]
+pub struct MatchArg {
+    /// Folder of lights (subfolders included).
+    pub lights: String,
+    /// Calibration library folder (subfolders included).
+    pub library: String,
+}
+
+#[derive(Debug, Deserialize, JsonSchema)]
 pub struct SetArg {
     /// Files to edit.
     #[serde(default)]
@@ -691,6 +699,43 @@ impl Fittle {
                 v["dry_run"] = json!(a.dry_run);
             }
             Ok(v)
+        })
+        .await?;
+        ok(tri!(v))
+    }
+
+    #[tool(
+        description = "Match light groups (camera, gain, offset, exposure, binning, filter, size) to darks, flats and bias/dark-flats in a calibration library, with per-kind status, the best candidate, plain-language mismatch notes, and for groups not ready a 'why' with what to shoot. Header-only. Schema fittle.calmatch/1.",
+        annotations(read_only_hint = true)
+    )]
+    async fn fits_match_calibration(
+        &self,
+        Parameters(a): Parameters<MatchArg>,
+    ) -> Result<CallToolResult, ErrorData> {
+        let (l, c) = (
+            tri!(self.roots.check(&a.lights)),
+            tri!(self.roots.check(&a.library)),
+        );
+        let v = blocking(move || -> Result<Value, String> {
+            let lights =
+                fittle_scan::list_recursive(&l).map_err(|e| format!("{}: {e}", l.display()))?;
+            let library =
+                fittle_scan::list_recursive(&c).map_err(|e| format!("{}: {e}", c.display()))?;
+            let mut m = fittle_scan::calmatch::match_calibration(
+                &l.to_string_lossy(),
+                &lights,
+                &c.to_string_lossy(),
+                &library,
+            );
+            // Paths per set can be thousands; keep a few.
+            for g in &mut m.groups {
+                for k in [&mut g.darks, &mut g.flats, &mut g.bias] {
+                    if let Some(s) = &mut k.set {
+                        s.paths.truncate(5);
+                    }
+                }
+            }
+            Ok(json!(m))
         })
         .await?;
         ok(tri!(v))

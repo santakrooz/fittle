@@ -733,6 +733,9 @@ mod tests {
             set_temp_c: None,
             binning: Some(1),
             pixel_scale: None,
+            offset: None,
+            camera: Some("ZWO ASI2600MC Pro".into()),
+            size: Some([6248, 4176]),
             error: None,
         };
         let mut other = base.clone();

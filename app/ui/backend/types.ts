@@ -280,6 +280,36 @@ export type Report = {
 
 export type Move = { from: string; to: string; error?: string };
 
+export type MatchStatus = "ok" | "warn" | "bad" | "none";
+export type CalSet = { kind: "dark" | "flat" | "bias" | "dark_flat"; name: string; master: boolean; frames: number; gain?: number; exposure_s?: number; temp_c?: number; filter?: string };
+export type KindMatch = { kind: CalSet["kind"]; status: MatchStatus; set?: CalSet; notes: string[] };
+export type LightGroup = {
+  camera?: string;
+  gain?: number;
+  exposure_s?: number;
+  filter?: string;
+  temp_c?: number;
+  subs: number;
+  integration_s: number;
+  nights: string[];
+  darks: KindMatch;
+  flats: KindMatch;
+  bias: KindMatch;
+  status: "ready" | "partial" | "missing";
+  why?: string;
+};
+export type Matching = {
+  schema: "fittle.calmatch/1";
+  lights: string;
+  library: string;
+  library_frames: number;
+  sets: number;
+  groups: LightGroup[];
+  ready: number;
+  partial: number;
+  missing: number;
+};
+
 export type KeywordInfo = {
   keyword: string;
   label: string;
@@ -429,6 +459,8 @@ export interface Backend {
   saveReport(format: "md" | "html" | "json" | "astrobin"): Promise<string>;
   /** Move files into _rejected/ beside them; `dryRun` only plans. */
   moveRejects(paths: string[], dryRun: boolean): Promise<Move[]>;
+  /** Match the lights in a folder to a calibration library. */
+  matchCalibration(lights: string, library: string): Promise<Matching>;
   /** fpack (unpack=false) or funpack a file into a new file beside it. */
   packFile(path: string, unpack: boolean): Promise<PackReport>;
   /** Development timing line (no-op unless tracing). */

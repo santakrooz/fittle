@@ -7,6 +7,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
+pub mod calmatch;
 pub mod grade;
 pub mod report;
 
@@ -55,6 +56,14 @@ pub struct Entry {
     /// Arcsec per pixel (derived from pixel size and focal length).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pixel_scale: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub offset: Option<f64>,
+    /// Camera (INSTRUME).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub camera: Option<String>,
+    /// Image width × height, pixels.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub size: Option<[u64; 2]>,
     /// Structural error (e.g. truncated), if any.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
@@ -274,6 +283,9 @@ fn entry(p: &Path) -> Entry {
         set_temp_c: None,
         binning: None,
         pixel_scale: None,
+        offset: None,
+        camera: None,
+        size: None,
         error: None,
     };
     match fittle_core::info(p) {
@@ -293,6 +305,9 @@ fn entry(p: &Path) -> Entry {
             e.set_temp_c = i.fields.set_temp_c.map(|f| f.value);
             e.binning = i.fields.binning.map(|f| f.value);
             e.pixel_scale = i.derived.pixel_scale.map(|f| f.value);
+            e.offset = i.fields.offset.map(|f| f.value);
+            e.camera = i.fields.camera.map(|f| f.value);
+            e.size = i.image.as_ref().map(|im| [im.width, im.height]);
             e.error = i
                 .health
                 .iter()

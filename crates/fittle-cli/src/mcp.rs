@@ -332,3 +332,88 @@ pub fn run_grade(a: GradeArgs) -> u8 {
     }
     exit::OK
 }
+
+#[derive(ClapArgs)]
+pub struct MatchArgs {
+    /// Folder of lights (subfolders included)
+    lights: PathBuf,
+    /// Calibration library folder (subfolders included)
+    #[arg(long, value_name = "DIR")]
+    library: PathBuf,
+    /// Print JSON (schema fittle.calmatch/1)
+    #[arg(long)]
+    json: bool,
+}
+
+pub fn run_match(a: MatchArgs) -> u8 {
+    use fittle_scan::calmatch::{GroupStatus, KindMatch, MatchStatus};
+    let list =
+        |p: &PathBuf| fittle_scan::list_recursive(p).map_err(|e| format!("{}: {e}", p.display()));
+    let (lights, library) = match (list(&a.lights), list(&a.library)) {
+        (Ok(l), Ok(c)) => (l, c),
+        (Err(e), _) | (_, Err(e)) => {
+            eprintln!("fittle: {e}");
+            return exit::ERROR;
+        }
+    };
+    let m = fittle_scan::calmatch::match_calibration(
+        &a.lights.to_string_lossy(),
+        &lights,
+        &a.library.to_string_lossy(),
+        &library,
+    );
+    if a.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&m).expect("serializable")
+        );
+        return exit::OK;
+    }
+    println!(
+        "{} light group(s) · {} ready · {} partial · {} missing · {} calibration frames in {} sets",
+        m.groups.len(),
+        good(&m.ready.to_string()),
+        warn(&m.partial.to_string()),
+        bad(&m.missing.to_string()),
+        m.library_frames,
+        m.sets
+    );
+    let cell = |k: &KindMatch| -> String {
+        let name = k
+            .set
+            .as_ref()
+            .map_or("none".to_string(), |s| s.name.clone());
+        match k.status {
+            MatchStatus::Ok => good(&name),
+            MatchStatus::Warn => warn(&format!("{name} ({})", k.notes.join("; "))),
+            MatchStatus::Bad => bad(&format!("{name} ({})", k.notes.join("; "))),
+            MatchStatus::None => bad("none"),
+        }
+    };
+    for g in &m.groups {
+        let status = match g.status {
+            GroupStatus::Ready => good("Ready"),
+            GroupStatus::Partial => warn("Partial"),
+            GroupStatus::Missing => bad("Missing"),
+        };
+        let mut head = Vec::new();
+        if let Some(x) = g.gain {
+            head.push(format!("Gain {x}"));
+        }
+        if let Some(x) = g.exposure_s {
+            head.push(format!("{x} s"));
+        }
+        if let Some(x) = &g.filter {
+            head.push(x.clone());
+        }
+        head.push(format!("{} subs", g.subs));
+        println!("\n{}  {status}", head.join(" · "));
+        println!("  darks  {}", cell(&g.darks));
+        println!("  flats  {}", cell(&g.flats));
+        println!("  bias   {}", cell(&g.bias));
+        if let Some(w) = &g.why {
+            println!("  {}", muted(w));
+        }
+    }
+    exit::OK
+}

@@ -172,6 +172,13 @@ fn mcp_end_to_end() {
         "fittle.header/1"
     );
 
+    let m = c.call_json(
+        "fits_match_calibration",
+        json!({ "lights": dir.path(), "library": dir.path() }),
+    );
+    assert_eq!(m["schema"], "fittle.calmatch/1");
+    assert_eq!(m["groups"][0]["status"], "missing");
+
     // Outside the allowed folder: refused, as a tool error the agent can read.
     let outside = corpus("siril/r_pp_NGC6995_stacked.fit");
     let (err, content) = c.call("fits_inspect", json!({ "paths": [outside] }));

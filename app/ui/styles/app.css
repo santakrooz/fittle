@@ -312,3 +312,19 @@ canvas.ft-thumb { display: block; object-fit: cover; }
   .report-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .report-bottom { grid-template-columns: 1fr; }
 }
+
+/* Match calibration (screen 9) */
+.calmatch { grid-template-columns: minmax(0, 1fr); }
+.report-tiles.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.rtile.warn b { color: var(--accent-fg); }
+.caltable { table-layout: fixed; }
+.caltable td { vertical-align: middle; overflow: hidden; }
+.caltable tbody tr { cursor: default; }
+.calchip { display: inline-block; max-width: 100%; padding: 3px 10px; border-radius: 999px; font: 12.5px var(--font-mono);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+.calchip small { font-size: 11.5px; opacity: .85; }
+.calchip.ok { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok-fg); }
+.calchip.warn { background: var(--accent-soft); color: var(--accent-fg); }
+.calchip.bad { background: color-mix(in srgb, var(--rose-fg) 16%, transparent); color: var(--rose-fg); }
+.rcard.why { color: var(--text-muted); line-height: 1.55; }
+.rcard.why b { color: var(--text); }
