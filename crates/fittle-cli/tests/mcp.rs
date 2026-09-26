@@ -230,3 +230,35 @@ fn mcp_end_to_end() {
     let packed = c.call_json("fits_fpack", json!({ "paths": [s], "dry_run": false }));
     assert_eq!(packed["files"][0]["verified"], true);
 }
+
+#[test]
+fn setup_and_self_test() {
+    let bin = std::path::Path::new(env!("CARGO_BIN_EXE_fittle"));
+    let dir = tempfile::tempdir().unwrap();
+    let root = dir.path().to_string_lossy().to_string();
+    let r = fittle_mcp::setup::self_test(bin, std::slice::from_ref(&root));
+    assert!(r.ok, "{r:?}");
+    assert!(r.tools.iter().any(|t| t == "fits_inspect"));
+    let out = Command::new(bin)
+        .args(["mcp", "--setup", "--json", "--root"])
+        .arg(dir.path())
+        .output()
+        .unwrap();
+    let v: Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert!(
+        v[0]["text"]
+            .as_str()
+            .unwrap()
+            .starts_with("claude mcp add fittle -- ")
+    );
+    let check = Command::new(bin)
+        .args(["mcp", "--check", "--root"])
+        .arg(dir.path())
+        .output()
+        .unwrap();
+    assert!(
+        check.status.success(),
+        "{}",
+        String::from_utf8_lossy(&check.stderr)
+    );
+}

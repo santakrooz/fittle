@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import type { Backend, HeaderDiff, BatchPlan, BlinkFrame, Bytes, Distribution, Rig, FrameStats, Matching, Move, PackReport, Report, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb, OrganizePlan } from "./types";
+import type { Backend, McpSetup, McpTest, HeaderDiff, BatchPlan, BlinkFrame, Bytes, Distribution, Rig, FrameStats, Matching, Move, PackReport, Report, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb, OrganizePlan } from "./types";
 
 /** Binary payloads: [u32 width][u32 height][u32 channels] little-endian, then data. */
 export function unpack(buf: ArrayBuffer): { width: number; height: number; channels: number; body: ArrayBuffer } {
@@ -69,6 +69,8 @@ export const tauriBackend: Backend = {
     return { width: u(0), height: u(1), bottomUp: u(3) === 1, stf: f, rgba: new Uint8ClampedArray(buf, 52) } satisfies BlinkFrame;
   },
   subStats: (path) => invoke<FrameStats>("sub_stats", { path }),
+  mcpSetup: (bin, roots) => invoke<McpSetup>("mcp_setup", { bin, roots }),
+  mcpTest: (bin, roots) => invoke<McpTest>("mcp_test", { bin, roots }),
   diffFiles: (a, b) => invoke<HeaderDiff>("diff_files", { a, b }),
   keywordSpread: (paths) => invoke<Distribution>("keyword_spread", { paths }),
   batchPlan: (paths, ops, options) => invoke<BatchPlan>("batch_plan", { paths, ops, options }),

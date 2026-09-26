@@ -143,6 +143,20 @@ export function demoBackend(): Backend {
       return { width: p.width, height: p.height, bottomUp: false, stf: [0, 0.5, 1, 0, 0.5, 1, 0, 0.5, 1], rgba: new Uint8ClampedArray(p.body) };
     },
     subStats: () => Promise.reject(new Error("Star metrics need the desktop app.")),
+    mcpSetup: async (bin, roots) => {
+      const b = bin || "/usr/local/bin/fittle";
+      const args = ["mcp", ...roots.flatMap((r) => ["--root", r])];
+      const server = { command: b, args };
+      return {
+        bin: b,
+        version: "demo",
+        snippets: [
+          { id: "claude-code", client: "Claude Code", how: "Run once in a terminal.", format: "shell", text: `claude mcp add fittle -- ${b} ${args.join(" ")}` },
+          { id: "claude-desktop", client: "Claude Desktop", how: "Add to mcpServers, then restart.", file: "~/Library/Application Support/Claude/claude_desktop_config.json", format: "json", text: JSON.stringify({ mcpServers: { fittle: server } }, null, 2) },
+        ],
+      };
+    },
+    mcpTest: () => Promise.reject(new Error("The connection test needs the desktop app.")),
     // Fixture: `fittle diff <a> <b> --json > app/demo-fixtures/diff.json`.
     diffFiles: () => json<HeaderDiff>("/demo/diff.json"),
     // Fixture: `fittle keys <folder> --json > app/demo-fixtures/keys.json`.
