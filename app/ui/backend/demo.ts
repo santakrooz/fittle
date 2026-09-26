@@ -143,6 +143,8 @@ export function demoBackend(): Backend {
       return { width: p.width, height: p.height, bottomUp: false, stf: [0, 0.5, 1, 0, 0.5, 1, 0, 0.5, 1], rgba: new Uint8ClampedArray(p.body) };
     },
     subStats: () => Promise.reject(new Error("Star metrics need the desktop app.")),
+    organizePlan: () => Promise.reject(new Error("Organizing needs the desktop app.")),
+    organizeApply: () => Promise.reject(new Error("Organizing needs the desktop app.")),
     // Fixture written by `fittle match-cal <lights> --library <dir> --json > app/demo-fixtures/calmatch.json`.
     matchCalibration: () => json<Matching>("/demo/calmatch.json"),
   };

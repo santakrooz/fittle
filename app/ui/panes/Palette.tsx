@@ -7,6 +7,7 @@ import { openExport } from "../state/exporter";
 import { openReport } from "../state/report";
 import { openCalMatch } from "../state/calmatch";
 import { openBlink } from "../state/blink";
+import { openOrganize } from "./Organize";
 import { fuzzy } from "./fuzzy";
 
 type Item = { id: string; group: "Actions" | "Keywords" | "Files"; title: string; hint?: string; cli?: string; run: () => void };
@@ -43,6 +44,7 @@ function actions(): Item[] {
     },
   ];
   if (s.folder && !s.folder.path.startsWith("demo")) {
+    a.push({ id: "organize", group: "Actions", title: "Organize folder (sort and rename)…", cli: `fittle organize "${s.folder.name}" --by object/filter/night --dry-run`, run: () => openOrganize() });
     a.push({ id: "blink", group: "Actions", title: "Blink through subs", hint: "B", run: () => openBlink() });
     a.push({ id: "calmatch", group: "Actions", title: "Match calibration (darks, flats, bias)…", cli: `fittle match-cal "${s.folder.name}" --library <dir>`, run: () => void openCalMatch() });
     a.push({ id: "report", group: "Actions", title: "Session report (scan and grade folder)", cli: `fittle scan --grade --recursive "${s.folder.name}"`, run: () => void openReport() });

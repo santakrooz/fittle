@@ -72,6 +72,10 @@ enum Command {
     Grade(mcp::GradeArgs),
     /// Match lights to darks, flats and bias in a calibration library
     MatchCal(mcp::MatchArgs),
+    /// Sort files into folders by header facts (object/filter/night), with undo
+    Organize(mcp::OrganizeArgs),
+    /// Rename files from a template ({object}_{filter}_{exptime}s_{seq})
+    Rename(mcp::RenameArgs),
     /// Run the MCP server on stdio (for Claude and other agents)
     Mcp(mcp::McpArgs),
 }
@@ -98,6 +102,8 @@ fn main() -> ExitCode {
         Command::Scan(args) => mcp::run_scan(args),
         Command::Grade(args) => mcp::run_grade(args),
         Command::MatchCal(args) => mcp::run_match(args),
+        Command::Organize(args) => mcp::run_organize(args),
+        Command::Rename(args) => mcp::run_rename(args),
         Command::Mcp(args) => mcp::run_mcp(args),
     };
     ExitCode::from(code)
