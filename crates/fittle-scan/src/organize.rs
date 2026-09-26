@@ -388,7 +388,8 @@ mod tests {
             .collect();
         assert_eq!(veil.len(), 2);
         assert!(
-            veil[0].to.ends_with("NGC 6995/LP/NGC 6995_20s.fit"),
+            Path::new(&veil[0].to)
+                .ends_with(Path::new("NGC 6995").join("LP").join("NGC 6995_20s.fit")),
             "{}",
             veil[0].to
         );
@@ -399,7 +400,11 @@ mod tests {
                 .iter()
                 .any(|m| m.companion && m.to.ends_with(".jpg"))
         );
-        assert!(p.new_folders.iter().any(|f| f.ends_with("M 31/L-eXtreme")));
+        assert!(
+            p.new_folders
+                .iter()
+                .any(|f| Path::new(f).ends_with(Path::new("M 31").join("L-eXtreme")))
+        );
         // Planning touches nothing.
         assert!(dir.join("a.fit").exists());
 
