@@ -420,6 +420,55 @@ async fn match_calibration(
     .map_err(err)?
 }
 
+/// One blink frame. Binary: `[u32 w][u32 h][u32 4][u32 bottom_up]`, then
+/// 9 × f32 stretch (shadows, midtones, highlights × 3 channels), then RGBA8.
+/// `stf` (flat, 9 values) locks the stretch; omit it to auto-stretch.
+#[tauri::command]
+async fn blink_frame(path: String, max_edge: usize, stf: Option<Vec<f32>>) -> Res<Response> {
+    let t = std::time::Instant::now();
+    let r = spawn_blocking(move || {
+        let locked: Option<Vec<fittle_image::stretch::Stf>> = stf.map(|v| {
+            v.chunks_exact(3)
+                .map(|c| fittle_image::stretch::Stf {
+                    shadows: c[0],
+                    midtones: c[1],
+                    highlights: c[2],
+                })
+                .collect()
+        });
+        let f = fittle_image::thumb::blink_frame(&path, max_edge, locked.as_deref())
+            .ok_or("could not read this file")?;
+        let mut out = Vec::with_capacity(16 + 36 + f.rgba.len());
+        for v in [f.width, f.height, 4, usize::from(f.bottom_up)] {
+            out.extend((v as u32).to_le_bytes());
+        }
+        for i in 0..3 {
+            let s = f.stf[i.min(f.stf.len() - 1)];
+            for v in [s.shadows, s.midtones, s.highlights] {
+                out.extend(v.to_le_bytes());
+            }
+        }
+        out.extend_from_slice(&f.rgba);
+        Ok::<_, String>(Response::new(out))
+    })
+    .await
+    .map_err(err)?;
+    trace("blink_frame", t);
+    r
+}
+
+/// Star metrics for one sub (grade card when no report is loaded).
+#[tauri::command]
+async fn sub_stats(path: String) -> Res<fittle_image::stars::FrameStats> {
+    spawn_blocking(move || {
+        fittle_image::stars::measure_file(std::path::Path::new(&path))
+            .map(|(_, s)| s)
+            .map_err(err)
+    })
+    .await
+    .map_err(err)?
+}
+
 /// The privacy-scrub edits for a file, to stage in the editor.
 #[tauri::command]
 async fn scrub_ops(path: String) -> Res<Vec<Op>> {
@@ -489,7 +538,9 @@ pub fn run() {
             session_report,
             save_report,
             move_rejects,
-            match_calibration
+            match_calibration,
+            blink_frame,
+            sub_stats
         ])
         .run(tauri::generate_context!())
         .expect("error while running Fittle");

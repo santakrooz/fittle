@@ -19,12 +19,48 @@ use crate::view::Mode;
 
 /// RGBA8 thumbnail with long edge ≤ `max_edge`: (width, height, pixels).
 pub fn thumbnail(path: impl AsRef<Path>, max_edge: usize) -> Option<(usize, usize, Vec<u8>)> {
-    let path = path.as_ref();
+    let (img, _) = small(path.as_ref(), max_edge)?;
+    let (w, h, px, _) = rgba(&img, None);
+    Some((w, h, px))
+}
+
+/// One blink frame: RGBA8 at long edge ≤ `max_edge`, stretched with `locked`
+/// (per channel) or, for the first frame, its own auto-stretch, which is
+/// returned so later frames can reuse it.
+#[derive(Debug, Clone)]
+pub struct BlinkFrame {
+    pub width: usize,
+    pub height: usize,
+    pub rgba: Vec<u8>,
+    pub stf: Vec<Stf>,
+    /// Stored rows run bottom-up; show flipped.
+    pub bottom_up: bool,
+}
+
+pub fn blink_frame(
+    path: impl AsRef<Path>,
+    max_edge: usize,
+    locked: Option<&[Stf]>,
+) -> Option<BlinkFrame> {
+    let (img, bottom_up) = small(path.as_ref(), max_edge)?;
+    let (width, height, rgba, stf) = rgba(&img, locked);
+    Some(BlinkFrame {
+        width,
+        height,
+        rgba,
+        stf,
+        bottom_up,
+    })
+}
+
+/// A small normalized (debayered) image, and whether rows run bottom-up.
+fn small(path: &Path, max_edge: usize) -> Option<(Image, bool)> {
     let fits = Fits::open(path).ok()?;
     let info = fittle_core::info_from(&fits, &path.to_string_lossy());
     let hdu = &fits.hdus[info.image.as_ref()?.hdu];
+    let bottom_up = crate::export::bottom_up(&info);
     if hdu.kind == HduKind::CompressedImage {
-        return full(path, max_edge);
+        return full(path, max_edge).map(|i| (i, bottom_up));
     }
     let (w, h) = (
         hdu.shape[0] as usize,
@@ -37,11 +73,6 @@ pub fn thumbnail(path: impl AsRef<Path>, max_edge: usize) -> Option<(usize, usiz
     };
     let bitpix = hdu.bitpix?;
     let bpp = (bitpix.unsigned_abs() / 8) as usize;
-    let bottom_up = info
-        .fields
-        .row_order
-        .as_ref()
-        .is_some_and(|r| r.value.eq_ignore_ascii_case("BOTTOM-UP"));
     let head = hdu.header();
     let cfa = info
         .fields
@@ -119,7 +150,7 @@ pub fn thumbnail(path: impl AsRef<Path>, max_edge: usize) -> Option<(usize, usiz
     if let Some(c) = cfa {
         small = superpixel(&small, c);
     }
-    Some(rgba(&small))
+    Some((small, bottom_up))
 }
 
 fn sample(b: &[u8], bitpix: i64) -> Option<f64> {
@@ -135,7 +166,7 @@ fn sample(b: &[u8], bitpix: i64) -> Option<f64> {
 }
 
 /// Full decode path (tile-compressed files).
-fn full(path: &Path, max_edge: usize) -> Option<(usize, usize, Vec<u8>)> {
+fn full(path: &Path, max_edge: usize) -> Option<Image> {
     let s = ViewSession::open(path).ok()?;
     let o = s.image.as_ref()?;
     let mode = if o.cfa.is_some() {
@@ -143,26 +174,28 @@ fn full(path: &Path, max_edge: usize) -> Option<(usize, usize, Vec<u8>)> {
     } else {
         Mode::Raw
     };
-    Some(rgba(&downsample(o.shown_image(mode), max_edge)))
+    Some(downsample(o.shown_image(mode), max_edge))
 }
 
-/// Auto-stretch a small normalized image into RGBA8.
-fn rgba(img: &Image) -> (usize, usize, Vec<u8>) {
-    let stats = channel_stats(img);
-    let stf: Vec<Stf> = stats
-        .iter()
-        .map(|s| crate::view::stf_from(s.median, s.mad))
-        .collect();
+/// Stretch a small normalized image into RGBA8 with `stf` (else auto).
+fn rgba(img: &Image, stf: Option<&[Stf]>) -> (usize, usize, Vec<u8>, Vec<Stf>) {
+    let stf: Vec<Stf> = match stf {
+        Some(s) if !s.is_empty() => s.to_vec(),
+        _ => channel_stats(img)
+            .iter()
+            .map(|s| crate::view::stf_from(s.median, s.mad))
+            .collect(),
+    };
     let plane = img.width * img.height;
     let mut out = Vec::with_capacity(plane * 4);
     for i in 0..plane {
         let c = |p: usize| {
             let p = p.min(img.planes - 1);
-            (stf[p].apply(img.data[p * plane + i]) * 255.0).round() as u8
+            (stf[p.min(stf.len() - 1)].apply(img.data[p * plane + i]) * 255.0).round() as u8
         };
         out.extend([c(0), c(1), c(2), 255]);
     }
-    (img.width, img.height, out)
+    (img.width, img.height, out, stf)
 }
 
 #[cfg(test)]
@@ -182,5 +215,25 @@ mod tests {
             assert!(w <= 32 && h <= 32 && w > 0 && h > 0, "{rel}: {w}×{h}");
             assert_eq!(px.len(), w * h * 4);
         }
+    }
+
+    #[test]
+    fn blink_locks_the_stretch() {
+        let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../testdata/synthetic");
+        let a = super::blink_frame(
+            root.join("seestar/Light_NGC 6995_20.0s_LP_20260924-213412.fit"),
+            48,
+            None,
+        )
+        .unwrap();
+        assert_eq!(a.stf.len(), 3);
+        let b = super::blink_frame(
+            root.join("unistellar/eVscope-20251003-221500.fits"),
+            48,
+            Some(&a.stf),
+        )
+        .unwrap();
+        assert_eq!(b.stf, a.stf, "locked stretch is reused");
+        assert_eq!(b.rgba.len(), b.width * b.height * 4);
     }
 }

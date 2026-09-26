@@ -241,6 +241,8 @@ export type Thresholds = {
   exposure_s?: number;
   subs: number;
   median_hfr?: number;
+  median_stars: number;
+  median_background: number;
   hfr_max?: number;
   stars_min: number;
   background_max: number;
@@ -279,6 +281,9 @@ export type Report = {
 };
 
 export type Move = { from: string; to: string; error?: string };
+
+/** A pre-stretched blink frame; `stf` is 9 numbers (s, m, h × 3 channels). */
+export type BlinkFrame = { width: number; height: number; bottomUp: boolean; stf: number[]; rgba: Uint8ClampedArray<ArrayBuffer> };
 
 export type MatchStatus = "ok" | "warn" | "bad" | "none";
 export type CalSet = { kind: "dark" | "flat" | "bias" | "dark_flat"; name: string; master: boolean; frames: number; gain?: number; exposure_s?: number; temp_c?: number; filter?: string };
@@ -459,6 +464,10 @@ export interface Backend {
   saveReport(format: "md" | "html" | "json" | "astrobin"): Promise<string>;
   /** Move files into _rejected/ beside them; `dryRun` only plans. */
   moveRejects(paths: string[], dryRun: boolean): Promise<Move[]>;
+  /** A blink frame; pass `stf` to lock the stretch (first frame: omit). */
+  blinkFrame(path: string, maxEdge: number, stf?: number[]): Promise<BlinkFrame>;
+  /** Star metrics for one sub. */
+  subStats(path: string): Promise<FrameStats>;
   /** Match the lights in a folder to a calibration library. */
   matchCalibration(lights: string, library: string): Promise<Matching>;
   /** fpack (unpack=false) or funpack a file into a new file beside it. */
