@@ -148,6 +148,15 @@ fn mcp_end_to_end() {
     assert!(content[1]["text"].as_str().unwrap().contains("NGC 6995"));
     let stats = c.call_json("fits_stats", json!({ "path": s }));
     assert_eq!(stats["channels"].as_array().unwrap().len(), 3);
+    assert!(stats["stars"]["stars"].as_u64().unwrap() > 0);
+    let grade = c.call_json(
+        "fits_grade_subs",
+        json!({ "path": dir.path(), "move_rejects": true, "reject": "stars<100000" }),
+    );
+    assert_eq!(grade["schema"], "fittle.grade/1");
+    assert_eq!(grade["rejected"], 1);
+    assert_eq!(grade["dry_run"], true);
+    assert!(sub.exists(), "dry run must not move");
     let scan = c.call_json("fits_scan_folder", json!({ "path": dir.path() }));
     assert_eq!(scan["files"], 1);
     assert_eq!(

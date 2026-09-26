@@ -21,7 +21,7 @@ pub enum DecodeError {
     Empty,
     #[error("data unit is shorter than its header says")]
     Truncated,
-    #[error("unsupported tile compression: {0}")]
+    #[error("unsupported: {0}")]
     Unsupported(String),
 }
 

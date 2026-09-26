@@ -68,6 +68,8 @@ enum Command {
     Funpack(pack::UnpackArgs),
     /// Summarize a folder: frames, nights, integration per target and filter
     Scan(mcp::ScanArgs),
+    /// Grade light subs (stars, HFR, background, trails) and suggest rejects
+    Grade(mcp::GradeArgs),
     /// Run the MCP server on stdio (for Claude and other agents)
     Mcp(mcp::McpArgs),
 }
@@ -92,6 +94,7 @@ fn main() -> ExitCode {
         Command::Fpack(args) => pack::run_fpack(args),
         Command::Funpack(args) => pack::run_funpack(args),
         Command::Scan(args) => mcp::run_scan(args),
+        Command::Grade(args) => mcp::run_grade(args),
         Command::Mcp(args) => mcp::run_mcp(args),
     };
     ExitCode::from(code)

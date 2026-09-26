@@ -7,6 +7,8 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
+pub mod grade;
+
 use rayon::prelude::*;
 use serde::Serialize;
 

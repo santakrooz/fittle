@@ -70,25 +70,33 @@ impl Roots {
         &self.0
     }
 
-    /// Resolve `p` (which may not exist yet) and require it under a root.
+    /// Resolve `p` (which, like an output path, may not exist yet) and
+    /// require it under a root. Missing folders resolve through their nearest
+    /// existing ancestor; `..` in the missing part is refused.
     pub fn check(&self, p: &str) -> Result<PathBuf, String> {
         let path = expand(p);
-        let resolved = match path.canonicalize() {
-            Ok(c) => c,
-            Err(_) => {
-                let parent = path
-                    .parent()
-                    .filter(|d| !d.as_os_str().is_empty())
-                    .unwrap_or(Path::new("."));
-                let name = path
-                    .file_name()
-                    .ok_or_else(|| format!("{p}: not a file path"))?;
-                parent
-                    .canonicalize()
-                    .map_err(|_| format!("{p}: folder does not exist"))?
-                    .join(name)
+        let mut existing = path.as_path();
+        let mut rest: Vec<std::ffi::OsString> = Vec::new();
+        let resolved = loop {
+            if let Ok(c) = existing.canonicalize() {
+                break rest.iter().rev().fold(c, |acc, part| acc.join(part));
             }
+            let name = existing
+                .file_name()
+                .ok_or_else(|| format!("{p}: no such folder"))?;
+            rest.push(name.to_owned());
+            existing = existing
+                .parent()
+                .filter(|d| !d.as_os_str().is_empty())
+                .unwrap_or(Path::new("."));
         };
+        if path
+            .components()
+            .any(|c| c == std::path::Component::ParentDir)
+            && !path.exists()
+        {
+            return Err(format!("{p}: `..` is not allowed in a new path"));
+        }
         if self.0.iter().any(|r| resolved.starts_with(r)) {
             Ok(resolved)
         } else {
@@ -186,6 +194,25 @@ pub struct ScanArg {
     /// Also return one row per file (at most 500).
     #[serde(default)]
     pub include_files: bool,
+}
+
+#[derive(Debug, Deserialize, JsonSchema)]
+pub struct GradeArg {
+    /// Folder of light subs.
+    pub path: String,
+    /// Include subfolders.
+    #[serde(default)]
+    pub recursive: bool,
+    /// Override limits, e.g. `hfr>3.5,stars<50,bg>0.2,ecc>0.6,trails`.
+    pub reject: Option<String>,
+    /// Also plan moving suggested rejects into `_rejected/` beside them.
+    #[serde(default)]
+    pub move_rejects: bool,
+    /// With move_rejects: plan only (default true). Set false to move.
+    #[serde(default = "yes")]
+    pub dry_run: bool,
+    /// Per-sub rows to return, worst first (default 50; all with 0).
+    pub limit: Option<usize>,
 }
 
 #[derive(Debug, Deserialize, JsonSchema)]
@@ -514,7 +541,7 @@ impl Fittle {
     }
 
     #[tool(
-        description = "Pixel statistics per channel (min, max, mean, median, MAD, clipped fractions) on the normalized image, the physical range 0 and 1 map to, and the auto-stretch parameters. Star count and HFR are not available yet.",
+        description = "Pixel statistics per channel (min, max, mean, median, MAD, clipped fractions) on the normalized image, the physical range 0 and 1 map to, the auto-stretch parameters, and star metrics (count, median HFR/FWHM in source pixels, eccentricity, background, satellite trail).",
         annotations(read_only_hint = true)
     )]
     async fn fits_stats(
@@ -530,6 +557,9 @@ impl Fittle {
                 .ok_or_else(|| s.image_error.clone().unwrap_or_else(|| "no image".into()))?;
             let info = o.info();
             let d = o.display(info.default_mode);
+            let stars = fittle_image::stars::measure_file(&path)
+                .ok()
+                .map(|(_, st)| st);
             Ok(json!({
                 "path": s.path,
                 "width": info.width,
@@ -539,6 +569,7 @@ impl Fittle {
                 "normalized_from": info.normalized_from,
                 "channels": d.stats,
                 "auto_stf": d.stf,
+                "stars": stars,
             }))
         })
         .await?;
@@ -583,6 +614,62 @@ impl Fittle {
             let mut v = json!(summary);
             if a.include_files {
                 v["entries"] = json!(entries.iter().take(500).collect::<Vec<_>>());
+            }
+            Ok(v)
+        })
+        .await?;
+        ok(tri!(v))
+    }
+
+    #[tool(
+        description = "Grade light subs in a folder: stars, median HFR/FWHM, eccentricity, background and satellite trails per sub, robust per-group limits, and suggested rejects with reasons (clouds, low_altitude, dawn, trailing, soft, satellite). Returns usable vs captured integration. Moving rejects into _rejected/ is planned only unless move_rejects and dry_run: false. Schema fittle.grade/1.",
+        annotations(destructive_hint = false, idempotent_hint = true)
+    )]
+    async fn fits_grade_subs(
+        &self,
+        Parameters(a): Parameters<GradeArg>,
+    ) -> Result<CallToolResult, ErrorData> {
+        let dir = tri!(self.roots.check(&a.path));
+        let rules = tri!(
+            a.reject
+                .as_deref()
+                .map(fittle_scan::grade::Rules::parse)
+                .transpose()
+        )
+        .unwrap_or_default();
+        let roots = self.roots.clone();
+        let v = blocking(move || -> Result<Value, String> {
+            let entries = if a.recursive {
+                fittle_scan::list_recursive(&dir)
+            } else {
+                fittle_scan::list(&dir)
+            }
+            .map_err(|e| format!("{}: {e}", dir.display()))?;
+            let g = fittle_scan::grade::grade(&dir.to_string_lossy(), &entries, &rules);
+            let mut v = json!(g);
+            // Worst first, trimmed for the agent.
+            let mut subs = g.subs.clone();
+            subs.sort_by(|x, y| y.badness.total_cmp(&x.badness));
+            let limit = a.limit.unwrap_or(50);
+            if limit > 0 {
+                subs.truncate(limit);
+            }
+            v["subs"] = json!(subs);
+            v["subs_returned"] = json!(subs.len());
+            if a.move_rejects {
+                let paths: Vec<&str> = g
+                    .subs
+                    .iter()
+                    .filter(|s| s.reject)
+                    .map(|s| s.path.as_str())
+                    .collect();
+                for p in &paths {
+                    roots.check(
+                        &fittle_scan::grade::rejected_path(Path::new(p)).to_string_lossy(),
+                    )?;
+                }
+                v["moves"] = json!(fittle_scan::grade::move_rejects(&paths, a.dry_run));
+                v["dry_run"] = json!(a.dry_run);
             }
             Ok(v)
         })
@@ -756,7 +843,7 @@ impl Fittle {
     }
 }
 
-const INSTRUCTIONS: &str = "Fittle reads astrophotography FITS files. Start with fits_inspect (what is this file?) or fits_scan_folder (what is in this folder?), and fits_preview to look at an image. Tools that write (fits_set_keywords, fits_scrub, fits_export, fits_fpack) are dry-run by default: show the user the plan and only call again with dry_run: false after they agree. Header edits never change pixel data; exports and compression always create new files. Paths must be inside the allowed folders. Resources fits://keywords, fits://quirks and fits://scopes explain keywords and vendor behaviour.";
+const INSTRUCTIONS: &str = "Fittle reads astrophotography FITS files. Start with fits_inspect (what is this file?) or fits_scan_folder (what is in this folder?), fits_preview to look at an image, and fits_grade_subs to find bad subs. Tools that write (fits_set_keywords, fits_scrub, fits_export, fits_fpack) are dry-run by default: show the user the plan and only call again with dry_run: false after they agree. Header edits never change pixel data; exports and compression always create new files. Paths must be inside the allowed folders. Resources fits://keywords, fits://quirks and fits://scopes explain keywords and vendor behaviour.";
 
 #[tool_handler]
 impl ServerHandler for Fittle {
