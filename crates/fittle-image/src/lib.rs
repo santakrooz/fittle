@@ -13,6 +13,7 @@ pub mod geom;
 pub mod preview;
 pub mod rice;
 pub mod session;
+pub mod stars;
 pub mod stats;
 pub mod stretch;
 pub mod thumb;

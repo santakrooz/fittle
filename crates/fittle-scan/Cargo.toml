@@ -7,5 +7,6 @@ publish.workspace = true
 
 [dependencies]
 fittle-core.workspace = true
+fittle-image.workspace = true
 rayon = "1"
 serde.workspace = true

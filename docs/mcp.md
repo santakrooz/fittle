@@ -32,9 +32,10 @@ matches and output folders, must be inside an allowed root.
 | `fits_inspect` | Verdict (sub or stack, with confidence and evidence), rig, target, exposure, site, derived facts. Schema `fittle.info/1` | No |
 | `fits_header` | Header records per HDU, optionally one HDU or a keyword filter | No |
 | `fits_preview` | A stretched JPEG/PNG preview (image content), debayered if colour | No |
-| `fits_stats` | Per-channel statistics and auto-stretch parameters | No |
+| `fits_stats` | Per-channel statistics, auto-stretch parameters, stars and HFR | No |
 | `fits_diff` | Header diff between two files, with calibration impact | No |
 | `fits_scan_folder` | Frame counts, nights, integration per target and filter, warnings | No |
+| `fits_grade_subs` | Stars, HFR, background, trails per sub; suggested rejects with reasons | Moving rejects: dry run by default |
 | `fits_set_keywords` | Set, remove or rename keywords (paths and/or glob) | Header only; dry run by default |
 | `fits_scrub` | Remove site coordinates, observer names and serials | Header only; dry run by default |
 | `fits_export` | PNG/JPEG/WebP/AVIF/TIFF/FITS with stretch, crop, rotate, bin, resize, share card | New files only; dry run by default |
@@ -48,5 +49,4 @@ compression never replace an existing file.
 Resources: `fits://keywords` (keyword dictionary), `fits://quirks` (software fingerprints
 and vendor quirks), `fits://scopes` (smart-scope registry).
 
-Coming with M6: `fits_grade_subs`, `fits_match_calibration`, `fits_organize`, and star
-counts / HFR in `fits_stats`.
+Coming later in M6: `fits_match_calibration` and `fits_organize`.
