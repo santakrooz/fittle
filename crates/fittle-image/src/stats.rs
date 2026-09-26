@@ -25,6 +25,9 @@ pub struct ChannelStats {
     pub clipped_low: f32,
     /// Fraction of pixels at or above 0.9999 (saturated).
     pub saturated: f32,
+    /// 99.99th percentile: the bright end of the data (brighter stars),
+    /// ignoring the few saturated cores; the white point of the viewer's Linear.
+    pub p9999: f32,
     /// `DISPLAY_BINS` counts over [0, 1].
     pub histogram: Vec<u32>,
 }
@@ -109,6 +112,7 @@ fn stats_of(data: &[f32]) -> ChannelStats {
         median,
         mad,
         clipped_low: (acc.hist[0] as f64 / n) as f32,
+        p9999: quantile_bin(&acc.hist, 0.9999) as f32 / (FINE - 1) as f32,
         saturated: saturated as f32,
         histogram,
     }

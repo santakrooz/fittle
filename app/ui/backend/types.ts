@@ -171,6 +171,8 @@ export type Display = {
   stats: ChannelStats[];
   stf: Stf[];
   stf_linked: Stf;
+  /** Linear from the auto black point to the 99.99th percentile (viewer "Linear"). */
+  stf_linear?: Stf[];
 };
 
 export type OpenedImage = {

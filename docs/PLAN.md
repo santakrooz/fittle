@@ -354,11 +354,11 @@ Ship the read-only CLI first, because it hardens the core that every other surfa
 
 **Open decisions**
 
-- [ ] License: MIT/Apache-2.0 dual (Rust norm, maximally reusable) vs GPL-3.0 (matches Siril's ecosystem, keeps forks open). Leaning MIT; confirm before first public release.
+- [x] License: **MIT** (decided 2026-09-26). Bundled data keeps its own terms (NOTICE.md: OpenNGC CC BY-SA 4.0, fonts OFL).
 - [x] Frontend framework: React 19 + TypeScript + Vite, matching AstroSideKick ([0002](decisions/0002-frontend-react.md)).
 - [ ] Name check: "fittle" on crates.io, Homebrew, winget, GitHub org, and domain.
 - [ ] Shared token package name and repo (`@astrodog/tokens`?) and who owns it.
-- [ ] Do Quick Look / Explorer thumbnails ship in v1.0 or v1.1?
+- [x] Quick Look / Explorer / Linux thumbnails ship in **v1.0** (decided 2026-09-26).
 - [ ] Telemetry: none (recommended) vs opt-in crash reports.
 
 **Claude Code kickoff**
