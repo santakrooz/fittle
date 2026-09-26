@@ -10,6 +10,7 @@ const FORMATS: { value: FormatKind; label: string }[] = [
   { value: "png", label: "PNG" },
   { value: "jpeg", label: "JPEG" },
   { value: "webp", label: "WebP" },
+  { value: "avif", label: "AVIF" },
   { value: "fits", label: "FITS" },
 ];
 
@@ -97,6 +98,7 @@ export function ExportModal() {
   if (!open || !opened?.image) return null;
   const image = opened.image;
   const isFits = c.format === "fits";
+  const lossy = c.format === "jpeg" || c.format === "avif";
 
   const run = async () => {
     setBusy(true);
@@ -185,8 +187,8 @@ export function ExportModal() {
             </label>
             <label className="ex-group">
               <span className="ex-label">Quality</span>
-              <select className="ex-input mono" value={c.format === "jpeg" ? c.quality : ""} disabled={c.format !== "jpeg"} onChange={(e) => setChoices({ quality: Number(e.target.value) })}>
-                {c.format !== "jpeg" && <option value="">Lossless</option>}
+              <select className="ex-input mono" value={lossy ? c.quality : ""} disabled={!lossy} onChange={(e) => setChoices({ quality: Number(e.target.value) })}>
+                {!lossy && <option value="">Lossless</option>}
                 {QUALITIES.map((q) => (
                   <option key={q} value={q}>
                     {q}
@@ -211,11 +213,15 @@ export function ExportModal() {
           <div className="ex-checks">
             <label>
               <input type="checkbox" checked={c.metadata && !isFits} disabled={isFits} onChange={(e) => setChoices({ metadata: e.target.checked })} />
-              {isFits ? "FITS keeps its header (plate solution updated)" : "Embed acquisition summary in XMP"}
+              {isFits ? "FITS keeps its header (plate solution updated)" : c.format === "avif" ? "Embed acquisition summary (EXIF)" : "Embed acquisition summary in XMP"}
             </label>
             <label>
               <input type="checkbox" checked={c.private} onChange={(e) => setChoices({ private: e.target.checked })} />
               Strip site coordinates and serial numbers
+            </label>
+            <label>
+              <input type="checkbox" checked={c.card && !isFits} disabled={isFits} onChange={(e) => setChoices({ card: e.target.checked })} />
+              Add caption strip (share card)
             </label>
             {image.can_debayer && (
               <label>

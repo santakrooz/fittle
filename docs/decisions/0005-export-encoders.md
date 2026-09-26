@@ -1,4 +1,4 @@
-# 0005 — Export encoders: focused pure-Rust crates, lossless WebP only
+# 0005 — Export encoders: focused pure-Rust crates, lossless WebP only, AVIF, share cards
 
 Date: 2026-09-25 · Milestone: M4
 
@@ -22,8 +22,12 @@ float TIFF and FITS output with an updated header, all without C dependencies
   source header carried over minus structural/compression keys, a rewritten TAN WCS
   when geometry changes (SIP dropped after resampling or rotation, with a HISTORY
   note), Bayer keys dropped after debayering, and the privacy scrub applied.
-- AVIF (`ravif`, pure Rust but a slow rav1e build) comes in a later M4 PR, likely
-  behind a cargo feature so CI and CLI builds stay fast.
+- **AVIF** uses `ravif` (rav1e) **without its `asm` feature**, which would need nasm; the
+  pure-Rust encoder is slower but needs no toolchain (1600 px in ~0.8 s). ravif has no XMP
+  slot, so AVIF carries the one-line acquisition summary as EXIF `ImageDescription`.
+- **Share cards** draw text with `swash` (pure Rust, supports variable fonts) using the
+  design-system fonts, embedded as OFL variable TTFs (~1.5 MB). Fontsource's WOFF2 files
+  can't be read by pure-Rust rasterizers, so the TTFs come from google/fonts.
 
 ## Consequences
 

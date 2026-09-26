@@ -260,6 +260,7 @@ export type ExportFormat =
   | { kind: "png"; bits: 8 | 16 }
   | { kind: "jpeg"; quality: number }
   | { kind: "webp" }
+  | { kind: "avif"; quality: number }
   | { kind: "tiff"; bits: 8 | 16 | 32 }
   | { kind: "fits" };
 
@@ -283,6 +284,8 @@ export type ExportSpec = {
   long_edge: number | null;
   metadata: boolean;
   private: boolean;
+  /** Share-card caption strip. */
+  card: boolean;
 };
 
 export type ExportPlan = {
