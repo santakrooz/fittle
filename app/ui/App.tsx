@@ -9,6 +9,7 @@ import { CalMatch } from "./panes/CalMatch";
 import { Blink } from "./panes/Blink";
 import { BatchEdit } from "./panes/BatchEdit";
 import { HeaderDiff, diffStore, openDiff } from "./panes/HeaderDiff";
+import { Filmstrip, filmstrip } from "./panes/Filmstrip";
 import { batch } from "./state/batch";
 import { Organize, organizeStore } from "./panes/Organize";
 import { blink, openBlink } from "./state/blink";
@@ -83,9 +84,12 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
   const tab = app.use((s) => s.tab);
   const editing = edits.use((s) => s.editing) && tab === "header";
   const notice = app.use((s) => s.notice);
+  const stripOn = filmstrip.use((s) => s.on);
+  const files = app.use((s) => s.folder?.entries.length ?? 0);
+  const strip = stripOn && files > 1;
 
   return (
-    <div className={`app ${editing ? "editing" : ""}`}>
+    <div className={`app ${editing ? "editing" : ""} ${strip ? "with-strip" : ""}`}>
       <TitleBar />
       <FileRail />
       <main className="stage" aria-busy={loading}>
@@ -100,6 +104,7 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
         {loading && hasImage && <div className="stage-busy" aria-hidden="true" />}
       </main>
       <Inspector />
+      <Filmstrip />
       {/* Night-vision: images become luminance in deep red. */}
       <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
         <filter id="night-red" colorInterpolationFilters="sRGB">

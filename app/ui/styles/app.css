@@ -433,3 +433,11 @@ tr.queued .dist-bar .seg.s0 { background: var(--accent); }
 .theme-btn:hover { color: var(--text); }
 .theme-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 [data-theme="night"] canvas, [data-theme="night"] img, [data-theme="night"] .brand { filter: url(#night-red); }
+
+/* Filmstrip under the viewer (screen 1) */
+.app.with-strip { grid-template-rows: var(--layout-titlebar) minmax(0, 1fr) calc(var(--layout-filmstrip) + 20px);
+  grid-template-areas: "title title title" "rail stage inspector" "strip strip strip"; }
+.app.with-strip.editing { grid-template-areas: "title title title" "rail inspector inspector" "strip strip strip"; }
+.filmstrip { grid-area: strip; display: flex; align-items: center; gap: 12px; padding: 0 16px; border-top: 1px solid var(--line);
+  background: var(--panel); overflow: hidden; min-width: 0; }
+.report, .blink { grid-row: 2 / -1; }
