@@ -374,6 +374,10 @@ export type HeaderDiff = {
   blockers: number;
 };
 
+export type McpSnippet = { id: string; client: string; how: string; file?: string; format: "shell" | "json" | "toml"; text: string };
+export type McpSetup = { bin: string | null; snippets: McpSnippet[]; version: string };
+export type McpTest = { ok: boolean; server?: string; tools: string[]; elapsed_ms: number; error?: string };
+
 export type Spread = "same" | "mixed" | "range" | "unique";
 export type KeyDist = {
   keyword: string;
@@ -524,6 +528,10 @@ export interface Backend {
   blinkFrame(path: string, maxEdge: number, stf?: number[]): Promise<BlinkFrame>;
   /** Star metrics for one sub. */
   subStats(path: string): Promise<FrameStats>;
+  /** Setup text for AI tools; `bin` overrides the found fittle binary. */
+  mcpSetup(bin: string | null, roots: string[]): Promise<McpSetup>;
+  /** Start the MCP server once and list its tools. */
+  mcpTest(bin: string, roots: string[]): Promise<McpTest>;
   /** Header diff of two files, with calibration impact. */
   diffFiles(a: string, b: string): Promise<HeaderDiff>;
   keywordSpread(paths: string[]): Promise<Distribution>;

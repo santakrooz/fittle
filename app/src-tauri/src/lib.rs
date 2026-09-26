@@ -588,6 +588,42 @@ async fn diff_files(a: String, b: String) -> Res<fittle_core::diff::Diff> {
         .map_err(err)?
 }
 
+#[derive(Serialize)]
+struct McpSetup {
+    /// The fittle CLI the snippets launch (found or given).
+    bin: Option<String>,
+    snippets: Vec<fittle_mcp::setup::Snippet>,
+    version: &'static str,
+}
+
+/// Setup text for AI tools (MCP). `bin` overrides the found binary.
+#[tauri::command]
+fn mcp_setup(bin: Option<String>, roots: Vec<String>) -> McpSetup {
+    let exe_dir = std::env::current_exe()
+        .ok()
+        .and_then(|e| e.parent().map(|p| p.to_path_buf()));
+    let bin = bin
+        .filter(|b| !b.trim().is_empty())
+        .map(std::path::PathBuf::from)
+        .or_else(|| fittle_mcp::setup::find_binary(exe_dir.as_deref()));
+    McpSetup {
+        snippets: bin
+            .as_deref()
+            .map(|b| fittle_mcp::setup::snippets(b, &roots))
+            .unwrap_or_default(),
+        bin: bin.map(|b| b.to_string_lossy().into_owned()),
+        version: env!("CARGO_PKG_VERSION"),
+    }
+}
+
+/// Start the MCP server once and list its tools.
+#[tauri::command]
+async fn mcp_test(bin: String, roots: Vec<String>) -> Res<fittle_mcp::setup::TestResult> {
+    spawn_blocking(move || fittle_mcp::setup::self_test(std::path::Path::new(&bin), &roots))
+        .await
+        .map_err(err)
+}
+
 /// The privacy-scrub edits for a file, to stage in the editor.
 #[tauri::command]
 async fn scrub_ops(path: String) -> Res<Vec<Op>> {
@@ -668,7 +704,9 @@ pub fn run() {
             rigs_list,
             rig_save,
             rig_delete,
-            diff_files
+            diff_files,
+            mcp_setup,
+            mcp_test
         ])
         .run(tauri::generate_context!())
         .expect("error while running Fittle");

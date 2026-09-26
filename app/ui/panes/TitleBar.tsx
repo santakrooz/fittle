@@ -2,6 +2,7 @@ import { Kbd } from "../ds";
 import { app } from "../state/app";
 import { baseName } from "../format";
 import { THEME_LABEL, cycleTheme, themeStore } from "../state/theme";
+import { openSettings } from "./Settings";
 
 export function TitleBar() {
   const folder = app.use((s) => s.folder?.name);
@@ -22,6 +23,11 @@ export function TitleBar() {
         </svg>
         <span>Search files, keys, actions</span>
         <Kbd>{mac ? "⌘K" : "Ctrl K"}</Kbd>
+      </button>
+      <button type="button" className="theme-btn" onClick={() => openSettings()} title="Settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.4 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.5 14H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7.4l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 3.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1.3z" />
+        </svg>
       </button>
       <button type="button" className="theme-btn" onClick={cycleTheme} title={`Theme: ${THEME_LABEL[theme]} (click to change)`} aria-label={`Theme: ${THEME_LABEL[theme]}`}>
         <svg viewBox="0 0 24 24" aria-hidden="true">

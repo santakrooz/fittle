@@ -13,9 +13,82 @@ pub struct McpArgs {
     /// FITTLE_MCP_ROOTS, else your home folder.
     #[arg(long, value_name = "DIR")]
     root: Vec<PathBuf>,
+    /// Print setup for Claude Code, Claude Desktop, Codex, Cursor, VS Code, Windsurf
+    #[arg(long)]
+    setup: bool,
+    /// Start the server once, list its tools, and stop (checks the setup works)
+    #[arg(long)]
+    check: bool,
+    /// With --setup / --check: print JSON
+    #[arg(long)]
+    json: bool,
 }
 
 pub fn run_mcp(a: McpArgs) -> u8 {
+    if a.setup || a.check {
+        let bin = std::env::current_exe().unwrap_or_else(|_| PathBuf::from("fittle"));
+        let roots: Vec<String> = if a.root.is_empty() {
+            fittle_mcp::Roots::new(vec![])
+                .dirs()
+                .iter()
+                .map(|d| d.to_string_lossy().into_owned())
+                .collect()
+        } else {
+            a.root
+                .iter()
+                .map(|r| {
+                    r.canonicalize()
+                        .unwrap_or(r.clone())
+                        .to_string_lossy()
+                        .into_owned()
+                })
+                .collect()
+        };
+        if a.check {
+            let r = fittle_mcp::setup::self_test(&bin, &roots);
+            if a.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&r).expect("serializable")
+                );
+            } else if r.ok {
+                println!(
+                    "{} {} answered with {} tools in {} ms",
+                    good("✓"),
+                    r.server.as_deref().unwrap_or("fittle"),
+                    r.tools.len(),
+                    r.elapsed_ms
+                );
+            } else {
+                eprintln!("{} {}", bad("✗"), r.error.as_deref().unwrap_or("failed"));
+            }
+            return if r.ok { exit::OK } else { exit::ERROR };
+        }
+        let s = fittle_mcp::setup::snippets(&bin, &roots);
+        if a.json {
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&s).expect("serializable")
+            );
+            return exit::OK;
+        }
+        println!(
+            "{}",
+            muted(
+                "Fittle's MCP server runs locally over stdio; clients start it with this command (no URL)."
+            )
+        );
+        for x in s {
+            println!("\n{}  {}", good(x.client), muted(&x.how));
+            if let Some(f) = &x.file {
+                println!("  {}", muted(&format!("file: {f}")));
+            }
+            for line in x.text.lines() {
+                println!("  {line}");
+            }
+        }
+        return exit::OK;
+    }
     let roots = fittle_mcp::Roots::new(a.root);
     // stdout carries the protocol; say where we are on stderr only.
     eprintln!(

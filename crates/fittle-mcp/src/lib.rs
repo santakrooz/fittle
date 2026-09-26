@@ -5,6 +5,8 @@
 //! folder; every tool that writes defaults to `dry_run: true` and returns the
 //! plan; exports and compression only ever create new files.
 
+pub mod setup;
+
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;

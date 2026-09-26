@@ -5,6 +5,12 @@
 
 ## Set up
 
+The easiest way: **Settings → Connect AI tools** in the app (or `fittle mcp --setup`) shows
+copy-ready setup for Claude Code, Claude Desktop, Codex, Cursor, VS Code and Windsurf with
+your binary path and allowed folders filled in, and **Test** (or `fittle mcp --check`)
+starts the server once and lists its tools. There is no URL: clients start Fittle locally
+over stdio.
+
 Claude Code:
 
 ```bash

@@ -441,3 +441,17 @@ tr.queued .dist-bar .seg.s0 { background: var(--accent); }
 .filmstrip { grid-area: strip; display: flex; align-items: center; gap: 12px; padding: 0 16px; border-top: 1px solid var(--line);
   background: var(--panel); overflow: hidden; min-width: 0; }
 .report, .blink { grid-row: 2 / -1; }
+
+/* Settings */
+.settings .report-main { max-width: 860px; }
+.settings-section { display: flex; flex-direction: column; gap: 14px; }
+.settings-section h2 { margin: 0; font: 600 16px var(--font-ui); }
+.settings-section > p { margin: 0; line-height: 1.55; }
+.settings-section .rcard { display: flex; flex-direction: column; gap: 10px; }
+.roots { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; }
+.roots li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--bg); overflow-wrap: anywhere; }
+.roots .rail-link { text-decoration: none; font-size: 15px; }
+.row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.client-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.snippet { margin: 0; padding: 12px 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; font-size: 12.5px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ok-line { color: var(--ok-fg); margin: 0; }
