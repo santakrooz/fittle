@@ -4,11 +4,13 @@ import { ExportModal } from "./panes/ExportModal";
 import { FileRail } from "./panes/FileRail";
 import { Inspector } from "./panes/Inspector";
 import { Palette } from "./panes/Palette";
+import { SessionReport } from "./panes/SessionReport";
 import { Hud, StageToolbar } from "./panes/StageChrome";
 import { TitleBar } from "./panes/TitleBar";
 import { app, init, openFile, openFolder, setMode, setStretch, step, view } from "./state/app";
 import { edits } from "./state/edits";
 import { exporter, openExport } from "./state/exporter";
+import { reportStore } from "./state/report";
 import { Stage } from "./viewer/Stage";
 
 /** React's development mode runs effects twice; open the startup file once. */
@@ -43,7 +45,7 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
         openExport();
         return;
       }
-      if (typing(e) || app.get().palette || exporter.get().open || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (typing(e) || app.get().palette || exporter.get().open || reportStore.get().open || e.metaKey || e.ctrlKey || e.altKey) return;
       // In the editor, arrows must not switch files under staged edits.
       if (edits.get().editing && app.get().tab === "header") return;
       const s = app.get();
@@ -88,6 +90,7 @@ export function App({ backend, demo }: { backend: Backend; demo?: boolean }) {
         {loading && hasImage && <div className="stage-busy" aria-hidden="true" />}
       </main>
       <Inspector />
+      <SessionReport />
       <Palette />
       <ExportModal />
       {notice && (

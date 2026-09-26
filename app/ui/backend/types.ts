@@ -202,8 +202,83 @@ export type Entry = {
   filter?: string;
   object?: string;
   date_obs?: string;
+  night?: string;
+  gain?: number;
   error?: string;
 };
+
+export type FrameStats = {
+  stars: number;
+  hfr?: number;
+  fwhm?: number;
+  eccentricity?: number;
+  background: number;
+  noise: number;
+  trail?: { angle_deg: number; length_px: number };
+  scale: number;
+};
+
+export type Reason = "clouds" | "low_altitude" | "dawn" | "trailing" | "soft" | "satellite" | "unreadable";
+
+export type SubGrade = {
+  path: string;
+  name: string;
+  date_obs?: string;
+  night?: string;
+  exposure_s?: number;
+  stats?: FrameStats;
+  sun_altitude?: number;
+  altitude?: number;
+  reject: boolean;
+  reasons: Reason[];
+  badness: number;
+  group: number;
+};
+
+export type Thresholds = {
+  object: string;
+  filter: string;
+  exposure_s?: number;
+  subs: number;
+  median_hfr?: number;
+  hfr_max?: number;
+  stars_min: number;
+  background_max: number;
+  eccentricity_max?: number;
+};
+
+export type Grading = {
+  subs: SubGrade[];
+  groups: Thresholds[];
+  kept: number;
+  rejected: number;
+  flagged_trails: number;
+  captured_s: number;
+  usable_s: number;
+  median_hfr?: number;
+  elapsed_ms: number;
+};
+
+export type Status = "ok" | "warn" | "bad";
+
+export type Report = {
+  schema: "fittle.report/1";
+  summary: {
+    folder: string;
+    files: number;
+    frames: Record<string, number>;
+    stacks: number;
+    nights: string[];
+    targets: { object: string; filter: string; subs: number; integration_s: number; nights: string[] }[];
+    total_light_s: number;
+    warnings: string[];
+  };
+  nights: { night: string; subs: number; captured_s: number; usable_s?: number; rejects?: number; status: Status }[];
+  checks: { status: Status; text: string }[];
+  grading?: Grading;
+};
+
+export type Move = { from: string; to: string; error?: string };
 
 export type KeywordInfo = {
   keyword: string;
@@ -348,6 +423,12 @@ export interface Backend {
   exportPreview(spec: ExportSpec, maxEdge: number): Promise<Bytes>;
   /** Export the open file into `dir` (null: next to the source). Never overwrites. */
   exportImage(spec: ExportSpec, template: string, dir: string | null): Promise<Exported>;
+  /** Session report for a folder; `grade` measures every light sub (seconds). */
+  sessionReport(path: string, recursive: boolean, grade: boolean, rules?: string): Promise<Report>;
+  /** Save the last report into its folder: md, html, json or astrobin. Returns the new file. */
+  saveReport(format: "md" | "html" | "json" | "astrobin"): Promise<string>;
+  /** Move files into _rejected/ beside them; `dryRun` only plans. */
+  moveRejects(paths: string[], dryRun: boolean): Promise<Move[]>;
   /** fpack (unpack=false) or funpack a file into a new file beside it. */
   packFile(path: string, unpack: boolean): Promise<PackReport>;
   /** Development timing line (no-op unless tracing). */

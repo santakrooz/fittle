@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import type { Backend, Bytes, PackReport, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb } from "./types";
+import type { Backend, Bytes, Move, PackReport, Report, Display, ExportPlan, Exported, Entry, FileResult, HeaderDoc, KeywordInfo, Op, Opened, Pixels, Plan, Readout, Thumb } from "./types";
 
 /** Binary payloads: [u32 width][u32 height][u32 channels] little-endian, then data. */
 export function unpack(buf: ArrayBuffer): { width: number; height: number; channels: number; body: ArrayBuffer } {
@@ -58,4 +58,7 @@ export const tauriBackend: Backend = {
   },
   exportImage: (spec, template, dir) => invoke<Exported>("export_image", { spec, template, dir }),
   packFile: (path, unpack) => invoke<PackReport>("pack_file", { path, unpack }),
+  sessionReport: (path, recursive, grade, rules) => invoke<Report>("session_report", { path, recursive, grade, rules: rules ?? null }),
+  saveReport: (format) => invoke<string>("save_report", { format }),
+  moveRejects: (paths, dryRun) => invoke<Move[]>("move_rejects", { paths, dryRun }),
 };

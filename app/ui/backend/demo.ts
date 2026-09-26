@@ -3,7 +3,7 @@
 // dev server from app/demo-fixtures). Regions and readouts come from the
 // preview, so they are approximate; RA/Dec is not available.
 import { unpack } from "./tauri";
-import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Mode, Opened, Pixels, Plan } from "./types";
+import type { Backend, Display, Entry, HeaderDoc, KeywordInfo, Mode, Opened, Pixels, Plan, Report } from "./types";
 
 export const isDemo = () => new URLSearchParams(location.search).has("demo");
 
@@ -133,6 +133,10 @@ export function demoBackend(): Backend {
     exportPreview: () => Promise.reject(new Error("Export preview needs the desktop app.")),
     exportImage: () => Promise.reject(new Error("Export needs the desktop app; the demo has no files.")),
     packFile: () => Promise.reject(new Error("Compression needs the desktop app; the demo has no files.")),
+    // Fixture written by `fittle scan --grade --report json -o app/demo-fixtures/report.json`.
+    sessionReport: () => json<Report>("/demo/report.json"),
+    saveReport: () => Promise.reject(new Error("Session reports need the desktop app.")),
+    moveRejects: () => Promise.reject(new Error("Moving files needs the desktop app.")),
   };
 }
 

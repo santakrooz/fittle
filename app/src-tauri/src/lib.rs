@@ -14,6 +14,7 @@ use fittle_image::export::{self, ExportSpec};
 use fittle_image::view::{Display, OpenedInfo};
 use fittle_image::{Mode, Readout, ViewSession};
 use fittle_scan::Entry;
+use fittle_scan::report::Report;
 use serde::Serialize;
 use tauri::State;
 use tauri::async_runtime::spawn_blocking;
@@ -23,7 +24,12 @@ use tauri::ipc::Response;
 struct AppState {
     session: Mutex<Option<Arc<ViewSession>>>,
     thumbs: Mutex<HashMap<String, Arc<Vec<u8>>>>,
+    /// The last session report, kept for saving.
+    report: Mutex<Option<Arc<SavedReport>>>,
 }
+
+/// A report and the folder entries it was built from.
+type SavedReport = (Report, Vec<Entry>);
 
 type Res<T> = Result<T, String>;
 
@@ -329,6 +335,74 @@ async fn pack_file(path: String, unpack: bool) -> Res<fittle_image::fpack::PackR
     .map_err(err)?
 }
 
+/// Session report for a folder; `grade` also measures every light sub.
+#[tauri::command]
+async fn session_report(
+    path: String,
+    recursive: bool,
+    grade: bool,
+    rules: Option<String>,
+    state: State<'_, AppState>,
+) -> Res<Report> {
+    let t = std::time::Instant::now();
+    let r = spawn_blocking(move || {
+        let rules = rules
+            .as_deref()
+            .map(fittle_scan::grade::Rules::parse)
+            .transpose()?
+            .unwrap_or_default();
+        let entries = if recursive {
+            fittle_scan::list_recursive(&path)
+        } else {
+            fittle_scan::list(&path)
+        }
+        .map_err(err)?;
+        let r = fittle_scan::report::report(&path, &entries, grade.then_some(&rules));
+        Ok::<_, String>(Arc::new((r, entries)))
+    })
+    .await
+    .map_err(err)??;
+    trace(
+        if grade {
+            "session_report (graded)"
+        } else {
+            "session_report"
+        },
+        t,
+    );
+    *state.report.lock().unwrap() = Some(r.clone());
+    Ok(r.0.clone())
+}
+
+/// Save the last report into its folder (md, html, json or astrobin); a new file.
+#[tauri::command]
+async fn save_report(format: String, state: State<'_, AppState>) -> Res<String> {
+    let r = state
+        .report
+        .lock()
+        .unwrap()
+        .clone()
+        .ok_or("no report yet")?;
+    spawn_blocking(move || {
+        fittle_scan::report::save(&r.0, &r.1, &format)
+            .map(|p| p.to_string_lossy().into_owned())
+            .map_err(err)
+    })
+    .await
+    .map_err(err)?
+}
+
+/// Move files into `_rejected/` beside them (dry run returns the plan).
+#[tauri::command]
+async fn move_rejects(paths: Vec<String>, dry_run: bool) -> Res<Vec<fittle_scan::grade::Move>> {
+    spawn_blocking(move || {
+        let refs: Vec<&str> = paths.iter().map(String::as_str).collect();
+        fittle_scan::grade::move_rejects(&refs, dry_run)
+    })
+    .await
+    .map_err(err)
+}
+
 /// The privacy-scrub edits for a file, to stage in the editor.
 #[tauri::command]
 async fn scrub_ops(path: String) -> Res<Vec<Op>> {
@@ -394,7 +468,10 @@ pub fn run() {
             export_plan,
             export_preview,
             export_image,
-            pack_file
+            pack_file,
+            session_report,
+            save_report,
+            move_rejects
         ])
         .run(tauri::generate_context!())
         .expect("error while running Fittle");

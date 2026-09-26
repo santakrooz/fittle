@@ -4,6 +4,7 @@ import { Kbd } from "../ds";
 import { baseName } from "../format";
 import { app, getBackend, openFile, openFolder, packCurrent, setMode, setStretch, view } from "../state/app";
 import { openExport } from "../state/exporter";
+import { openReport } from "../state/report";
 import { fuzzy } from "./fuzzy";
 
 type Item = { id: string; group: "Actions" | "Keywords" | "Files"; title: string; hint?: string; cli?: string; run: () => void };
@@ -39,6 +40,9 @@ function actions(): Item[] {
       run: () => { const i = app.get().opened?.info; if (i) navigator.clipboard?.writeText(JSON.stringify(i, null, 2)).catch(() => {}); },
     },
   ];
+  if (s.folder && !s.folder.path.startsWith("demo")) {
+    a.push({ id: "report", group: "Actions", title: "Session report (scan and grade folder)", cli: `fittle scan --grade --recursive "${s.folder.name}"`, run: () => void openReport() });
+  }
   if (s.current && !s.current.startsWith("demo:")) {
     const packed = s.current.toLowerCase().endsWith(".fz");
     a.push(

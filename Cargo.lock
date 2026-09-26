@@ -1225,6 +1225,7 @@ dependencies = [
  "fittle-image",
  "rayon",
  "serde",
+ "serde_json",
 ]
 
 [[package]]
